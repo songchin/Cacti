@@ -23,16 +23,16 @@
 */
 
 /* html_start_box - draws the start of an HTML box with an optional title
-   @arg $title - the title of this box ("" for no title)
-   @arg $width - the width of the box in pixels or percent
-   @arg $background_color - the color of the box border and title row background
+   @param $title - the title of this box ("" for no title)
+   @param $width - the width of the box in pixels or percent
+   @param $background_color - the color of the box border and title row background
      color
-   @arg $cell_padding - the amount of cell padding to use inside of the box
-   @arg $align - the HTML alignment to use for the box (center, left, or right)
-   @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
+   @param $cell_padding - the amount of cell padding to use inside of the box
+   @param $align - the HTML alignment to use for the box (center, left, or right)
+   @param $add_text - the url to use when the user clicks 'Add' in the upper-right
      corner of the box ("" for no 'Add' link)
-   @arg $collapsing - tells wether or not the table collapses
-   @arg $table_id - the table id to make the table addressable by jQuery's table DND plugin */
+   @param $collapsing - tells wether or not the table collapses
+   @param $table_id - the table id to make the table addressable by jQuery's table DND plugin */
 function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text = "", $collapsing = false, $table_id = "") {
 	global $colors, $config;
 	static $form_number = 0;
@@ -147,7 +147,7 @@ function html_start_box_dq($query_name, $query_id, $device_id, $colspan, $width,
 }
 
 /* html_end_box - draws the end of an HTML box
-   @arg $trailing_br (bool) - whether to draw a trailing <br> tag after ending
+   @param $trailing_br (bool) - whether to draw a trailing <br> tag after ending
      the box */
 function html_end_box($trailing_br = true) { ?>
 					</table>
@@ -158,8 +158,8 @@ function html_end_box($trailing_br = true) { ?>
 <?php }
 
 /* html_graph_start_box - draws the start of an HTML graph view box
-   @arg $cellpadding - the table cell padding for the box
-   @arg $leading_br (bool) - whether to draw a leader <br> tag before the start of the table */
+   @param $cellpadding - the table cell padding for the box
+   @param $leading_br (bool) - whether to draw a leader <br> tag before the start of the table */
 function html_graph_start_box($cellpadding = 3, $leading_br = true) {
 	if ($leading_br == true) {
 		print "<br>\n";
@@ -174,13 +174,13 @@ function html_graph_end_box() {
 }
 
 /* html_graph_area - draws an area the contains full sized graphs
-   @arg $graph_array - the array to contains graph information. for each graph in the
+   @param $graph_array - the array to contains graph information. for each graph in the
      array, the following two keys must exist
      $arr[0]["local_graph_id"] // graph id
      $arr[0]["title_cache"] // graph title
-   @arg $no_graphs_message - display this message if no graphs are found in $graph_array
-   @arg $extra_url_args - extra arguments to append to the url
-   @arg $header - html to use as a header */
+   @param $no_graphs_message - display this message if no graphs are found in $graph_array
+   @param $extra_url_args - extra arguments to append to the url
+   @param $header - html to use as a header */
 function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
 	global $config;
 
@@ -289,13 +289,13 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 }
 
 /* html_graph_thumbnail_area - draws an area the contains thumbnail sized graphs
-   @arg $graph_array - the array to contains graph information. for each graph in the
+   @param $graph_array - the array to contains graph information. for each graph in the
      array, the following two keys must exist
      $arr[0]["local_graph_id"] // graph id
      $arr[0]["title_cache"] // graph title
-   @arg $no_graphs_message - display this message if no graphs are found in $graph_array
-   @arg $extra_url_args - extra arguments to append to the url
-   @arg $header - html to use as a header */
+   @param $no_graphs_message - display this message if no graphs are found in $graph_array
+   @param $extra_url_args - extra arguments to append to the url
+   @param $header - html to use as a header */
 function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
 	$i = 0; $k = 0; $j = 0;
 
@@ -452,12 +452,12 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 
 /* html_nav_bar - draws a navigation bar which includes previous/next links as well as current
      page information
-   @arg $background_color - the background color of this navigation bar row
-   @arg $colspan - the colspan for the entire row
-   @arg $current_page - the current page in the navigation system
-   @arg $rows_per_page - the number of rows that are displayed on a single page
-   @arg $total_rows - the total number of rows in the navigation system
-   @arg $nav_url - the url to use when presenting users with previous/next links. the variable
+   @param $background_color - the background color of this navigation bar row
+   @param $colspan - the colspan for the entire row
+   @param $current_page - the current page in the navigation system
+   @param $rows_per_page - the number of rows that are displayed on a single page
+   @param $total_rows - the total number of rows in the navigation system
+   @param $nav_url - the url to use when presenting users with previous/next links. the variable
      <PAGE> will be substituted with the correct page number if included */
 function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page, $total_rows, $nav_url) {
 	if (substr_count($nav_url, "?")) {
@@ -493,13 +493,13 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 /* html_header_sort - draws a header row suitable for display inside of a box element.  When
      a user selects a column header, the collback function "filename" will be called to handle
      the sort the column and display the altered results.
-   @arg $header_items - an array containing a list of column items to display.  The
+   @param $header_items - an array containing a list of column items to display.  The
         format is similar to the html_header, with the exception that it has three
         dimensions associated with each element (db_column => display_text, default_sort_order)
-   @arg $sort_column - the value of current sort column.
-   @arg $sort_direction - the value the current sort direction.  The actual sort direction
+   @param $sort_column - the value of current sort column.
+   @param $sort_direction - the value the current sort direction.  The actual sort direction
         will be opposite this direction if the user selects the same named column.
-   @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
+   @param $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
 function html_header_sort($header_items, $sort_column, $sort_direction, $last_item_colspan = 1) {
 	global $colors;
 	static $rand_id = 0;
@@ -559,13 +559,13 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
      suitable for display inside of a box element.  When a user selects a column header,
      the collback function "filename" will be called to handle the sort the column and display
      the altered results.
-   @arg $header_items - an array containing a list of column items to display.  The
+   @param $header_items - an array containing a list of column items to display.  The
         format is similar to the html_header, with the exception that it has three
         dimensions associated with each element (db_column => display_text, default_sort_order)
-   @arg $sort_column - the value of current sort column.
-   @arg $sort_direction - the value the current sort direction.  The actual sort direction
+   @param $sort_column - the value of current sort column.
+   @param $sort_direction - the value the current sort direction.  The actual sort direction
         will be opposite this direction if the user selects the same named column.
-   @arg $form_action - the url to post the 'select all' form to */
+   @param $form_action - the url to post the 'select all' form to */
 function html_header_sort_checkbox($header_items, $sort_column, $sort_direction, $form_action = "", $table_id = "") {
 	global $colors;
 	static $rand_id = 0;
@@ -630,13 +630,13 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 }
 
 /* html_header - draws a header row suitable for display inside of a box element
-   @arg $header_items - an array containing a list of items to be included in the header
-   @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row
-   @arg $resizable - allow for the table to be resized via javascript
-   @arg $table_id - table_id
-   @arg $tclass - optional class extension for table
-   @arg $trclass - optional class extension for table row
-   @arg $thclass - optional class extension for table header cell
+   @param $header_items - an array containing a list of items to be included in the header
+   @param $last_item_colspan - the TD 'colspan' to apply to the last cell in the row
+   @param $resizable - allow for the table to be resized via javascript
+   @param $table_id - table_id
+   @param $tclass - optional class extension for table
+   @param $trclass - optional class extension for table row
+   @param $thclass - optional class extension for table header cell
  */
 function html_header($header_items, $last_item_colspan = 1, $resizable = false, $table_id = '', $tclass = '', $trclass = '', $thclass = '') {
 	global $colors;
@@ -668,12 +668,12 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = false, 
 
 /* html_header_checkbox - draws a header row with a 'select all' checkbox in the last cell
      suitable for display inside of a box element
-   @arg $header_items - an array containing a list of items to be included in the header
-   @arg $form_action - the url to post the 'select all' form to
-   @arg $resizable - allow for the table to be resized via javascript
-   @arg $tclass - optional class extension for table
-   @arg $trclass - optional class extension for table row
-   @arg $thclass - optional class extension for table header cell
+   @param $header_items - an array containing a list of items to be included in the header
+   @param $form_action - the url to post the 'select all' form to
+   @param $resizable - allow for the table to be resized via javascript
+   @param $tclass - optional class extension for table
+   @param $trclass - optional class extension for table row
+   @param $thclass - optional class extension for table header cell
  */
 function html_header_checkbox($header_items, $form_action = "", $resizable = false, $tclass = '', $trclass= '', $thclass = '') {
 	global $colors;
@@ -704,17 +704,17 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 }
 
 /* html_create_list - draws the items for an html dropdown given an array of data
-   @arg $form_data - an array containing data for this dropdown. it can be formatted
+   @param $form_data - an array containing data for this dropdown. it can be formatted
      in one of two ways:
      $array["id"] = "value";
      -- or --
      $array[0]["id"] = 43;
      $array[0]["name"] = "Red";
-   @arg $column_display - used to indentify the key to be used for display data. this
+   @param $column_display - used to indentify the key to be used for display data. this
      is only applicable if the array is formatted using the second method above
-   @arg $column_id - used to indentify the key to be used for id data. this
+   @param $column_id - used to indentify the key to be used for id data. this
      is only applicable if the array is formatted using the second method above
-   @arg $form_previous_value - the current value of this form element */
+   @param $form_previous_value - the current value of this form element */
 function html_create_list($form_data, $column_display, $column_id, $form_previous_value) {
 	if (empty($column_display)) {
 		foreach (array_keys($form_data) as $id) {
@@ -746,9 +746,9 @@ function html_create_list($form_data, $column_display, $column_id, $form_previou
 }
 
 /* html_split_string - takes a string and breaks it into a number of <br> separated segments
-   @arg $string - string to be modified and returned
-   @arg $length - the maximal string length to split to
-   @arg $forgiveness - the maximum number of characters to walk back from to determine
+   @param $string - string to be modified and returned
+   @param $length - the maximal string length to split to
+   @param $forgiveness - the maximum number of characters to walk back from to determine
          the correct break location.
    @returns $new_string - the modified string to be returned. */
 function html_split_string($string, $length = 70, $forgiveness = 10) {
@@ -781,14 +781,14 @@ function html_split_string($string, $length = 70, $forgiveness = 10) {
 
 /* html_create_nav - creates page select navigation html
  * 					creates a table inside of a row
-   @arg $current_page - the current page displayed
-   @arg $max_pages - the maxium number of pages to show on a page
-   @arg $rows_per_page - the number of rows to display per page
-   @arg $total_rows - the total number of rows that can be displayed
-   @arg $columns - the total number of columns on this page
-   @arg $base_url - the url to navigate to
-   @arg $page_var - the request variable to look for the page number
-   @arg $url_page_select - the page list to display */
+   @param $current_page - the current page displayed
+   @param $max_pages - the maxium number of pages to show on a page
+   @param $rows_per_page - the number of rows to display per page
+   @param $total_rows - the total number of rows that can be displayed
+   @param $columns - the total number of columns on this page
+   @param $base_url - the url to navigate to
+   @param $page_var - the request variable to look for the page number
+   @param $url_page_select - the page list to display */
 function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows, $columns, $base_url, $page_var = "page") {
 	if (substr_count($base_url, "?")) {
 		$base_url .= "&";
@@ -847,12 +847,12 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 
 /* draw_graph_items_list - draws a nicely formatted list of graph items for display
      on an edit form
-   @arg $item_list - an array representing the list of graph items. this array should
+   @param $item_list - an array representing the list of graph items. this array should
      come directly from the output of db_fetch_assoc()
-   @arg $filename - the filename to use when referencing any external url
-   @arg $url_data - any extra GET url information to pass on when referencing any
+   @param $filename - the filename to use when referencing any external url
+   @param $url_data - any extra GET url information to pass on when referencing any
      external url
-   @arg $disable_controls - whether to hide all edit/delete functionality on this form */
+   @param $disable_controls - whether to hide all edit/delete functionality on this form */
 function draw_graph_items_list($item_list, $filename, $url_data, $disable_controls) {
 	global $colors, $config, $graph_item_types, $rrd_textalign;
 
@@ -1019,8 +1019,8 @@ function html_get_column_width($name, $element) {
 }
 
 /* html_read_cookie_element - extracts an element from the specified cookie array
-   @arg $name - the cookie name that contains the cookie elements
-   @arg $element - the name of the cookie element to be searched for. */
+   @param $name - the cookie name that contains the cookie elements
+   @param $element - the name of the cookie element to be searched for. */
 function html_read_cookie_element($name, $element) {
 	if (isset($_COOKIE[$name])) {
 		$parts = explode("!", $_COOKIE[$name]);
@@ -1170,7 +1170,7 @@ function draw_menu($user_menu = "") {
 
 /* draw_actions_dropdown - draws a table the allows the user to select an action to perform
      on one or more data elements
-   @arg $actions_array - an array that contains a list of possible actions. this array should
+   @param $actions_array - an array that contains a list of possible actions. this array should
      be compatible with the form_dropdown() function */
 function draw_actions_dropdown($actions_array) {
 	global $config, $actions_none;

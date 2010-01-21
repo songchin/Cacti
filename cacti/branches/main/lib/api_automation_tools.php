@@ -22,6 +22,10 @@
  +-------------------------------------------------------------------------+
  */
 
+/** getHostTemplates
+ *
+ * @return array
+ */
 function getHostTemplates() {
 	$tmpArray = db_fetch_assoc("select id, name from device_template order by id");
 
@@ -36,9 +40,9 @@ function getHostTemplates() {
 	return $device_templates;
 }
 
-/* getDevices				get all matching devices for given selection criteria
- * @arg $input_parms	array of selection criteria
- * returns				array of devices, indexed by device_id
+/** getDevices					get all matching devices for given selection criteria
+ * @param string $input_parms	array of selection criteria
+ * @return						array of devices, indexed by device_id
  */
 function getDevices($input_parms) {
 	$devices    = array();
@@ -181,10 +185,12 @@ function getDevices($input_parms) {
 	return db_fetch_assoc($sql_stmt);
 }
 
-/* getGraphs				- get all Graphs related to a given device selection
- * @arg $device_selection	- sql selection of device(s), empty for all devices
- * 							  e.g. WHERE device_id = <id>
- * 							       WHERE (device_id IN (...))
+/** getGraphs						- get all Graphs related to a given device selection
+ * @param string $device_selection	- sql selection of device(s), empty for all devices
+ * 									  e.g. WHERE device_id = <id>
+ * 								       WHERE (device_id IN (...))
+ * @param array $header
+ * @return array
  */
 function getGraphs($device_selection, &$header) {
 	$sql = "SELECT " .
@@ -217,7 +223,12 @@ function getGraphs($device_selection, &$header) {
 }
 
 
-
+/** getHostGraphs
+ *
+ * @param array $devices
+ * @param array $header
+ * @return array
+ */
 function getHostGraphs($devices, &$header) {
 
 	$header = array();	# provides header info for printout
@@ -255,7 +266,11 @@ function getHostGraphs($devices, &$header) {
 }
 
 
-
+/** getInputFields
+ *
+ * @param int $templateId
+ * @return array
+ */
 function getInputFields($templateId) {
 	$fields    = array();
 
@@ -292,14 +307,14 @@ function getInputFields($templateId) {
 	return $fields;
 }
 
-/* displayGenericArray	- column-save printout of arrays
- * @arg $data			- the array to be printed; fields of each array item must relate to $req_fields
- * @arg $req_fields		- an array of fields to be printed;
- * 							index = field name;
- * 							"desc" = human readable description
- * @arg $title			- optional title of printout; skipped in quietMode
- * @arg $quietMode		- optionally suppress title printout
- * returns				  true, if anything has been printed
+/** displayGenericArray	- column-save printout of arrays
+ * @param array $data			- the array to be printed; fields of each array item must relate to $req_fields
+ * @param array $req_fields		- an array of fields to be printed;
+ * 									index = field name;
+ * 									"desc" = human readable description
+ * @param string $title			- optional title of printout; skipped in quietMode
+ * @param bool $quietMode		- optionally suppress title printout
+ * @return bool					- true, if anything has been printed
  */
 function displayGenericArray($data, $req_fields=array(), $title="", $quietMode=FALSE) {
 	$exit_code = false; # assume an error until we've printed sth
@@ -352,6 +367,10 @@ function displayGenericArray($data, $req_fields=array(), $title="", $quietMode=F
 	return $exit_code;
 }
 
+/** getAddresses
+ *
+ * @return array
+ */
 function getAddresses() {
 	$addresses = array();
 	$tmpArray  = db_fetch_assoc("SELECT id, hostname FROM device ORDER BY hostname");
@@ -365,6 +384,12 @@ function getAddresses() {
 	return $addresses;
 }
 
+/** getSNMPFields
+ *
+ * @param int $deviceId
+ * @param int $snmp_query_id
+ * @return array
+ */
 function getSNMPFields($deviceId, $snmp_query_id = "") {
 	$fieldNames = array();
 
@@ -389,6 +414,13 @@ function getSNMPFields($deviceId, $snmp_query_id = "") {
 		return $fieldNames;
 }
 
+/** getSNMPValues
+ *
+ * @param int $deviceId
+ * @param string $field
+ * @param int $snmp_query_id
+ * @return array
+ */
 function getSNMPValues($deviceId, $field, $snmp_query_id = "") {
 	$values   = array();
 
@@ -414,6 +446,10 @@ function getSNMPValues($deviceId, $field, $snmp_query_id = "") {
 		return $values;
 }
 
+/** getSNMPQueries
+ *
+ * @return array
+ */
 function getSNMPQueries() {
 	$queries  = array();
 	$tmpArray = db_fetch_assoc("SELECT id, name
@@ -429,6 +465,13 @@ function getSNMPQueries() {
 	return $queries;
 }
 
+/** getSNMPQueriesByDevices
+ *
+ * @param array $devices
+ * @param int $snmp_query_id
+ * @param string $header
+ * @return array
+ */
 function getSNMPQueriesByDevices($devices, $snmp_query_id='', &$header) {
 	global $reindex_types;
 
@@ -475,6 +518,11 @@ function getSNMPQueriesByDevices($devices, $snmp_query_id='', &$header) {
 	return $tmpArray;
 }
 
+/** getSNMPQueryTypes
+ *
+ * @param int $snmpQueryId
+ * @return array
+ */
 function getSNMPQueryTypes($snmpQueryId) {
 	$types    = array();
 	$tmpArray = db_fetch_assoc("SELECT id, name
@@ -491,6 +539,10 @@ function getSNMPQueryTypes($snmpQueryId) {
 	return $types;
 }
 
+/** getGraphTemplates
+ *
+ * @return array
+ */
 function getGraphTemplates() {
 	$graph_templates = array();
 	$tmpArray        = db_fetch_assoc("SELECT id, name
@@ -506,6 +558,11 @@ function getGraphTemplates() {
 	return $graph_templates;
 }
 
+/** getGraphTemplatesByHostTemplate
+ *
+ * @param int $device_template_id
+ * @return array
+ */
 function getGraphTemplatesByHostTemplate($device_template_id) {
 	$graph_templates = array();
 	$tmpArray 		 = db_fetch_assoc("SELECT " .
@@ -525,6 +582,11 @@ function getGraphTemplatesByHostTemplate($device_template_id) {
 	return $graph_templates;
 }
 
+/** displayQueryTypes
+ *
+ * @param array $types
+ * @param bool $quietMode
+ */
 function displayQueryTypes($types, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known SNMP Query Types: (id, name)") . "\n";
@@ -539,6 +601,11 @@ function displayQueryTypes($types, $quietMode = FALSE) {
 	}
 }
 
+/** displayHostTemplates
+ *
+ * @param array $device_templates
+ * @param bool $quietMode
+ */
 function displayHostTemplates($device_templates, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Valid Device Templates: (id, name)") . "\n";
@@ -555,6 +622,10 @@ function displayHostTemplates($device_templates, $quietMode = FALSE) {
 	}
 }
 
+/** displayCommunities
+ *
+ * @param bool $quietMode
+ */
 function displayCommunities($quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known communities are: (community)") . "\n";
@@ -576,6 +647,12 @@ function displayCommunities($quietMode = FALSE) {
 	}
 }
 
+/** displaySNMPFields
+ *
+ * @param array $fields
+ * @param int $deviceId
+ * @param bool $quietMode
+ */
 function displaySNMPFields($fields, $deviceId, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known SNMP Fields for device-id $deviceId: (name)") . "\n";
@@ -590,6 +667,13 @@ function displaySNMPFields($fields, $deviceId, $quietMode = FALSE) {
 	}
 }
 
+/** displaySNMPValues
+ *
+ * @param array $values
+ * @param int $deviceId
+ * @param string $field
+ * @param bool $quietMode
+ */
 function displaySNMPValues($values, $deviceId, $field, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known values for $field for device $deviceId: (name)") . "\n";
@@ -604,6 +688,13 @@ function displaySNMPValues($values, $deviceId, $field, $quietMode = FALSE) {
 	}
 }
 
+/** displaySNMPValuesExtended
+ *
+ * @param int $deviceId
+ * @param string $fields
+ * @param int $snmpQueryId
+ * @param bool $quietMode
+ */
 function displaySNMPValuesExtended($deviceId, $fields, $snmpQueryId, $quietMode = FALSE) {
 	$exit_code = 1; # assume an error until we've printed sth
 
@@ -761,6 +852,11 @@ function displaySNMPValuesExtended($deviceId, $fields, $snmpQueryId, $quietMode 
 	return($exit_code);
 }
 
+/** displaySNMPQueries
+ *
+ * @param array $queries
+ * @param bool $quietMode
+ */
 function displaySNMPQueries($queries, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known SNMP Queries:(id, name)") . "\n";
@@ -775,6 +871,11 @@ function displaySNMPQueries($queries, $quietMode = FALSE) {
 	}
 }
 
+/** displayInputFields
+ *
+ * @param array $input_fields
+ * @param bool $quietMode
+ */
 function displayInputFields($input_fields, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known Input Fields: (name, default, description)") . "\n";
@@ -791,6 +892,11 @@ function displayInputFields($input_fields, $quietMode = FALSE) {
 	}
 }
 
+/** displayGraphTemplates
+ *
+ * @param array $templates
+ * @param bool $quietMode
+ */
 function displayGraphTemplates($templates, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known Graph Templates: (id, name)") . "\n";
@@ -805,6 +911,11 @@ function displayGraphTemplates($templates, $quietMode = FALSE) {
 	}
 }
 
+/** displayDevices
+ *
+ * @param array $devices
+ * @param bool $quietMode
+ */
 function displayDevices($devices, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known Hosts: (id, hostname, template, description)") . "\n";
@@ -821,8 +932,10 @@ function displayDevices($devices, $quietMode = FALSE) {
 	}
 }
 
-
-
+/** displayRealms
+ * @param array $perm
+ * @param bool $quietMode
+ */
 function displayRealms($perm, $quietMode = FALSE) {
 	global $user_auth_realms;
 
@@ -872,8 +985,11 @@ function displayRealms($perm, $quietMode = FALSE) {
 	}
 }
 
-
-
+/** displayPerms
+ *
+ * @param array $perm
+ * @param bool $quietMode
+ */
 function displayPerms($perm, $quietMode = FALSE) {
 	global $perm_item_types;
 
@@ -957,8 +1073,10 @@ function displayPerms($perm, $quietMode = FALSE) {
 	}
 }
 
-
-
+/** displayTrees
+ *
+ * @param bool $quietMode
+ */
 function displayTrees($quietMode = FALSE) {
 	global $tree_sort_types;
 
@@ -986,6 +1104,12 @@ function displayTrees($quietMode = FALSE) {
 	}
 }
 
+/** displayTreeNodes
+ * @param int $id
+ * @param string $nodeType
+ * @param int $parentNode
+ * @param bool $quietMode
+ */
 function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode = FALSE) {
 	global $tree_sort_types, $tree_item_types, $device_group_types;
 
@@ -1091,6 +1215,10 @@ function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode
 	}
 }
 
+/** displayRRAs
+ *
+ * @param bool $quietMode
+ */
 function displayRRAs($quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known RRAs: (id, steps, rows, timespan, name)") . "\n";
@@ -1120,6 +1248,10 @@ function displayRRAs($quietMode = FALSE) {
 	}
 }
 
+/** displayUsers
+ *
+ * @param bool $quietMode
+ */
 function displayUsers($quietMode = FALSE) {
 	global $graph_policy_array;
 
@@ -1148,6 +1280,10 @@ function displayUsers($quietMode = FALSE) {
 	}
 }
 
+/** displayGroups
+ *
+ * @param bool $quietMode
+ */
 function displayGroups($quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known Groups: (tbd...)") . "\n";
@@ -1168,11 +1304,11 @@ function displayGroups($quietMode = FALSE) {
 	}
 }
 
-/*
+/**
  * verifyDevice		- verifies all array items for a device array
  * 					  recodes the device array, if necessary
- * @arg $device		- device array (part of device table)
- * @arg $ri_check	- request a referential integrity test
+ * @param $device		- device array (part of device table)
+ * @param $ri_check	- request a referential integrity test
  * returns			- if ok, returns true with array recoded; otherwise array containg error message
  */
 function verifyDevice(&$device, $ri_check=false) {
@@ -1401,11 +1537,11 @@ function verifyDevice(&$device, $ri_check=false) {
 	return true;
 }
 
-/*
+/**
  * verifyDataQuery	- verifies all array items for a data query array
  * 					  recodes the array, if necessary
- * @arg $data_query	- data query array (part of device_snmp_query)
- * @arg $ri_check	- request a referential integrity test
+ * @param $data_query	- data query array (part of device_snmp_query)
+ * @param $ri_check	- request a referential integrity test
  * returns			- if ok, returns true with array recoded; otherwise array containg error message
  */
 function verifyDataQuery(&$data_query, $ri_check=false) {
@@ -1480,11 +1616,11 @@ function verifyDataQuery(&$data_query, $ri_check=false) {
 	return true;
 }
 
-/*
+/**
  * verifyDQGraph	- verifies all array items for a graph array to create a Data Query based Graph
  * 					  recodes the dqGraph array, if necessary
- * @arg $dqGraph	- dqGraph array (part of  table)
- * @arg $ri_check	- request a referential integrity test
+ * @param $dqGraph	- dqGraph array (part of  table)
+ * @param $ri_check	- request a referential integrity test
  * returns			- if ok, returns true with array recoded; otherwise array containg error message
  */
 function verifyDQGraph(&$dqGraph, $ri_check=false) {
@@ -1612,9 +1748,9 @@ function verifyDQGraph(&$dqGraph, $ri_check=false) {
 	}
 }
 
-/* verifyGraphInputFields	- verifies Graph Input Fields
- * @arg $cgInputFields		- input fields as given by user
- * @arg $input_fields		- input fields related to the specific graph template
+/** verifyGraphInputFields	- verifies Graph Input Fields
+ * @param $cgInputFields		- input fields as given by user
+ * @param $input_fields		- input fields related to the specific graph template
  * returns					- value array as needed by graph creation function
  */
 function verifyGraphInputFields($cgInputFields, $input_fields) {
@@ -1667,6 +1803,12 @@ function verifyGraphInputFields($cgInputFields, $input_fields) {
 	}
 }
 
+/** verifyPermissions
+ *
+ * @param array $perm
+ * @param string $delim
+ * @param bool $ri_check
+ */
 function verifyPermissions(&$perm, $delim, $ri_check=false) {
 	global $perm_item_types;
 
@@ -1760,8 +1902,11 @@ function verifyPermissions(&$perm, $delim, $ri_check=false) {
 	}
 }
 
-
-
+/** verifyTree
+ *
+ * @param array $tree
+ * @param bool $ri_check
+ */
 function verifyTree(&$tree, $ri_check=false) {
 	global $tree_sort_types_cli;
 
@@ -1802,7 +1947,11 @@ function verifyTree(&$tree, $ri_check=false) {
 	}
 }
 
-
+/** verifyTreeItem
+ *
+ * @param array $tree_item
+ * @param bool $ri_check
+ */
 function verifyTreeItem(&$tree_item, $ri_check=false) {
 	global $tree_sort_types_cli;
 

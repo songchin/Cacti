@@ -365,8 +365,8 @@ function get_icon($graph_tree_id, $order_key) {
 
 /* tree_tier_string - returns the tier key information to be used to determine
  visibility status of the tree item.
- @arg $order_key - the order key of the branch to fetch the depth for
- @arg $chars_per_tier - the number of characters dedicated to each branch
+ @param $order_key - the order key of the branch to fetch the depth for
+ @param $chars_per_tier - the number of characters dedicated to each branch
  depth (tier). this is typically '3' in cacti.
  @returns - the string representing the leaf position
  */

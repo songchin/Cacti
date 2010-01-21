@@ -1108,7 +1108,7 @@ function explore_tree($path, $tree_id, $parent_tree_item_id) {
 }
 
 /* export_is_tree_allowed - determines whether the export user is allowed to view a certain graph tree
-   @arg $tree_id - (int) the ID of the graph tree to check permissions for
+   @param $tree_id - (int) the ID of the graph tree to check permissions for
    @returns - (bool) whether the current user is allowed the view the specified graph tree or not */
 function export_is_tree_allowed($tree_id) {
 	$current_user = db_fetch_row("select policy_trees from user_auth where id=" . read_config_option("export_user_id"));
@@ -1391,8 +1391,8 @@ function grow_dhtml_trees_export($fp, $tree_id) {
 
 /* get_graph_tree_array_export - returns a list of graph trees taking permissions into account if
      necessary
-   @arg $return_sql - (bool) Whether to return the SQL to create the dropdown rather than an array
-	@arg $force_refresh - (bool) Force the refresh of the array from the database
+   @param $return_sql - (bool) Whether to return the SQL to create the dropdown rather than an array
+	@param $force_refresh - (bool) Force the refresh of the array from the database
    @returns - (array) an array containing a list of graph trees */
 function get_graph_tree_array_export($return_sql = false, $force_refresh = false) {
 	global $config;
@@ -1578,7 +1578,7 @@ function create_dhtml_tree_export($tree_id) {
 
 /* create_export_directory_structure - builds the export directory strucutre and copies
    graphics and treeview scripts to those directories.
-   @arg $cacti_root_path - the directory where Cacti is installed
+   @param $cacti_root_path - the directory where Cacti is installed
         $dir - the export directory where graphs will either be staged or located.
 */
 function create_export_directory_structure($cacti_root_path, $dir) {
@@ -1645,7 +1645,7 @@ function get_tree_item_title($tree_item_id) {
 
 /* clean_up_export_name - runs a string through a series of regular expressions designed to
      eliminate "bad" characters
-   @arg $string - the string to modify/clean
+   @param $string - the string to modify/clean
    @returns - the modified string */
 function clean_up_export_name($string) {
 	$string = preg_replace("/[\s\ ]+/", "_", $string);

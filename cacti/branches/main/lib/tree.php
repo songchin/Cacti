@@ -23,7 +23,7 @@
 */
 
 /* get_tree_item_type - gets the type of tree item
-   @arg $tree_item_id - the id of the tree item to fetch the type for
+   @param $tree_item_id - the id of the tree item to fetch the type for
    @returns - a string reprenting the type of the tree item. valid return
      values are 'header', 'graph', and 'device' */
 function get_tree_item_type($tree_item_id) {
@@ -41,8 +41,8 @@ function get_tree_item_type($tree_item_id) {
 }
 
 /* tree_tier - gets the "depth" of a particular branch of the tree
-   @arg $order_key - the order key of the branch to fetch the depth for
-   @arg $chars_per_tier - the number of characters dedicated to each branch
+   @param $order_key - the order key of the branch to fetch the depth for
+   @param $chars_per_tier - the number of characters dedicated to each branch
      depth (tier). this is typically '3' in cacti.
    @returns - a number reprenting the depth of the branch, where '0' is the
      base of the tree and the maximum value is:
@@ -60,9 +60,9 @@ function tree_tier($order_key, $chars_per_tier = CHARS_PER_TIER) {
 }
 
 /* get_parent_id - returns the tree item id of the parent of this tree item
-   @arg $id - the tree item id to search for a parent
-   @arg $table - the sql table to use when searching for a parent id
-   @arg $where - extra sql WHERE queries that must be used to query $table
+   @param $id - the tree item id to search for a parent
+   @param $table - the sql table to use when searching for a parent id
+   @param $where - extra sql WHERE queries that must be used to query $table
    @returns - the id of the parent tree item to $id, or '0' if $id is at the root
      of the tree */
 function get_parent_id($id, $table, $where = "") {
@@ -85,11 +85,11 @@ function get_parent_id($id, $table, $where = "") {
 }
 
 /* get_next_tree_id - finds the next available order key on a particular branch
-   @arg $order_key - the order key to use as a starting point for the available
+   @param $order_key - the order key to use as a starting point for the available
      order key search. this order is used as the 'root' in the search
-   @arg $table - the sql table to use when searching for a parent id
-   @arg $field - the sql field name that contains the order key
-   @arg $where - extra sql WHERE queries that must be used to query $table
+   @param $table - the sql table to use when searching for a parent id
+   @param $field - the sql field name that contains the order key
+   @param $where - extra sql WHERE queries that must be used to query $table
    @returns - the next available order key in $order_key's branch */
 function get_next_tree_id($order_key, $table, $field, $where) {
 	if (preg_match("/^" . str_repeat('0', CHARS_PER_TIER) . "/",$order_key)) {
@@ -111,29 +111,29 @@ function get_next_tree_id($order_key, $table, $field, $where) {
 }
 
 /* branch_up - moves a branch up in the tree
-   @arg $order_key - the order key of the branch to move up
-   @arg $table - the sql table to use when searching for a parent id
-   @arg $field - the sql field name that contains the order key
-   @arg $where - extra sql WHERE queries that must be used to query $table */
+   @param $order_key - the order key of the branch to move up
+   @param $table - the sql table to use when searching for a parent id
+   @param $field - the sql field name that contains the order key
+   @param $where - extra sql WHERE queries that must be used to query $table */
 function branch_up($order_key, $table, $field, $where) {
 	move_branch('up', $order_key, $table, $field, $where);
 }
 
 /* branch_down - moves a branch down in the tree
-   @arg $order_key - the order key of the branch to move down
-   @arg $table - the sql table to use when searching for a parent id
-   @arg $field - the sql field name that contains the order key
-   @arg $where - extra sql WHERE queries that must be used to query $table */
+   @param $order_key - the order key of the branch to move down
+   @param $table - the sql table to use when searching for a parent id
+   @param $field - the sql field name that contains the order key
+   @param $where - extra sql WHERE queries that must be used to query $table */
 function branch_down($order_key, $table, $field, $where) {
 	move_branch('down', $order_key, $table, $field, $where);
 }
 
 /* move_branch - moves a branch up or down in the tree
-   @arg $dir - the direction of the move, either 'up' or 'down'
-   @arg $order_key - the order key of the branch to move up or down
-   @arg $table - the sql table to use when searching for a parent id
-   @arg $field - the sql field name that contains the order key
-   @arg $where - extra sql WHERE queries that must be used to query $table */
+   @param $dir - the direction of the move, either 'up' or 'down'
+   @param $order_key - the order key of the branch to move up or down
+   @param $table - the sql table to use when searching for a parent id
+   @param $field - the sql field name that contains the order key
+   @param $where - extra sql WHERE queries that must be used to query $table */
 function move_branch($dir, $order_key, $table, $field, $where) {
 	$tier = tree_tier($order_key);
 
@@ -200,11 +200,11 @@ function reset_session_variables($pre_tree) {
 }
 
 /* sort_branch - sorts the child items a branch using a specified sorting algorithm
-   @arg $sort_type - the type of sorting to perform. available options are:
+   @param $sort_type - the type of sorting to perform. available options are:
      SORT_TYPE_TREE (1) - sort the entire tree
      SORT_TYPE_TREE_ITEM (2) - sort a single tree branch
-   @arg $item_id - the id tree or tree item to sort
-   @arg $sort_style - the type of sorting to perform. available options are:
+   @param $item_id - the id tree or tree item to sort
+   @param $sort_style - the type of sorting to perform. available options are:
      TREE_ORDERING_NONE (1) - no sorting
      TREE_ORDERING_ALPHABETIC (2) - alphabetic sorting
      TREE_ORDERING_NUMERIC (3) - numeric sorting */
@@ -303,8 +303,8 @@ function sort_tree($sort_type, $item_id, $sort_style) {
 
 /* reparent_branch - places a branch and all of its children to a new root
      node
-   @arg $new_parent_id - the target parent id for the target branch to move
-   @arg $tree_item_id - the id of the branch to re-parent */
+   @param $new_parent_id - the target parent id for the target branch to move
+   @param $tree_item_id - the id of the branch to re-parent */
 function reparent_branch($new_parent_id, $tree_item_id) {
 	if (empty($tree_item_id)) { return 0; }
 
@@ -342,7 +342,7 @@ function reparent_branch($new_parent_id, $tree_item_id) {
 }
 
 /* delete_branch - deletes a branch and all of its children
-   @arg $tree_item_id - the id of the branch to remove */
+   @param $tree_item_id - the id of the branch to remove */
 function delete_branch($tree_item_id) {
 	if (empty($tree_item_id)) { return 0; }
 

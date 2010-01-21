@@ -268,7 +268,7 @@ $colors["form_alternate2"] = "E5E5E5";
 
 
 /* dosPath - converts a path with spaces to a dos 8.3 path
-    @arg $path - the path with spaces
+    @param $path - the path with spaces
     @returns (un)modified path */
 function dosPath($path) {
 	$path = str_replace("\\", "/", $path);

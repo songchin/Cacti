@@ -71,9 +71,9 @@ function api_graph_remove_multi($local_graph_ids) {
 }
 
 /* api_resize_graphs - resizes the selected graph, overriding the template value
-   @arg $graph_templates_graph_id - the id of the graph to resize
-   @arg $graph_width - the width of the resized graph
-   @arg $graph_height - the height of the resized graph
+   @param $graph_templates_graph_id - the id of the graph to resize
+   @param $graph_width - the width of the resized graph
+   @param $graph_height - the height of the resized graph
   */
 function api_resize_graphs($local_graph_id, $graph_width, $graph_height) {
 	global $config;
@@ -83,7 +83,7 @@ function api_resize_graphs($local_graph_id, $graph_width, $graph_height) {
 }
 
 /* api_reapply_suggested_graph_title - reapplies the suggested name to a graph title
-   @arg $graph_templates_graph_id - the id of the graph to reapply the name to
+   @param $graph_templates_graph_id - the id of the graph to reapply the name to
 */
 function api_reapply_suggested_graph_title($local_graph_id) {
 	global $config;
@@ -137,7 +137,7 @@ function api_reapply_suggested_graph_title($local_graph_id) {
 }
 
 /* api_get_graphs_from_datasource - get's all graphs related to a data source
-   @arg $local_data_id - the id of the data source
+   @param $local_data_id - the id of the data source
    @returns - array($id => $name_cache) returns the graph id's and names of the graphs
   */
 function api_get_graphs_from_datasource($local_data_id) {

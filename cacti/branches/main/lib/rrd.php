@@ -387,13 +387,13 @@ function rrdtool_function_update($update_cache_array, $rrd_struc) {
 $rrd_fetch_cache = array();
 
 /* rrdtool_function_fetch - given a data source, return all of its data in an array
-   @arg $local_data_id - the data source to fetch data for
-   @arg $start_time - the start time to use for the data calculation. this value can
+   @param $local_data_id - the data source to fetch data for
+   @param $start_time - the start time to use for the data calculation. this value can
      either be absolute (unix timestamp) or relative (to now)
-   @arg $end_time - the end time to use for the data calculation. this value can
+   @param $end_time - the end time to use for the data calculation. this value can
      either be absolute (unix timestamp) or relative (to now)
-   @arg $resolution - the accuracy of the data measured in seconds
-   @arg $show_unknown - Show unknown 'NAN' values in the output as 'U'
+   @param $resolution - the accuracy of the data measured in seconds
+   @param $show_unknown - Show unknown 'NAN' values in the output as 'U'
    @returns - (array) an array containing all data in this data source broken down
      by each data source item. the maximum of all data source items is included in
      an item called 'ninety_fifth_percentile_maximum' */
@@ -2060,8 +2060,8 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 
 
 /* rrdtool_set_font		- set the rrdtool font option
- * @arg $type			- the type of font: DEFAULT, TITLE, AXIS, UNIT, LEGEND, WATERMARK
- * @arg $no_legend		- special handling for TITLE if legend is suppressed
+ * @param $type			- the type of font: DEFAULT, TITLE, AXIS, UNIT, LEGEND, WATERMARK
+ * @param $no_legend		- special handling for TITLE if legend is suppressed
  * returns				- rrdtool --font option for the given font type
  */
 function rrdtool_set_font($type, $no_legend = "") {
@@ -2189,9 +2189,9 @@ function rrdtool_set_x_grid($xaxis_id, $start, $end) {
 }
 
 /* rrd_substitute_device_query_data substitute |device*| and |query*| type variables
- * @arg $txt_graph_item 	the variable to be substituted
- * @arg $graph				from table graph_templates_graph
- * @arg $graph_item			from table graph.templates_item
+ * @param $txt_graph_item 	the variable to be substituted
+ * @param $graph				from table graph_templates_graph
+ * @param $graph_item			from table graph.templates_item
  * returns					variable substituted by value
  */
 function rrd_substitute_device_query_data($txt_graph_item, $graph, $graph_item) {
@@ -2214,7 +2214,7 @@ function rrd_substitute_device_query_data($txt_graph_item, $graph, $graph_item) 
 }
 
 /* rrdgraph_scale		compute scaling parameters for rrd graphs
- * @arg $graph			graph options
+ * @param $graph			graph options
  * returns				graph options prepared for use with rrdtool graph
  */
 function rrdgraph_scale($graph) {
@@ -2285,8 +2285,8 @@ function rrdgraph_scale($graph) {
 }
 
 /* rrdgraph_image_format		determine image format for rrdtool graph statement
- * @arg $image_format_id		the id of the wanted image format
- * @arg $rrdtool_version		rrdtool version used for checks
+ * @param $image_format_id		the id of the wanted image format
+ * @param $rrdtool_version		rrdtool version used for checks
  * returns						--imgformat string
  */
 function rrdgraph_image_format($image_format_id, $rrdtool_version) {
@@ -2338,9 +2338,9 @@ function rrdgraph_image_format($image_format_id, $rrdtool_version) {
 }
 
 /* rrdgraph_start_end		computes start and end timestamps in unixtime format
- * @arg $graph_data_array	override parameters for start, end, e.g. for zooming
- * @arg $rra				rra parameters used for this graph
- * @arg $seconds_between_graph_updates
+ * @param $graph_data_array	override parameters for start, end, e.g. for zooming
+ * @param $rra				rra parameters used for this graph
+ * @param $seconds_between_graph_updates
  * returns					array of start, end time
  */
 function rrdgraph_start_end($graph_data_array, $rra, $seconds_between_graph_updates) {
@@ -2642,8 +2642,8 @@ function rrdgraph_item_opts($graph_item, $graph_data_array, $hardreturn, $graph_
 }
 
 /* rrdtool_cacti_compare 	compares cacti information to rrd file information
- * @arg $data_source_id		the id of the data source
- * @arg $info				rrdtool info as an array
+ * @param $data_source_id		the id of the data source
+ * @param $info				rrdtool info as an array
  * returns					array build like $info defining html class in case of error
  */
 function rrdtool_cacti_compare($data_source_id, &$info) {
@@ -2848,9 +2848,9 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 
 /* rrdtool_tune			- create rrdtool tune/resize commands
  * 						  html+cli enabled
- * @arg $rrd_file		- rrd file name
- * @arg $diff			- array of discrepancies between cacti setttings and rrd file info
- * @arg $show_source	- only show text+commands or execute all commands, execute is for cli mode only!
+ * @param $rrd_file		- rrd file name
+ * @param $diff			- array of discrepancies between cacti setttings and rrd file info
+ * @param $show_source	- only show text+commands or execute all commands, execute is for cli mode only!
  */
 function rrdtool_tune($rrd_file, $diff, $show_source=TRUE) {
 
@@ -2907,7 +2907,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source=TRUE) {
 }
 
 /* rrd_check - Given a data source id, check the rrdtool file to the data source definition
-   @arg $data_source_id - data source id
+   @param $data_source_id - data source id
    @rerturn - (array) an array containing issues with the rrdtool file definition vs data source */
 function rrd_check($data_source_id) {
 	global $config, $rrd_tune_array;
@@ -2920,7 +2920,7 @@ function rrd_check($data_source_id) {
 }
 
 /* rrd_repair - Given a data source id, update the rrdtool file to match the data source definition
-   @arg $data_source_id - data source id
+   @param $data_source_id - data source id
    @rerturn - 1 success, 2 false */
 function rrd_repair($data_source_id) {
 	global $config, $rrd_tune_array;
@@ -2933,7 +2933,7 @@ function rrd_repair($data_source_id) {
 }
 
 /* rrdtool_function_info - given a data source id, return rrdtool info array
-   @arg $data_source_id - data source id
+   @param $data_source_id - data source id
    @returns - (array) an array containing all data from rrdtool info command */
 function rrdtool_function_info($data_source_id) {
 	global $config;

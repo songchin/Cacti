@@ -413,10 +413,10 @@ function data_query_update_device_cache_from_buffer($device_id, $snmp_query_id, 
 
 /* data_query_index - returns an array containing the data query ID and index value given
 	a data query index type/value combination and a device ID
-   @arg $index_type - the name of the index to match
-   @arg $index_value - the value of the index to match
-   @arg $device_id - (int) the device ID to match
-   @arg $data_query_id - (int) the data query ID to match
+   @param $index_type - the name of the index to match
+   @param $index_value - the value of the index to match
+   @param $device_id - (int) the device ID to match
+   @param $data_query_id - (int) the data query ID to match
    @returns - (array) the data query ID and index that matches the three arguments */
 function data_query_index($index_type, $index_value, $device_id, $data_query_id) {
 	return db_fetch_cell("select
@@ -429,7 +429,7 @@ function data_query_index($index_type, $index_value, $device_id, $data_query_id)
 }
 
 /* data_query_field_list - returns an array containing data query information for a given data source
-   @arg $data_template_data_id - the ID of the data source to retrieve information for
+   @param $data_template_data_id - the ID of the data source to retrieve information for
    @returns - (array) an array that looks like:
 	Array
 	(
@@ -460,7 +460,7 @@ function data_query_field_list($data_template_data_id) {
 
 /* encode_data_query_index - encodes a data query index value so that it can be included
 	inside of a form
-   @arg $index - the index name to encode
+   @param $index - the index name to encode
    @returns - the encoded data query index */
 function encode_data_query_index($index) {
 	return md5($index);
@@ -468,9 +468,9 @@ function encode_data_query_index($index) {
 
 /* decode_data_query_index - decodes a data query index value so that it can be read from
 	a form
-   @arg $encoded_index - the index that was encoded with encode_data_query_index()
-   @arg $data_query_id - the id of the data query that this index belongs to
-   @arg $encoded_index - the id of the device that this index belongs to
+   @param $encoded_index - the index that was encoded with encode_data_query_index()
+   @param $data_query_id - the id of the data query that this index belongs to
+   @param $encoded_index - the id of the device that this index belongs to
    @returns - the decoded data query index */
 function decode_data_query_index($encoded_index, $data_query_id, $device_id) {
 	/* yes, i know MySQL has a MD5() function that would make this a bit quicker. however i would like to
@@ -488,8 +488,8 @@ function decode_data_query_index($encoded_index, $data_query_id, $device_id) {
 
 /* update_data_query_cache - updates the local data query cache for each graph and data
 	source tied to this device/data query
-   @arg $device_id - the id of the device to refresh
-   @arg $data_query_id - the id of the data query to refresh */
+   @param $device_id - the id of the device to refresh
+   @param $data_query_id - the id of the data query to refresh */
 function update_data_query_cache($device_id, $data_query_id) {
 	$graphs = db_fetch_assoc("select id from graph_local where device_id = '$device_id' and snmp_query_id = '$data_query_id'");
 
@@ -510,7 +510,7 @@ function update_data_query_cache($device_id, $data_query_id) {
 
 /* update_graph_data_query_cache - updates the local data query cache for a particular
 	graph
-   @arg $local_graph_id - the id of the graph to update the data query cache for */
+   @param $local_graph_id - the id of the graph to update the data query cache for */
 function update_graph_data_query_cache($local_graph_id) {
 	$device_id = db_fetch_cell("select device_id from graph_local where id=$local_graph_id");
 
@@ -538,7 +538,7 @@ function update_graph_data_query_cache($local_graph_id) {
 
 /* update_data_source_data_query_cache - updates the local data query cache for a particular
 	data source
-   @arg $local_data_id - the id of the data source to update the data query cache for */
+   @param $local_data_id - the id of the data source to update the data query cache for */
 function update_data_source_data_query_cache($local_data_id) {
 	$device_id = db_fetch_cell("select device_id from data_local where id=$local_data_id");
 
@@ -564,8 +564,8 @@ function update_data_source_data_query_cache($local_data_id) {
 /* get_formatted_data_query_indexes - obtains a list of indexes for a device/data query that
 	is sorted by the chosen index field and formatted using the data query index title
 	format
-   @arg $device_id - the id of the device which contains the data query
-   @arg $data_query_id - the id of the data query to retrieve a list of indexes for
+   @param $device_id - the id of the device which contains the data query
+   @param $data_query_id - the id of the data query to retrieve a list of indexes for
    @returns - an array formatted like the following:
 	$arr[snmp_index] = "formatted data query index string" */
 function get_formatted_data_query_indexes($device_id, $data_query_id) {
@@ -608,9 +608,9 @@ function get_formatted_data_query_indexes($device_id, $data_query_id) {
 
 /* get_formatted_data_query_index - obtains a single index for a device/data query/data query
 	index that is formatted using the data query index title format
-   @arg $device_id - the id of the device which contains the data query
-   @arg $data_query_id - the id of the data query which contains the data query index
-   @arg $data_query_index - the index to retrieve the formatted name for
+   @param $device_id - the id of the device which contains the data query
+   @param $data_query_id - the id of the data query which contains the data query index
+   @param $data_query_index - the index to retrieve the formatted name for
    @returns - a string containing the formatted name for the given data query index */
 function get_formatted_data_query_index($device_id, $data_query_id, $data_query_index) {
 	/* from the xml; cached in 'device_snmp_query' */
@@ -622,9 +622,9 @@ function get_formatted_data_query_index($device_id, $data_query_id, $data_query_
 /* get_ordered_index_type_list - builds an ordered list of data query index types that are
 	valid given a list of data query indexes that will be checked against the data query
 	cache
-   @arg $device_id - the id of the device which contains the data query
-   @arg $data_query_id - the id of the data query to build the type list from
-   @arg $data_query_index_array - an array containing each data query index to use when checking
+   @param $device_id - the id of the device which contains the data query
+   @param $data_query_id - the id of the data query to build the type list from
+   @param $data_query_index_array - an array containing each data query index to use when checking
 	each data query type for validity. a valid data query type will contain no empty or duplicate
 	values for each row in the cache that matches one of the $data_query_index_array
    @returns - an array of data query types either ordered or unordered depending on whether
@@ -698,8 +698,8 @@ function get_ordered_index_type_list($device_id, $data_query_id, $data_query_ind
 	combination. this works by fetching a list of valid data query index types and choosing
 	the first one in the list. the user can optionally override how the cache is updated
 	in the data query xml file
-   @arg $device_id - the id of the device which contains the data query
-   @arg $data_query_id - the id of the data query update the sort cache for */
+   @param $device_id - the id of the device which contains the data query
+   @param $data_query_id - the id of the data query update the sort cache for */
 function update_data_query_sort_cache($device_id, $data_query_id) {
 	$raw_xml = get_data_query_array($data_query_id);
 
@@ -727,7 +727,7 @@ function update_data_query_sort_cache($device_id, $data_query_id) {
 
 /* update_data_query_sort_cache_by_device - updates the sort cache for all data queries associated
 	with a particular device. see update_data_query_sort_cache() for details about updating the cache
-   @arg $device_id - the id of the device to update the cache for */
+   @param $device_id - the id of the device to update the cache for */
 function update_data_query_sort_cache_by_device($device_id) {
 	$data_queries = db_fetch_assoc("select snmp_query_id from device_snmp_query where device_id = '$device_id'");
 
@@ -740,8 +740,8 @@ function update_data_query_sort_cache_by_device($device_id) {
 
 /* get_best_data_query_index_type - returns the best available data query index type using the
 	sort cache
-   @arg $device_id - the id of the device which contains the data query
-   @arg $data_query_id - the id of the data query to fetch the best data query index type for
+   @param $device_id - the id of the device which contains the data query
+   @param $data_query_id - the id of the data query to fetch the best data query index type for
    @returns - a string containing containing best data query index type. this will be one of the
 	valid input field names as specified in the data query xml file */
 function get_best_data_query_index_type($device_id, $data_query_id) {
@@ -749,10 +749,10 @@ function get_best_data_query_index_type($device_id, $data_query_id) {
 }
 
 /* get_script_query_path - builds the complete script query executable path
-   @arg $args - the variable that contains any arguments to be appended to the argument
+   @param $args - the variable that contains any arguments to be appended to the argument
 	list (variables will be substituted in this function)
-   @arg $script_path - the path on the disk to the script file
-   @arg $device_id - the id of the device that this script query belongs to
+   @param $script_path - the path on the disk to the script file
+   @param $device_id - the id of the device that this script query belongs to
    @returns - a full path to the script query script containing all arguments */
 function get_script_query_path($args, $script_path, $device_id) {
 	global $config;
@@ -771,12 +771,12 @@ function get_script_query_path($args, $script_path, $device_id) {
 }
 
 /* data_query_rewrite_indexes - returns array of rewritten indexes
-	@arg $errmsg 			- array that will contain warnings if any
-	@arg $device_id
-	@arg $snmp_query_id
-	@arg $rewrite_index 	- value of <rewrite_index> from data query XML
-	@arg $snmp_indexes 		- array of snmp indexes as it used in query_snmp_device() or single index
-	@arg $fields_processed  - array of field names that are already processed in query_snmp_device(),
+	@param $errmsg 			- array that will contain warnings if any
+	@param $device_id
+	@param $snmp_query_id
+	@param $rewrite_index 	- value of <rewrite_index> from data query XML
+	@param $snmp_indexes 		- array of snmp indexes as it used in query_snmp_device() or single index
+	@param $fields_processed  - array of field names that are already processed in query_snmp_device(),
 							  refusing non-processed (e.g. stale) fields to be used as index rewrite source
 	@returns 				- (array) of original snmp indexes associated with rewritten ones
 */
@@ -848,9 +848,9 @@ function data_query_rewrite_indexes(&$errmsg, $device_id, $snmp_query_id, $rewri
 }
 
 /* rewrite_snmp_enum_value - returns rewritten $value based on rewrite map
-   @arg $field_name 	- name of field being rewritten, used for cache purpuses
-   @arg $value 			- value to be translated
-   @arg $map 			- translation map in serialize() form
+   @param $field_name 	- name of field being rewritten, used for cache purpuses
+   @param $value 			- value to be translated
+   @param $map 			- translation map in serialize() form
    @returns 			- rewritten value if possible, original one otherwise */
 function rewrite_snmp_enum_value($field_name, $value=NULL, $map=NULL) {
 	static $mapcache = array();

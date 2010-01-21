@@ -26,8 +26,8 @@
      or alphabetically depending on which seems best. it also trys to strip out
      extra characters before sorting to improve accuracy when sorting things like
      switch ifNames, etc
-   @arg $a - the first string to compare
-   @arg $b - the second string to compare
+   @param $a - the first string to compare
+   @param $b - the second string to compare
    @returns - '1' if $a is greater than $b, '-1' if $a is less than $b, or '0' if
      $b is equal to $b */
 function usort_data_query_index($a, $b) {
@@ -60,8 +60,8 @@ function usort_data_query_index($a, $b) {
 }
 
 /* usort_numeric - sorts two values numerically (ie. 1, 34, 36, 76)
-   @arg $a - the first string to compare
-   @arg $b - the second string to compare
+   @param $a - the first string to compare
+   @param $b - the second string to compare
    @returns - '1' if $a is greater than $b, '-1' if $a is less than $b, or '0' if
      $b is equal to $b */
 function usort_numeric($a, $b) {
@@ -75,8 +75,8 @@ function usort_numeric($a, $b) {
 }
 
 /* usort_alphabetic - sorts two values alphabetically (ie. ab, by, ef, xy)
-   @arg $a - the first string to compare
-   @arg $b - the second string to compare
+   @param $a - the first string to compare
+   @param $b - the second string to compare
    @returns - '1' if $a is greater than $b, '-1' if $a is less than $b, or '0' if
      $b is equal to $b */
 function usort_alphabetic($a, $b) {
@@ -84,8 +84,8 @@ function usort_alphabetic($a, $b) {
 }
 
 /* usort_natural - sorts two values naturaly (ie. ab1, ab2, ab7, ab10, ab20)
-   @arg $a - the first string to compare
-   @arg $b - the second string to compare
+   @param $a - the first string to compare
+   @param $b - the second string to compare
    @returns - '1' if $a is greater than $b, '-1' if $a is less than $b, or '0' if
      $b is equal to $b */
 function usort_natural($a, $b) {

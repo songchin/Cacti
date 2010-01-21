@@ -23,13 +23,13 @@
 */
 
 /* db_connect_real - makes a connection to the database server
-   @arg $device - the hostname of the database server, 'localhost' if the database server is running
+   @param $device - the hostname of the database server, 'localhost' if the database server is running
       on this machine
-   @arg $user - the username to connect to the database server as
-   @arg $pass - the password to connect to the database server with
-   @arg $db_name - the name of the database to connect to
-   @arg $db_type - the type of database server to connect to, only 'mysql' is currently supported
-   @arg $retries - the number a time the server should attempt to connect before failing
+   @param $user - the username to connect to the database server as
+   @param $pass - the password to connect to the database server with
+   @param $db_name - the name of the database to connect to
+   @param $db_type - the type of database server to connect to, only 'mysql' is currently supported
+   @param $retries - the number a time the server should attempt to connect before failing
    @returns - (bool) '1' for success, '0' for error */
 function db_connect_real($device, $user, $pass, $db_name, $db_type, $port = "3306", $retries = 20) {
 	global $cnn_id;
@@ -67,8 +67,8 @@ function db_close($db_conn = FALSE) {
 }
 
 /* db_execute - run an sql query and do not return any output
-   @arg $sql - the sql query to execute
-   @arg $log - whether to log error messages, defaults to true
+   @param $sql - the sql query to execute
+   @param $log - whether to log error messages, defaults to true
    @returns - '1' for success, '0' for error */
 function db_execute($sql, $log = TRUE, $db_conn = FALSE) {
 	global $cnn_id;
@@ -112,9 +112,9 @@ function db_execute($sql, $log = TRUE, $db_conn = FALSE) {
 
 /* db_fetch_cell - run a 'select' sql query and return the first column of the
      first row found
-   @arg $sql - the sql query to execute
-   @arg $col_name - use this column name instead of the first one
-   @arg $log - whether to log error messages, defaults to true
+   @param $sql - the sql query to execute
+   @param $col_name - use this column name instead of the first one
+   @param $log - whether to log error messages, defaults to true
    @returns - (bool) the output of the sql query as a single variable */
 function db_fetch_cell($sql, $col_name = '', $log = TRUE, $db_conn = FALSE) {
 	global $cnn_id;
@@ -159,8 +159,8 @@ function db_fetch_cell($sql, $col_name = '', $log = TRUE, $db_conn = FALSE) {
 }
 
 /* db_fetch_row - run a 'select' sql query and return the first row found
-   @arg $sql - the sql query to execute
-   @arg $log - whether to log error messages, defaults to true
+   @param $sql - the sql query to execute
+   @param $log - whether to log error messages, defaults to true
    @returns - the first row of the result as a hash */
 function db_fetch_row($sql, $log = TRUE, $db_conn = FALSE) {
 	global $cnn_id;
@@ -196,8 +196,8 @@ function db_fetch_row($sql, $log = TRUE, $db_conn = FALSE) {
 }
 
 /* db_fetch_assoc - run a 'select' sql query and return all rows found
-   @arg $sql - the sql query to execute
-   @arg $log - whether to log error messages, defaults to true
+   @param $sql - the sql query to execute
+   @param $log - whether to log error messages, defaults to true
    @returns - the entire result set as a multi-dimensional hash */
 function db_fetch_assoc($sql, $log = TRUE, $db_conn = FALSE) {
 	global $cnn_id;
@@ -251,8 +251,8 @@ function db_fetch_insert_id($db_conn = FALSE) {
      item to a string that can be used in the OR portion of an sql query in the
      following form:
         column=item1 OR column=item2 OR column=item2 ...
-   @arg $array - the array to convert
-   @arg $sql_column - the column to set each item in the array equal to
+   @param $array - the array to convert
+   @param $sql_column - the column to set each item in the array equal to
    @returns - a string that can be placed in a SQL OR statement */
 function array_to_sql_or($array, $sql_column) {
 	/* if the last item is null; pop it off */
@@ -278,10 +278,10 @@ function array_to_sql_or($array, $sql_column) {
 }
 
 /* db_replace - replaces the data contained in a particular row
-   @arg $table_name - the name of the table to make the replacement in
-   @arg $array_items - an array containing each column -> value mapping in the row
-   @arg $keyCols - the name of the column containing the primary key
-   @arg $autoQuote - whether to use intelligent quoting or not
+   @param $table_name - the name of the table to make the replacement in
+   @param $array_items - an array containing each column -> value mapping in the row
+   @param $keyCols - the name of the column containing the primary key
+   @param $autoQuote - whether to use intelligent quoting or not
    @returns - the auto incriment id column (if applicable) */
 function db_replace($table_name, $array_items, $keyCols, $db_conn = FALSE) {
 	global $cnn_id;
@@ -301,9 +301,9 @@ function db_replace($table_name, $array_items, $keyCols, $db_conn = FALSE) {
 }
 
 /* sql_save - saves data to an sql table
-   @arg $array_items - an array containing each column -> value mapping in the row
-   @arg $table_name - the name of the table to make the replacement in
-   @arg $key_cols - the primary key(s)
+   @param $array_items - an array containing each column -> value mapping in the row
+   @param $table_name - the name of the table to make the replacement in
+   @param $key_cols - the primary key(s)
    @returns - the auto incriment id column (if applicable) */
 function sql_save($array_items, $table_name, $key_cols = "id", $autoinc = TRUE, $db_conn = FALSE) {
 	global $cnn_id;
@@ -344,7 +344,7 @@ function sql_save($array_items, $table_name, $key_cols = "id", $autoinc = TRUE, 
 }
 
 /* sql_sanitize - removes and quotes unwanted chars in values passed for use in SQL statements
-   @arg $value - value to sanitize
+   @param $value - value to sanitize
    @return - fixed value */
 function sql_sanitize($value) {
 	//$value = str_replace("'", "''", $value);
@@ -354,8 +354,8 @@ function sql_sanitize($value) {
 }
 
 /* sql_column_exists - checks if a named column exists in the table specified
-   @arg $table_name - table to check
-   @arg $column_name - column name
+   @param $table_name - table to check
+   @param $column_name - column name
    @return true or false; */
 function sql_column_exists($table_name, $column_name, $db_conn = "") {
 	global $cnn_id;

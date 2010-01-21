@@ -232,7 +232,7 @@ if ($action == 'login') {
 
 /* auth_display_custom_error_message - displays a custom error message to the browser that looks like
      the pre-defined error messages
-   @arg $message - the actual text of the error message to display */
+   @param $message - the actual text of the error message to display */
 function auth_display_custom_error_message($message) {
 	global $config;
 	/* kill the session */

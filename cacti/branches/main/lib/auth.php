@@ -24,11 +24,11 @@
 
 
 /* user_copy - copies user account
-   @arg $template_user - username of the user account that should be used as the template
-   @arg $new_user - new username of the account to be created/overwritten
-   @arg $new_realm - new realm of the account to be created, overwrite not affected, but is used for lookup
-   @arg $overwrite - Allow overwrite of existing user, preserves username, fullname, password and realm
-   @arg $data_override - Array of user_auth field and values to override on the new user
+   @param $template_user - username of the user account that should be used as the template
+   @param $new_user - new username of the account to be created/overwritten
+   @param $new_realm - new realm of the account to be created, overwrite not affected, but is used for lookup
+   @param $overwrite - Allow overwrite of existing user, preserves username, fullname, password and realm
+   @param $data_override - Array of user_auth field and values to override on the new user
    @return - True on copy, False on no copy */
 function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 0, $overwrite = false, $data_override = array()) {
 
@@ -128,7 +128,7 @@ function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 
 
 
 /* user_remove - remove a user account
-   @arg $user_id - Id os the user account to remove */
+   @param $user_id - Id os the user account to remove */
 function user_remove($user_id) {
 	/* ================= input validation ================= */
 	input_validate_input_number($user_id);
@@ -158,7 +158,7 @@ function user_remove($user_id) {
 
 
 /* user_disable - disable a user account
-   @arg $user_id - Id of the user account to disable */
+   @param $user_id - Id of the user account to disable */
 function user_disable($user_id) {
 	/* ================= input validation ================= */
 	input_validate_input_number($user_id);
@@ -170,7 +170,7 @@ function user_disable($user_id) {
 
 
 /* user_enable - enable a user account
-   @arg $user_id - Id of the user account to enable */
+   @param $user_id - Id of the user account to enable */
 function user_enable($user_id) {
 	/* ================= input validation ================= */
 	input_validate_input_number($user_id);
@@ -182,8 +182,8 @@ function user_enable($user_id) {
 
 
 /* user_authorized - validate if a user has access to a realm
-   @arg int $realm - the realm to check
-   @arg int $user_id - the id of the user
+   @param int $realm - the realm to check
+   @param int $user_id - the id of the user
    @returns boolean true or false */
 function user_authorized($realm_id, $user_id = 0) {
 	/* ================= input validation ================= */
@@ -207,9 +207,9 @@ function user_authorized($realm_id, $user_id = 0) {
 
 /* get_graph_permissions_sql - creates SQL that reprents the current graph, device and graph
      template policies
-   @arg $policy_graphs - (int) the current graph policy
-   @arg $policy_devices - (int) the current device policy
-   @arg $policy_graph_templates - (int) the current graph template policy
+   @param $policy_graphs - (int) the current graph policy
+   @param $policy_devices - (int) the current device policy
+   @param $policy_graph_templates - (int) the current graph template policy
    @returns - an SQL "where" statement */
 function get_graph_permissions_sql($policy_graphs, $policy_devices, $policy_graph_templates) {
 	$sql = "";
@@ -263,7 +263,7 @@ function get_graph_permissions_sql($policy_graphs, $policy_devices, $policy_grap
 }
 
 /* is_graph_allowed - determines whether the current user is allowed to view a certain graph
-   @arg $local_graph_id - (int) the ID of the graph to check permissions for
+   @param $local_graph_id - (int) the ID of the graph to check permissions for
    @returns - (bool) whether the current user is allowed the view the specified graph or not */
 function is_graph_allowed($local_graph_id) {
 	$current_user = db_fetch_row("select policy_graphs,policy_devices,policy_graph_templates from user_auth where id=" . $_SESSION["sess_user_id"]);
@@ -290,7 +290,7 @@ function is_graph_allowed($local_graph_id) {
 }
 
 /* is_tree_allowed - determines whether the current user is allowed to view a certain graph tree
-   @arg $tree_id - (int) the ID of the graph tree to check permissions for
+   @param $tree_id - (int) the ID of the graph tree to check permissions for
    @returns - (bool) whether the current user is allowed the view the specified graph tree or not */
 function is_tree_allowed($tree_id) {
 	$current_user = db_fetch_row("select policy_trees from user_auth where id=" . $_SESSION["sess_user_id"]);

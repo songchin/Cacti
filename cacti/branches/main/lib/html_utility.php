@@ -24,16 +24,16 @@
 
 /* inject_form_variables - replaces all variables contained in $form_array with
      their actual values
-   @arg $form_array - an array that contains all of the information needed to draw
+   @param $form_array - an array that contains all of the information needed to draw
      the html form. see the arrays contained in include/global_settings.php
      for the extact syntax of this array
-   @arg $arg1 - an array that represents the |arg1:| variable (see
+   @param $arg1 - an array that represents the |arg1:| variable (see
      include/global_form.php for more details)
-   @arg $arg2 - an array that represents the |arg2:| variable (see
+   @param $arg2 - an array that represents the |arg2:| variable (see
      include/global_form.php for more details)
-   @arg $arg3 - an array that represents the |arg3:| variable (see
+   @param $arg3 - an array that represents the |arg3:| variable (see
      include/global_form.php for more details)
-   @arg $arg4 - an array that represents the |arg4:| variable (see
+   @param $arg4 - an array that represents the |arg4:| variable (see
      include/global_form.php for more details)
    @returns - $form_array with all available variables substituted with their
      proper values */
@@ -69,9 +69,9 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
 }
 
 /* form_alternate_row_color - starts an HTML row with an alternating color scheme
-   @arg $row_id 	- used to allow js and ajax actions on this object
-   @arg $hover		- use onMouse events
-   @arg $row_class 	- additional class attributes, e.g. "nodrag nodrop"
+   @param $row_id 	- used to allow js and ajax actions on this object
+   @param $hover		- use onMouse events
+   @param $row_class 	- additional class attributes, e.g. "nodrag nodrop"
    @returns 		- the background color used for this particular row */
 function form_alternate_row_color($row_id = "", $hover = false, $row_class = "") {
 	static $class_int  = 1;
@@ -115,16 +115,16 @@ function form_alternate_row_color($row_id = "", $hover = false, $row_class = "")
 }
 
 /* form_selectable_cell - format's a table row such that it can be highlighted using cacti's js actions
-   @arg $contents - the readable portion of the
-   @arg $id - the id of the object that will be highlighted
-   @arg $width - the width of the table element
-   @arg $class - the class to apply to the table element */
+   @param $contents - the readable portion of the
+   @param $id - the id of the object that will be highlighted
+   @param $width - the width of the table element
+   @param $class - the class to apply to the table element */
 function form_selectable_cell($contents, $id, $width="", $class="") {
 	print "\t<td onClick='select_line(\"$id\")'" . (strlen($width) ? " width='$width'" : "") . (strlen($class) ? " class='$class'" : "") . ">" . $contents . "</td>\n";
 }
 
 /* form_checkbox_cell - format's a tables checkbox form element so that the cacti js actions work on it
-   @arg $title - the text that will be displayed if your hover over the checkbox */
+   @param $title - the text that will be displayed if your hover over the checkbox */
 function form_checkbox_cell($title, $id, $checked = false) {
 	print "\t<td onClick='select_line(\"$id\",true)' style='" . get_checkbox_style() . "' width='1%' align='center'>\n";
 	print "\t\t<input type='checkbox' title='$title' style='margin: 0px;' id='chk_" . $id . "' name='chk_" . $id . "'" . ($checked ? " checked" : "") . ">\n";
@@ -143,7 +143,7 @@ function form_end_table() {
 }
 
 /* html_boolean - returns the boolean equivalent of an HTML checkbox value
-   @arg $html_boolean - the value of the HTML checkbox
+   @param $html_boolean - the value of the HTML checkbox
    @returns - true or false based on the value of the HTML checkbox */
 function html_boolean($html_boolean) {
 	if ($html_boolean == CHECKED) {
@@ -155,7 +155,7 @@ function html_boolean($html_boolean) {
 
 /* html_boolean_friendly - returns the natural language equivalent of an HTML
      checkbox value
-   @arg $html_boolean - the value of the HTML checkbox
+   @param $html_boolean - the value of the HTML checkbox
    @returns - 'Selected' or 'Not Selected' based on the value of the HTML
      checkbox */
 function html_boolean_friendly($html_boolean) {
@@ -182,9 +182,9 @@ function get_checkbox_style() {
 
 /* get_request_var - returns the current value of a PHP $_GET variable, optionally
      returning a default value if the request variable does not exist
-   @arg $name - the name of the request variable. this should be a valid key in the
+   @param $name - the name of the request variable. this should be a valid key in the
      $_GET array
-   @arg $default - the value to return if the specified name does not exist in the
+   @param $default - the value to return if the specified name does not exist in the
      $_GET array
    @returns - the value of the request variable */
 function get_request_var($name, $default = "") {
@@ -202,9 +202,9 @@ function get_request_var($name, $default = "") {
 
 /* get_request_var_post - returns the current value of a PHP $_POST variable, optionally
      returning a default value if the request variable does not exist
-   @arg $name - the name of the request variable. this should be a valid key in the
+   @param $name - the name of the request variable. this should be a valid key in the
      $_POST array
-   @arg $default - the value to return if the specified name does not exist in the
+   @param $default - the value to return if the specified name does not exist in the
      $_POST array
    @returns - the value of the request variable */
 function get_request_var_post($name, $default = "") {
@@ -222,9 +222,9 @@ function get_request_var_post($name, $default = "") {
 
 /* get_request_var_request - returns the current value of a PHP $_REQUEST variable, optionally
      returning a default value if the request variable does not exist
-   @arg $name - the name of the request variable. this should be a valid key in the
+   @param $name - the name of the request variable. this should be a valid key in the
      $_REQUEST array
-   @arg $default - the value to return if the specified name does not exist in the
+   @param $default - the value to return if the specified name does not exist in the
      $_REQUEST array
    @returns - the value of the request variable */
 function get_request_var_request($name, $default = "") {
@@ -238,9 +238,9 @@ function get_request_var_request($name, $default = "") {
 
 /* load_current_session_value - finds the correct value of a variable that is being
      cached as a session variable on an HTML form
-   @arg $request_var_name - the array index name for the request variable
-   @arg $session_var_name - the array index name for the session variable
-   @arg $default_value - the default value to use if values cannot be obtained using
+   @param $request_var_name - the array index name for the request variable
+   @param $session_var_name - the array index name for the session variable
+   @param $default_value - the default value to use if values cannot be obtained using
      the session or request array */
 function load_current_session_value($request_var_name, $session_var_name, $default_value) {
 	if (isset($_REQUEST[$request_var_name])) {
@@ -255,8 +255,8 @@ function load_current_session_value($request_var_name, $session_var_name, $defau
 
 /* get_colored_device_status - given a device's status, return the colored text in HTML
      format suitable for display
-   @arg $disabled (bool) - true if the device is disabled, false is it is not
-   @arg $status - the status type of the device as defined in global_constants.php
+   @param $disabled (bool) - true if the device is disabled, false is it is not
+   @param $status - the status type of the device as defined in global_constants.php
    @returns - a string containing html that represents the device's current status */
 function get_colored_device_status($disabled, $status) {
 	if ($disabled) {
@@ -279,8 +279,8 @@ function get_colored_device_status($disabled, $status) {
 
 /* get_colored_poller_status - given a poller's status, return the colored text in HTML
      format suitable for display
-   @arg $disabled (bool) - true if the device is disabled, false is it is not
-   @arg $last_update - the time which this poller was last updated in timestamp format
+   @param $disabled (bool) - true if the device is disabled, false is it is not
+   @param $last_update - the time which this poller was last updated in timestamp format
    @returns - a string containing html that represents the device's current status */
 function get_colored_poller_status($disabled, $last_update) {
 	if ($disabled) {
@@ -318,12 +318,12 @@ function get_current_graph_end() {
 
 /* get_page_list - generates the html necessary to present the user with a list of pages limited
      in length and number of rows per page
-   @arg $current_page - the current page number
-   @arg $pages_per_screen - the maximum number of pages allowed on a single screen. odd numbered
+   @param $current_page - the current page number
+   @param $pages_per_screen - the maximum number of pages allowed on a single screen. odd numbered
      values for this argument are prefered for equality reasons
-   @arg $current_page - the current page number
-   @arg $total_rows - the total number of available rows
-   @arg $url - the url string to prepend to each page click
+   @param $current_page - the current page number
+   @param $total_rows - the total number of available rows
+   @param $url - the url string to prepend to each page click
    @returns - a string containing html that represents the a page list */
 function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_rows, $url, $page_var = "page") {
 	$url_page_select = "";
@@ -384,7 +384,7 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 
 
 /* clean_html_output - Remove all known cross site script (xss) attack vectors from user input
-   @arg $data - User input to process
+   @param $data - User input to process
    @returns - Cleaned user input
 */
 function clean_html_output($data) {

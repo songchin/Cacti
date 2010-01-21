@@ -23,7 +23,7 @@
 */
 
 /* exec_poll - executes a command and returns its output
-   @arg $command - the command to execute
+   @param $command - the command to execute
    @returns - the output of $command after execution */
 function exec_poll($command) {
 	global $config;
@@ -53,11 +53,11 @@ function exec_poll($command) {
 
 /* exec_poll_php - sends a command to the php script server and returns the
      output
-   @arg $command - the command to send to the php script server
-   @arg $using_proc_function - whether or not this version of php is making use
+   @param $command - the command to send to the php script server
+   @param $using_proc_function - whether or not this version of php is making use
      of the proc_open() and proc_close() functions (php 4.3+)
-   @arg $pipes - the array of r/w pipes returned from proc_open()
-   @arg $proc_fd - the file descriptor returned from proc_open()
+   @param $pipes - the array of r/w pipes returned from proc_open()
+   @param $proc_fd - the file descriptor returned from proc_open()
    @returns - the output of $command after execution against the php script
      server */
 function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
@@ -110,8 +110,8 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
 
 /* exec_background - executes a program in the background so that php can continue
      to execute code in the foreground
-   @arg $filename - the full pathname to the script to execute
-   @arg $args - any additional arguments that must be passed onto the executable */
+   @param $filename - the full pathname to the script to execute
+   @param $args - any additional arguments that must be passed onto the executable */
 function exec_background($filename, $args = "") {
 	global $config;
 
@@ -132,7 +132,7 @@ function exec_background($filename, $args = "") {
 
 /* file_exists_2gb - fail safe version of the file exists function to correct
      for errors in certain versions of php.
-   @arg $filename - the name of the file to be tested. */
+   @param $filename - the name of the file to be tested. */
 function file_exists_2gb($filename) {
 	global $config;
 
@@ -146,8 +146,8 @@ function file_exists_2gb($filename) {
 
 /* update_reindex_cache - builds a cache that is used by the poller to determine if the
      indexes for a particular data query/device have changed
-   @arg $device_id - the id of the device to which the data query belongs
-   @arg $data_query_id - the id of the data query to rebuild the reindex cache for */
+   @param $device_id - the id of the device to which the data query belongs
+   @param $data_query_id - the id of the data query to rebuild the reindex cache for */
 function update_reindex_cache($device_id, $data_query_id) {
 	global $config;
 
@@ -298,8 +298,8 @@ function poller_update_poller_reindex_from_buffer($device_id, $data_query_id, &$
 
 /* process_poller_output - grabs data from the 'poller_output' table and feeds the *completed*
      results to RRDTool for processing
-  @arg $rrdtool_pipe - the array of pipes containing the file descriptor for rrdtool
-  @arg $remainder - don't use LIMIT if TRUE */
+  @param $rrdtool_pipe - the array of pipes containing the file descriptor for rrdtool
+  @param $remainder - don't use LIMIT if TRUE */
 function process_poller_output($rrdtool_pipe, $remainder = FALSE) {
 	global $config;
 

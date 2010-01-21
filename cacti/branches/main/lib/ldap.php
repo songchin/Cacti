@@ -27,19 +27,19 @@ LDAP functions
 */
 
 /* cacti_ldap_auth
-  @arg $username - username of the user
-  @arg $password - password of the user
-  @arg $ldap_dn - LDAP DN for binding
-  @arg $ldap_device - Hostname or IP of LDAP server, Default = Configured settings value
-  @arg $ldap_port - Port of the LDAP server uses, Default = Configured settings value
-  @arg $ldap_port_ssl - Port of the LDAP server uses for SSL, Default = Configured settings value
-  @arg $ldap_version - '2' or '3', LDAP protocol version, Default = Configured settings value
-  @arg $ldap_encryption - '0' None, '1' SSL, '2' TLS, Default = Configured settings value
-  @arg $ldap_referrals - '0' Referrals from server are ignored, '1' Referrals from server are processed, Default = Configured setting value
-  @arg $ldap_group_require - '0' Group membership is not required, '1' Group membership is required
-  @arg $ldap_group_dn - LDAP Group DN
-  @arg $ldap_group_attrib - Name of the LDAP Attrib that contains members
-  @arg $ldap_group_require - '1' DN or '2' Username, user group member ship type
+  @param $username - username of the user
+  @param $password - password of the user
+  @param $ldap_dn - LDAP DN for binding
+  @param $ldap_device - Hostname or IP of LDAP server, Default = Configured settings value
+  @param $ldap_port - Port of the LDAP server uses, Default = Configured settings value
+  @param $ldap_port_ssl - Port of the LDAP server uses for SSL, Default = Configured settings value
+  @param $ldap_version - '2' or '3', LDAP protocol version, Default = Configured settings value
+  @param $ldap_encryption - '0' None, '1' SSL, '2' TLS, Default = Configured settings value
+  @param $ldap_referrals - '0' Referrals from server are ignored, '1' Referrals from server are processed, Default = Configured setting value
+  @param $ldap_group_require - '0' Group membership is not required, '1' Group membership is required
+  @param $ldap_group_dn - LDAP Group DN
+  @param $ldap_group_attrib - Name of the LDAP Attrib that contains members
+  @param $ldap_group_require - '1' DN or '2' Username, user group member ship type
 
   @return - array of values
     "error_num" = error number returned
@@ -245,19 +245,19 @@ function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_device = "
 }
 
 /* cacti_ldap_search_dn
-  @arg $username - username to search for in the LDAP directory
-  @arg $ldap_dn - configured LDAP DN for binding, "<username>" will be replaced with $username
-  @arg $ldap_device - Hostname or IP of LDAP server, Default = Configured settings value
-  @arg $ldap_port - Port of the LDAP server uses, Default = Configured settings value
-  @arg $ldap_port_ssl - Port of the LDAP server uses for SSL, Default = Configured settings value
-  @arg $ldap_version - '2' or '3', LDAP protocol version, Default = Configured settings value
-  @arg $ldap_encryption - '0' None, '1' SSL, '2' TLS, Default = Configured settings value
-  @arg $ldap_referrals - '0' Referrals from server are ignored, '1' Referrals from server are processed, Default = Configured setting value
-  @arg $ldap_mode - '0' No Searching, '1' Anonymous Searching, '2' Specfic Searching, Default = Configured settings value
-  @arg $ldap_search_base - Search base DN, Default = Configured settings value
-  @arg $ldap_search_filter - Filter to find the user, Default = Configured settings value
-  @arg $ldap_specific_dn - DN for binding to perform user search, Default = Configured settings value
-  @arg $ldap_specific_password - Password for binding to perform user search, Default - Configured settings value
+  @param $username - username to search for in the LDAP directory
+  @param $ldap_dn - configured LDAP DN for binding, "<username>" will be replaced with $username
+  @param $ldap_device - Hostname or IP of LDAP server, Default = Configured settings value
+  @param $ldap_port - Port of the LDAP server uses, Default = Configured settings value
+  @param $ldap_port_ssl - Port of the LDAP server uses for SSL, Default = Configured settings value
+  @param $ldap_version - '2' or '3', LDAP protocol version, Default = Configured settings value
+  @param $ldap_encryption - '0' None, '1' SSL, '2' TLS, Default = Configured settings value
+  @param $ldap_referrals - '0' Referrals from server are ignored, '1' Referrals from server are processed, Default = Configured setting value
+  @param $ldap_mode - '0' No Searching, '1' Anonymous Searching, '2' Specfic Searching, Default = Configured settings value
+  @param $ldap_search_base - Search base DN, Default = Configured settings value
+  @param $ldap_search_filter - Filter to find the user, Default = Configured settings value
+  @param $ldap_specific_dn - DN for binding to perform user search, Default = Configured settings value
+  @param $ldap_specific_password - Password for binding to perform user search, Default - Configured settings value
 
   @return - array of values
     "error_num" = error number returned

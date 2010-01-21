@@ -24,11 +24,11 @@
 
 /* nth_percentile - given a data source, calculate the Nth percentile for a given
      time period
-   @arg $local_data_id - the data source to perform the Nth percentile calculation
-   @arg $start_seconds - start seconds of time range
-   @arg $stop_seconds - stop seconds of time range
-   @arg $percentile - Nth Percentile to calculate, integer between 1 and 99
-   @arg $resolution - the accuracy of the data measured in seconds
+   @param $local_data_id - the data source to perform the Nth percentile calculation
+   @param $start_seconds - start seconds of time range
+   @param $stop_seconds - stop seconds of time range
+   @param $percentile - Nth Percentile to calculate, integer between 1 and 99
+   @param $resolution - the accuracy of the data measured in seconds
    @returns - (array) an array containing each data source item, and its 95th percentile */
 function nth_percentile($local_data_id, $start_seconds, $end_seconds, $percentile = 95, $resolution = 0) {
 	global $config;
@@ -203,15 +203,15 @@ function nth_percentile($local_data_id, $start_seconds, $end_seconds, $percentil
 
 /* bandwidth_summation - given a data source, sums all data in the rrd for a given
      time period
-   @arg $local_data_id - the data source to perform the summation for
-   @arg $start_time - the start time to use for the data calculation. this value can
+   @param $local_data_id - the data source to perform the summation for
+   @param $start_time - the start time to use for the data calculation. this value can
      either be absolute (unix timestamp) or relative (to now)
-   @arg $end_time - the end time to use for the data calculation. this value can
+   @param $end_time - the end time to use for the data calculation. this value can
      either be absolute (unix timestamp) or relative (to now)
-   @arg $resolution - the accuracy of the data measured in seconds
-   @arg $rra_steps - how many periods each sample in the RRA counts for, values above '1'
+   @param $resolution - the accuracy of the data measured in seconds
+   @param $rra_steps - how many periods each sample in the RRA counts for, values above '1'
      result in an averaged summation
-   @arg $ds_steps - how many seconds each period represents
+   @param $ds_steps - how many seconds each period represents
    @returns - (array) an array containing each data source item, and its sum */
 function bandwidth_summation($local_data_id, $start_time, $end_time, $rra_steps, $ds_steps) {
 	$fetch_array = rrdtool_function_fetch($local_data_id, $start_time, $end_time, $rra_steps * $ds_steps);
@@ -249,7 +249,7 @@ function bandwidth_summation($local_data_id, $start_time, $end_time, $rra_steps,
 
 /* variable_nth_percentile - given a Nth percentile variable, calculate the Nth percentile
      and format it for display on the graph
-   @arg $regexp_match_array - the array that contains each argument in the Nth percentile variable. it
+   @param $regexp_match_array - the array that contains each argument in the Nth percentile variable. it
      should be formatted like so:
        $arr[0] // full variable string
        $arr[1] // Nth percentile
@@ -257,13 +257,13 @@ function bandwidth_summation($local_data_id, $start_time, $end_time, $rra_steps,
        $arr[3] // power of 10 divisor
        $arr[4] // current, total, max, total_peak, all_max_current, all_max_peak
        $arr[5] // digits of floating point precision
-   @arg $graph_item - an array that contains the current graph item
-   @arg $graph_items - an array that contains all graph items
-   @arg $graph_start - the start time to use for the data calculation. this value can
+   @param $graph_item - an array that contains the current graph item
+   @param $graph_items - an array that contains all graph items
+   @param $graph_start - the start time to use for the data calculation. this value can
      either be absolute (unix timestamp) or relative (to now)
-   @arg $graph_end - the end time to use for the data calculation. this value can
+   @param $graph_end - the end time to use for the data calculation. this value can
      either be absolute (unix timestamp) or relative (to now)
-   @arg $seconds_between_graph_updates - the number of seconds between each update on the graph which
+   @param $seconds_between_graph_updates - the number of seconds between each update on the graph which
      varies depending on the RRA in use
    @returns - a string containg the Nth percentile suitable for placing on the graph */
 function variable_nth_percentile(&$regexp_match_array, &$graph_item, &$graph_items, $graph_start, $graph_end) {
@@ -448,24 +448,24 @@ function variable_nth_percentile(&$regexp_match_array, &$graph_item, &$graph_ite
 
 /* variable_bandwidth_summation - given a bandwidth summation variable, calculate the summation
      and format it for display on the graph
-   @arg $regexp_match_array - the array that contains each argument in the bandwidth summation variable. it
+   @param $regexp_match_array - the array that contains each argument in the bandwidth summation variable. it
      should be formatted like so:
        $arr[0] // full variable string
        $arr[1] // power of 10 divisor or 'auto'
        $arr[2] // current, total
        $arr[3] // digits of floating point precision
        $arr[4] // seconds to perform the calculation for or 'auto'
-   @arg $graph_item - an array that contains the current graph item
-   @arg $graph_items - an array that contains all graph items
-   @arg $graph_start - the start time to use for the data calculation. this value can
+   @param $graph_item - an array that contains the current graph item
+   @param $graph_items - an array that contains all graph items
+   @param $graph_start - the start time to use for the data calculation. this value can
      either be absolute (unix timestamp) or relative (to now)
-   @arg $graph_end - the end time to use for the data calculation. this value can
+   @param $graph_end - the end time to use for the data calculation. this value can
      either be absolute (unix timestamp) or relative (to now)
-   @arg $seconds_between_graph_updates - the number of seconds between each update on the graph which
+   @param $seconds_between_graph_updates - the number of seconds between each update on the graph which
      varies depending on the RRA in use
-   @arg $rra_step - how many periods each sample in the RRA counts for, values above '1' result in an
+   @param $rra_step - how many periods each sample in the RRA counts for, values above '1' result in an
      averaged summation
-   @arg $ds_step - how many seconds each period represents
+   @param $ds_step - how many seconds each period represents
    @returns - a string containg the bandwidth summation suitable for placing on the graph */
 function variable_bandwidth_summation(&$regexp_match_array, &$graph_item, &$graph_items, $graph_start, $graph_end, $rra_step, $ds_step) {
 	global $graph_item_types;

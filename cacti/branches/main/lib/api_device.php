@@ -23,7 +23,7 @@
 */
 
 /* api_device_remove - removes a device
-   @arg $device_id - the id of the device to remove */
+   @param $device_id - the id of the device to remove */
 function api_device_remove($device_id) {
 	db_execute("delete from device             where id=$device_id");
 	db_execute("delete from device_graph       where device_id=$device_id");
@@ -40,7 +40,7 @@ function api_device_remove($device_id) {
 }
 
 /* api_device_remove_multi - removes multiple devices in one call
-   @arg $device_ids - an array of device id's to remove */
+   @param $device_ids - an array of device id's to remove */
 function api_device_remove_multi($device_ids) {
 	$devices_to_delete = "";
 	$i = 0;
@@ -78,8 +78,8 @@ function api_device_remove_multi($device_ids) {
 }
 
 /* api_device_dq_remove - removes a device->data query mapping
-   @arg $device_id - the id of the device which contains the mapping
-   @arg $data_query_id - the id of the data query to remove the mapping for */
+   @param $device_id - the id of the device which contains the mapping
+   @param $data_query_id - the id of the data query to remove the mapping for */
 function api_device_dq_remove($device_id, $data_query_id) {
 	db_execute("delete from device_snmp_cache where snmp_query_id=$data_query_id and device_id=$device_id");
 	db_execute("delete from device_snmp_query where snmp_query_id=$data_query_id and device_id=$device_id");
@@ -87,8 +87,8 @@ function api_device_dq_remove($device_id, $data_query_id) {
 }
 
 /* api_device_gt_remove - removes a device->graph template mapping
-   @arg $device_id - the id of the device which contains the mapping
-   @arg $graph_template_id - the id of the graph template to remove the mapping for */
+   @param $device_id - the id of the device which contains the mapping
+   @param $graph_template_id - the id of the graph template to remove the mapping for */
 function api_device_gt_remove($device_id, $graph_template_id) {
 	db_execute("delete from device_graph where graph_template_id=$graph_template_id and device_id=$device_id");
 }
