@@ -43,11 +43,11 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch (get_request_var_request("action")) {
 	case 'save':
-		form_save();
+		graph_form_save();
 
 		break;
 	case 'actions':
-		form_actions();
+		graph_form_actions();
 
 		break;
 	case 'graph_diff':
@@ -60,7 +60,7 @@ switch (get_request_var_request("action")) {
 	case 'item':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		item();
+		graph_item();
 
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;

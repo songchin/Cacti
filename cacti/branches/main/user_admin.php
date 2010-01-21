@@ -27,11 +27,11 @@ include("./include/auth.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $user_actions = array(
-	1 => __("Delete"),
-	2 => __("Copy"),
-	3 => __("Enable"),
-	4 => __("Disable"),
-	5 => __("Batch Copy")
+	"1" => __("Delete"),
+	"2" => __("Copy"),
+	"3" => __("Enable"),
+	"4" => __("Disable"),
+	"5" => __("Batch Copy")
 	);
 
 switch (get_request_var_request("action")) {
@@ -78,7 +78,7 @@ function form_actions() {
 			$selected_items = unserialize(stripslashes(get_request_var_post("selected_items")));
 		}
 
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") === "1") { /* delete */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -88,7 +88,7 @@ function form_actions() {
 			}
 		}
 
-		if (get_request_var_post("drp_action") == "2") { /* copy */
+		if (get_request_var_post("drp_action") === "2") { /* copy */
 			/* ================= input validation ================= */
 			input_validate_input_number(get_request_var_post("selected_items"));
 			input_validate_input_number(get_request_var_post("new_realm"));
@@ -112,7 +112,7 @@ function form_actions() {
 			}
 		}
 
-		if (get_request_var_post("drp_action") == "3") { /* enable */
+		if (get_request_var_post("drp_action") === "3") { /* enable */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -122,7 +122,7 @@ function form_actions() {
 			}
 		}
 
-		if (get_request_var_post("drp_action") == "4") { /* disable */
+		if (get_request_var_post("drp_action") === "4") { /* disable */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -132,7 +132,7 @@ function form_actions() {
 			}
 		}
 
-		if (get_request_var_post("drp_action") == "5") { /* batch copy */
+		if (get_request_var_post("drp_action") === "5") { /* batch copy */
 			/* ================= input validation ================= */
 			input_validate_input_number(get_request_var_post("template_user"));
 			/* ==================================================== */
@@ -182,7 +182,7 @@ function form_actions() {
 	}
 
 	/* Check for deleting of Graph Export User */
-	if ((get_request_var_post("drp_action") == "1") && (sizeof($user_array))) { /* delete */
+	if ((get_request_var_post("drp_action") === "1") && (sizeof($user_array))) { /* delete */
 		$exportuser = read_config_option('export_user_id');
 		if (in_array($exportuser, $user_array)) {
 			raise_message(22);
@@ -198,7 +198,7 @@ function form_actions() {
 
 	print "<form action='user_admin.php' method='post'>\n";
 
-	if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+	if (get_request_var_post("drp_action") === ACTION_NONE) { /* NONE */
 		print "	<tr>
 					<td class='textArea'>
 						<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
@@ -206,7 +206,7 @@ function form_actions() {
 				</tr>\n";
 	}
 
-	if ((get_request_var_post("drp_action") == "1") && (sizeof($user_array))) { /* delete */
+	if ((get_request_var_post("drp_action") === "1") && (sizeof($user_array))) { /* delete */
 		print "
 			<tr>
 				<td class='textArea'>
@@ -216,7 +216,7 @@ function form_actions() {
 			</tr>\n";
 	}
 	$user_id = "";
-	if ((get_request_var_post("drp_action") == "2") && (sizeof($user_array))) { /* copy */
+	if ((get_request_var_post("drp_action") === "2") && (sizeof($user_array))) { /* copy */
 		$user_id = $user_array[0];
 		$user_realm = db_fetch_cell("SELECT realm FROM user_auth WHERE id = " . $user_id);
 
@@ -248,7 +248,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if ((get_request_var_post("drp_action") == "3") && (sizeof($user_array))) { /* enable */
+	if ((get_request_var_post("drp_action") === "3") && (sizeof($user_array))) { /* enable */
 		print "
 			<tr>
 				<td class='textArea'>
@@ -258,7 +258,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if ((get_request_var_post("drp_action") == "4") && (sizeof($user_array))) { /* disable */
+	if ((get_request_var_post("drp_action") === "4") && (sizeof($user_array))) { /* disable */
 		print "
 			<tr>
 				<td class='textArea'>
@@ -268,7 +268,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if ((get_request_var_post("drp_action") == "5") && (sizeof($user_array))) { /* batch copy */
+	if ((get_request_var_post("drp_action") === "5") && (sizeof($user_array))) { /* batch copy */
 		$usernames = db_fetch_assoc("SELECT id,username FROM user_auth WHERE realm = 0 ORDER BY username");
 		print "
 			<tr>
@@ -290,7 +290,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($user_array) || get_request_var_post("drp_action") == ACTION_NONE) {
+	if (!sizeof($user_array) || get_request_var_post("drp_action") === ACTION_NONE) {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one user.</span></td></tr>\n";
 		$save_html = "<a href='user_admin.php'><img src='images/button_cancel.gif' alt='Cancel' align='middle' border='0'></a>";
 
@@ -301,7 +301,7 @@ function form_actions() {
 	print " <tr>
 			<td align='right' bgcolor='#eaeaea'>
 				<input type='hidden' name='action' value='actions'>";
-	if (get_request_var_post("drp_action") == "2") { /* copy */
+	if (get_request_var_post("drp_action") === "2") { /* copy */
 		print "				<input type='hidden' name='selected_items' value='" . $user_id . "'>\n";
 	}else{
 		print "				<input type='hidden' name='selected_items' value='" . (isset($user_array) ? serialize($user_array) : '') . "'>\n";

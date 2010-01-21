@@ -26,7 +26,7 @@
     The Save Function
    -------------------------- */
 
-function form_save() {
+function graph_form_save() {
 	if ((isset($_POST["save_component_graph_new"])) && (!empty($_POST["graph_template_id"]))) {
 		/* ================= input validation ================= */
 		input_validate_input_number(get_request_var_post("graph_template_id"));
@@ -237,13 +237,13 @@ function form_save() {
     The "actions" function
    ------------------------ */
 
-function form_actions() {
+function graph_form_actions() {
 	global $colors, $graph_actions;
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if (get_request_var_post("drp_action") == GRAPH_ACTION_DELETE) { /* delete */
+		if (get_request_var_post("drp_action") === GRAPH_ACTION_DELETE) { /* delete */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -276,7 +276,7 @@ function form_actions() {
 
 				api_graph_remove($selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CHANGE_TEMPLATE) { /* change graph template */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_CHANGE_TEMPLATE) { /* change graph template */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -285,7 +285,7 @@ function form_actions() {
 
 				change_graph_template($selected_items[$i], get_request_var_post("graph_template_id"), true);
 			}
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_DUPLICATE) { /* duplicate */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_DUPLICATE) { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -293,7 +293,7 @@ function form_actions() {
 
 				duplicate_graph($selected_items[$i], 0, get_request_var_post("title_format"));
 			}
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CONVERT_TO_TEMPLATE) { /* graph -> graph template */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_CONVERT_TO_TEMPLATE) { /* graph -> graph template */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -311,7 +311,7 @@ function form_actions() {
 
 				api_tree_item_save(0, get_request_var_post("tree_id"), TREE_ITEM_TYPE_GRAPH, get_request_var_post("tree_item_id"), "", $selected_items[$i], read_graph_config_option("default_rra_id"), 0, 0, 0, false);
 			}
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CHANGE_HOST) { /* change device */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_CHANGE_HOST) { /* change device */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -321,7 +321,7 @@ function form_actions() {
 				db_execute("update graph_local set device_id=" . $_POST["device_id"] . " where id=" . $selected_items[$i]);
 				update_graph_title_cache($selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested naming */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested naming */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -330,7 +330,7 @@ function form_actions() {
 				api_reapply_suggested_graph_title($selected_items[$i]);
 				update_graph_title_cache($selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_RESIZE) { /* resize graphs */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_RESIZE) { /* resize graphs */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -338,14 +338,14 @@ function form_actions() {
 
 				api_resize_graphs($selected_items[$i], get_request_var_post('graph_width'), get_request_var_post('graph_height'));
 			}
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_ENABLE_EXPORT) { /* enable graph export */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_ENABLE_EXPORT) { /* enable graph export */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 				db_execute("UPDATE graph_templates_graph SET export='on' WHERE local_graph_id=" . $selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_DISABLE_EXPORT) { /* disable graph export */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_DISABLE_EXPORT) { /* disable graph export */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -387,13 +387,13 @@ function form_actions() {
 	print "<form action='graphs.php' method='post'>\n";
 
 	if (sizeof($graph_array)) {
-		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+		if (get_request_var_post("drp_action") === ACTION_NONE) { /* NONE */
 			print "	<tr>
 						<td class='textArea'>
 							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
 						</td>
 					</tr>\n";
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_DELETE) { /* delete */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_DELETE) { /* delete */
 			$graphs = array();
 
 			/* find out which (if any) data sources are being used by this graph, so we can tell the user */
@@ -431,7 +431,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CHANGE_TEMPLATE) { /* change graph template */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_CHANGE_TEMPLATE) { /* change graph template */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Choose a graph template and click save to change the graph template for the following graphs. Be aware that all warnings will be suppressed during the conversion, so graph data loss is possible.") . "</p>
@@ -440,7 +440,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_DUPLICATE) { /* duplicate */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_DUPLICATE) { /* duplicate */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be duplicated. You can optionally change the title format for the new graphs.") . "</p>
@@ -449,7 +449,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CONVERT_TO_TEMPLATE) { /* graph -> graph template */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_CONVERT_TO_TEMPLATE) { /* graph -> graph template */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be converted into graph templates.  You can optionally change the title format for the new graph templates.") . "</p>
@@ -468,7 +468,7 @@ function form_actions() {
 				</tr>\n
 				<input type='hidden' name='tree_id' value='" . $matches[1] . "'>\n
 				";
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CHANGE_HOST) { /* change device */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_CHANGE_HOST) { /* change device */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Choose a new device for these graphs:") . "</p>
@@ -477,7 +477,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested naming to device */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested naming to device */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will have their suggested naming conventions recalculated and applied to the graphs.") . "</p>
@@ -485,7 +485,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_RESIZE) { /* reapply suggested naming to device */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_RESIZE) { /* reapply suggested naming to device */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be resized per your specifications.") . "</p>
@@ -495,7 +495,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_ENABLE_EXPORT) { /* enable graph export */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_ENABLE_EXPORT) { /* enable graph export */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be enabled for graph export.") . "</p>
@@ -503,7 +503,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_DISABLE_EXPORT) { /* disable graph export */
+		}elseif (get_request_var_post("drp_action") === GRAPH_ACTION_DISABLE_EXPORT) { /* disable graph export */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be disabled for graph export.") . "</p>
@@ -525,7 +525,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($graph_array) || get_request_var_post("drp_action") == ACTION_NONE) {
+	if (!sizeof($graph_array) || get_request_var_post("drp_action") === ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($graph_array), get_request_var_post("drp_action"));
@@ -540,7 +540,7 @@ function form_actions() {
     item - Graph Items
    ----------------------- */
 
-function item() {
+function graph_item() {
 	global $colors, $consolidation_functions, $graph_item_types, $struct_graph_item;
 
 	/* ================= input validation ================= */

@@ -30,8 +30,8 @@ define("MAX_DISPLAY_PAGES", 21);
 
 $cdef_actions = array(
 	ACTION_NONE => __("None"),
-	1 => __("Delete"),
-	2 => __("Duplicate")
+	"1" => __("Delete"),
+	"2" => __("Duplicate")
 	);
 
 /* set default action */
@@ -159,7 +159,7 @@ function form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") === "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $cdef_id) {
@@ -190,7 +190,7 @@ function form_actions() {
 				db_execute("delete from cdef where " . array_to_sql_or($cdef_ids, "id"));
 				db_execute("delete from cdef_items where " . array_to_sql_or($cdef_ids, "cdef_id"));
 			}
-		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
+		}elseif (get_request_var_post("drp_action") === "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -228,13 +228,13 @@ function form_actions() {
 	print "<form action='cdef.php' method='post'>\n";
 
 	if (isset($cdef_array)) {
-		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+		if (get_request_var_post("drp_action") === ACTION_NONE) { /* NONE */
 			print "	<tr>
 						<td class='textArea'>
 							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
 						</td>
 					</tr>\n";
-		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
+		}elseif (get_request_var_post("drp_action") === "1") { /* delete */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>" . __("Are you sure you want to delete the following CDEFs?") . "</p>
@@ -242,7 +242,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
+		}elseif (get_request_var_post("drp_action") === "2") { /* duplicate */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>" . __("When you click save, the following CDEFs will be duplicated. You can optionally change the title format for the new CDEFs.") . "</p>
@@ -260,7 +260,7 @@ function form_actions() {
 	print "<div><input type='hidden' name='selected_items' value='" . (isset($cdef_array) ? serialize($cdef_array) : '') . "'></div>";
 	print "<div><input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'></div>";
 
-	if (!isset($cdef_array) || get_request_var_post("drp_action") == ACTION_NONE) {
+	if (!isset($cdef_array) || get_request_var_post("drp_action") === ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($cdef_array), get_request_var_post("drp_action"));

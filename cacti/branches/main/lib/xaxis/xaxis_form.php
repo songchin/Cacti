@@ -96,7 +96,7 @@ function xaxis_form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") === "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 				foreach($selected_items as $xaxis_id) {
@@ -139,7 +139,7 @@ function xaxis_form_actions() {
 				db_execute("delete from graph_templates_xaxis where " . array_to_sql_or($xaxis_ids, "id"));
 				db_execute("delete from graph_templates_xaxis_items where " . array_to_sql_or($xaxis_ids, "xaxis_id"));
 			}
-		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
+		}elseif (get_request_var_post("drp_action") === "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -179,13 +179,13 @@ function xaxis_form_actions() {
 	print "<form action='xaxis_presets.php' method='post'>\n";
 
 	if (isset($xaxis_array)) {
-		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+		if (get_request_var_post("drp_action") === ACTION_NONE) { /* NONE */
 			print "	<tr>
 						<td class='textArea'>
 							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
 						</td>
 					</tr>\n";
-		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
+		}elseif (get_request_var_post("drp_action") === "1") { /* delete */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>" . __("Are you sure you want to delete the following X-Axis Presets?") . "</p>
@@ -193,7 +193,7 @@ function xaxis_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
+		}elseif (get_request_var_post("drp_action") === "2") { /* duplicate */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>" . __("When you click save, the following X-Axis Presets will be duplicated. You can optionally change the title format for the new X-Axis Presets.") . "</p>
@@ -211,7 +211,7 @@ function xaxis_form_actions() {
 	print "<div><input type='hidden' name='selected_items' value='" . (isset($xaxis_array) ? serialize($xaxis_array) : '') . "'></div>";
 	print "<div><input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'></div>";
 
-	if (!isset($xaxis_array) || get_request_var_post("drp_action") == ACTION_NONE) {
+	if (!isset($xaxis_array) || get_request_var_post("drp_action") === ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($xaxis_array), get_request_var_post("drp_action"));

@@ -243,7 +243,7 @@ function data_source_form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if (get_request_var_post("drp_action") == DS_ACTION_DELETE) { /* delete */
+		if (get_request_var_post("drp_action") === DS_ACTION_DELETE) { /* delete */
 			if (!isset($_POST["delete_type"])) { $_POST["delete_type"] = 1; }
 
 			switch (get_request_var_post("delete_type")) {
@@ -284,7 +284,7 @@ function data_source_form_actions() {
 
 					api_data_source_remove($selected_items[$i]);
 				}
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_CHANGE_TEMPLATE) { /* change graph template */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_CHANGE_TEMPLATE) { /* change graph template */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -293,7 +293,7 @@ function data_source_form_actions() {
 
 				change_data_template($selected_items[$i], get_request_var_post("data_template_id"));
 			}
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_CHANGE_HOST) { /* change device */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_CHANGE_HOST) { /* change device */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -304,7 +304,7 @@ function data_source_form_actions() {
 				push_out_device(get_request_var_post("device_id"), $selected_items[$i]);
 				update_data_source_title_cache($selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_DUPLICATE) { /* duplicate */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_DUPLICATE) { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -312,7 +312,7 @@ function data_source_form_actions() {
 
 				duplicate_data_source($selected_items[$i], 0, get_request_var_post("title_format"));
 			}
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_CONVERT_TO_TEMPLATE) { /* data source -> data template */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_CONVERT_TO_TEMPLATE) { /* data source -> data template */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -320,15 +320,15 @@ function data_source_form_actions() {
 
 				data_source_to_data_template($selected_items[$i], get_request_var_post("title_format"));
 			}
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_ENABLE) { /* data source enable */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_ENABLE) { /* data source enable */
 			for ($i=0;($i<count($selected_items));$i++) {
 				api_data_source_enable($selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_DISABLE) { /* data source disable */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_DISABLE) { /* data source disable */
 			for ($i=0;($i<count($selected_items));$i++) {
 				api_data_source_disable($selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested data source naming */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested data source naming */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -366,13 +366,13 @@ function data_source_form_actions() {
 	print "<form action='data_sources.php' method='post'>\n";
 
 	if (sizeof($ds_array)) {
-		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+		if (get_request_var_post("drp_action") === ACTION_NONE) { /* NONE */
 			print "	<tr>
 						<td class='textArea'>
 							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
 						</td>
 					</tr>\n";
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_DELETE) { /* delete */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_DELETE) { /* delete */
 			$graphs = array();
 
 			/* find out which (if any) graphs are using this data source, so we can tell the user */
@@ -413,7 +413,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_CHANGE_TEMPLATE) { /* change graph template */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_CHANGE_TEMPLATE) { /* change graph template */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Choose a data template and click save to change the data template for the following data souces. Be aware that all warnings will be suppressed during the conversion, so graph data loss is possible.") . "</p>
@@ -422,7 +422,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_CHANGE_HOST) { /* change device */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_CHANGE_HOST) { /* change device */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Choose a new device for these data sources.") . "</p>
@@ -431,7 +431,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_DUPLICATE) { /* duplicate */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_DUPLICATE) { /* duplicate */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following data sources will be duplicated. You can optionally change the title format for the new data sources.") . "</p>
@@ -440,7 +440,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_CONVERT_TO_TEMPLATE) { /* data source -> data template */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_CONVERT_TO_TEMPLATE) { /* data source -> data template */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following data sources will be converted into data templates.  You can optionally change the title format for the new data templates.") . "</p>
@@ -449,7 +449,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_ENABLE) { /* data source enable */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_ENABLE) { /* data source enable */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click yes, the following data sources will be enabled.") . "</p>
@@ -457,7 +457,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_DISABLE) { /* data source disable */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_DISABLE) { /* data source disable */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click yes, the following data sources will be disabled.") . "</p>
@@ -465,7 +465,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested data source naming */
+		}elseif (get_request_var_post("drp_action") === DS_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested data source naming */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>" . __("When you click yes, the following data sources will will have their suggested naming conventions recalculated.") . "</p>
@@ -482,7 +482,7 @@ function data_source_form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($ds_array) || get_request_var_post("drp_action") == ACTION_NONE) {
+	if (!sizeof($ds_array) || get_request_var_post("drp_action") === ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($ds_array), get_request_var_post("drp_action"));

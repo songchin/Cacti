@@ -29,8 +29,8 @@ define("MAX_DISPLAY_PAGES", 21);
 
 $poller_actions = array(
 	ACTION_NONE => __("None"),
-	1 => __("Delete"),
-	2 => __("Duplicate")
+	"1" => __("Delete"),
+	"2" => __("Duplicate")
 	);
 
 /* file: pollers.php, action: edit */
@@ -149,7 +149,7 @@ function form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") === "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $poller_id) {
@@ -181,7 +181,7 @@ function form_actions() {
 				db_execute("update poller_item set poller_id=0 where " . array_to_sql_or($poller_ids, "poller_id"));
 				db_execute("update device set poller_id=0 where " . array_to_sql_or($poller_ids, "poller_id"));
 			}
-		}elseif (get_request_var_post("drp_action") == "2") { /* disable */
+		}elseif (get_request_var_post("drp_action") === "2") { /* disable */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -219,13 +219,13 @@ function form_actions() {
 	print "<form action='pollers.php' method='post'>\n";
 
 	if (sizeof($poller_array)) {
-		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+		if (get_request_var_post("drp_action") === ACTION_NONE) { /* NONE */
 			print "	<tr>
 						<td class='textArea'>
 							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
 						</td>
 					</tr>\n";
-		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
+		}elseif (get_request_var_post("drp_action") === "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
 						<p>". __("Are you sure you want to delete the following pollers? All devices currently attached this these pollers will be reassigned to the default poller.") . "</p>
@@ -233,7 +233,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == "2") { /* disable */
+		}elseif (get_request_var_post("drp_action") === "2") { /* disable */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to disable the following pollers? All devices currently attached to these pollers will no longer have their graphs updated.") . "</p>
@@ -250,7 +250,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($poller_array) || get_request_var_post("drp_action") == ACTION_NONE) {
+	if (!sizeof($poller_array) || get_request_var_post("drp_action") === ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($poller_array), get_request_var_post("drp_action"));

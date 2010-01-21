@@ -28,8 +28,8 @@ include_once(CACTI_BASE_PATH . "/lib/xaxis/xaxis_form.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
-define("XAXIS_ACTION_DELETE", 1);
-define("XAXIS_ACTION_DUPLICATE", 2);
+define("XAXIS_ACTION_DELETE", "1");
+define("XAXIS_ACTION_DUPLICATE", "2");
 $xaxis_actions = array(
 	XAXIS_ACTION_DELETE => __("Delete"),
 	XAXIS_ACTION_DUPLICATE => __("Duplicate")

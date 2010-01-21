@@ -177,7 +177,7 @@ function api_device_form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if (get_request_var_post("drp_action") == DEVICE_ACTION_ENABLE) { /* Enable Selected Devices */
+		if (get_request_var_post("drp_action") === DEVICE_ACTION_ENABLE) { /* Enable Selected Devices */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -198,7 +198,7 @@ function api_device_form_actions() {
 
 				poller_update_poller_cache_from_buffer($local_data_ids, $poller_items);
 			}
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_DISABLE) { /* Disable Selected Devices */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_DISABLE) { /* Disable Selected Devices */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -210,7 +210,7 @@ function api_device_form_actions() {
 				db_execute("delete from poller_item where device_id='" . $selected_items[$i] . "'");
 				db_execute("delete from poller_reindex where device_id='" . $selected_items[$i] . "'");
 			}
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_CHANGE_SNMP_OPTIONS) { /* change snmp options */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_CHANGE_SNMP_OPTIONS) { /* change snmp options */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -225,7 +225,7 @@ function api_device_form_actions() {
 
 				push_out_device($selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_CLEAR_STATISTICS) { /* Clear Statisitics for Selected Devices */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_CLEAR_STATISTICS) { /* Clear Statisitics for Selected Devices */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -235,7 +235,7 @@ function api_device_form_actions() {
 						total_polls = '0', failed_polls = '0',	availability = '100.00'
 						where id = '" . $selected_items[$i] . "'");
 			}
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS) { /* change availability options */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS) { /* change availability options */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -250,7 +250,7 @@ function api_device_form_actions() {
 
 				push_out_device($selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_CHANGE_POLLER) { /* change poller */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_CHANGE_POLLER) { /* change poller */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -265,7 +265,7 @@ function api_device_form_actions() {
 
 				push_out_device($selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_CHANGE_SITE) { /* change site */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_CHANGE_SITE) { /* change site */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -280,7 +280,7 @@ function api_device_form_actions() {
 
 				push_out_device($selected_items[$i]);
 			}
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_DELETE) { /* delete */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_DELETE) { /* delete */
 			if (!isset($_POST["delete_type"])) { $_POST["delete_type"] = 2; }
 
 			$data_sources_to_act_on = array();
@@ -377,29 +377,30 @@ function api_device_form_actions() {
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='device_edit_actions'>\n";
 	html_start_box("<strong>" . $device_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
+print "<pre>POST:"; print_r($_POST); print "</pre>";
 
 	if (sizeof($device_array)) {
-		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+		if (get_request_var_post("drp_action") === ACTION_NONE) { /* NONE */
 			print "	<tr>
 						<td class='textArea'>
 							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
 						</td>
 					</tr>\n";
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_ENABLE) { /* Enable Devices */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_ENABLE) { /* Enable Devices */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>" . __("To enable the following devices, press the \"yes\" button below.") . "</p>
 						<p>$device_list</p>
 					</td>
 					</tr>";
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_DISABLE) { /* Disable Devices */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_DISABLE) { /* Disable Devices */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>" . __("To disable the following devices, press the \"yes\" button below.") . "</p>
 						<p>$device_list</p>
 					</td>
 					</tr>";
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_CHANGE_SNMP_OPTIONS) { /* change snmp options */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_CHANGE_SNMP_OPTIONS) { /* change snmp options */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>" . __("To change SNMP parameters for the following devices, check the box next to the fields you want to update, fill in the new value, and click \"yes\".") . "</p>
@@ -428,7 +429,7 @@ function api_device_form_actions() {
 					"fields" => $form_array
 					)
 				);
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS) { /* change availability options */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS) { /* change availability options */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>" . __("To change availability parameters for the following devices, check the box next to the fields you want to update, fill in the new value, and click yes.") . "</p>
@@ -457,14 +458,14 @@ function api_device_form_actions() {
 					"fields" => $form_array
 					)
 				);
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_CLEAR_STATISTICS) { /* Clear Statisitics for Selected Devices */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_CLEAR_STATISTICS) { /* Clear Statisitics for Selected Devices */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>" . __("To clear the counters for the following devices, press the \"yes\" button below.") . "</p>
 						<p>$device_list</p>
 					</td>
 					</tr>";
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_DELETE) { /* delete */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_DELETE) { /* delete */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to delete the following devices?") . "</p>
@@ -475,7 +476,7 @@ function api_device_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_CHANGE_POLLER) { /* Change Poller */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_CHANGE_POLLER) { /* Change Poller */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>" . __("Select the new poller below for the devices(s) below and select 'yes' to continue, or 'no' to return.") . "</p>
@@ -494,7 +495,7 @@ function api_device_form_actions() {
 					"fields" => $form_array
 					)
 				);
-		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_CHANGE_SITE) { /* Change Site */
+		}elseif (get_request_var_post("drp_action") === DEVICE_ACTION_CHANGE_SITE) { /* Change Site */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>" . __("Select the new site for the devices(s) below and select 'yes' to continue, or 'no' to return.") . "</p>
@@ -537,7 +538,7 @@ function api_device_form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($device_array) || get_request_var_post("drp_action") == ACTION_NONE) {
+	if (!sizeof($device_array) || get_request_var_post("drp_action") === ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($device_array), get_request_var_post("drp_action"));
@@ -1740,7 +1741,7 @@ function device() {
 			form_selectable_cell(round(($device["id"]), 2), $device["id"]);
 			form_selectable_cell((isset($device_graphs[$device["id"]]) ? $device_graphs[$device["id"]] : 0), $device["id"]);
 			form_selectable_cell((isset($device_data_sources[$device["id"]]) ? $device_data_sources[$device["id"]] : 0), $device["id"]);
-			form_selectable_cell( "<span $spanextra>".get_colored_device_status(($device["disabled"] == CHECKED ? true : false), $device["status"]), $device["id"] . "</span>" );
+			form_selectable_cell( "<span $spanextra>".get_colored_device_status(($device["disabled"] == CHECKED ? true : false), $device["status"]) . "</span>", $device["id"]);
 			form_selectable_cell(round(($device["status_event_count"]), 2), $device["id"]);
 			form_selectable_cell(round(($device["cur_time"]), 2), $device["id"]);
 			form_selectable_cell(round(($device["avg_time"]), 2), $device["id"]);
