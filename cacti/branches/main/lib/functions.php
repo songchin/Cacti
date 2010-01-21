@@ -2060,7 +2060,7 @@ function get_associated_rras($local_graph_id) {
    @returns - the url requested by the browser */
 function get_browser_query_string() {
 	if (!empty($_SERVER["REQUEST_URI"])) {
-		$browser_query_string = basename($_SERVER["REQUEST_URI"]);
+		$browser_query_string = $_SERVER["REQUEST_URI"];
 	}else{
 		$browser_query_string = basename($_SERVER["PHP_SELF"]) . (empty($_SERVER["QUERY_STRING"]) ? "" : "?" . $_SERVER["QUERY_STRING"]);
 	}
