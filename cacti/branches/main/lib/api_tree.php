@@ -22,6 +22,10 @@
  +-------------------------------------------------------------------------+
 */
 
+/** api_tree_add_tree_names_to_actions_array - add tree names to the action dropdown list
+ *
+ * @return unknown_type
+ */
 function api_tree_add_tree_names_to_actions_array() {
 	/* add a list of tree names to the actions dropdown */
 	$trees = db_fetch_assoc("select id,name from graph_tree order by name");
@@ -35,6 +39,21 @@ function api_tree_add_tree_names_to_actions_array() {
 	return $actions;
 }
 
+/** api_tree_item_save - add a tree item to the database
+ *
+ * @param int $id
+ * @param int $tree_id
+ * @param string $type
+ * @param int $parent_tree_item_id
+ * @param string $title
+ * @param int $local_graph_id
+ * @param int $rra_id
+ * @param int $device_id
+ * @param int $device_grouping_type
+ * @param int $sort_children_type
+ * @param string $propagate_changes
+ * @return unknown_type
+ */
 function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, $local_graph_id, $rra_id,
 	$device_id, $device_grouping_type, $sort_children_type, $propagate_changes) {
 	global $config;

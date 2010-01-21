@@ -22,6 +22,11 @@
  +-------------------------------------------------------------------------+
 */
 
+/** api_data_source_remove - removea data source along with all related objects
+ *
+ * @param int $local_data_id - the id of the data source to be removed
+ * @return unknown_type
+ */
 function api_data_source_remove($local_data_id) {
 	if (empty($local_data_id)) {
 		return;
@@ -40,6 +45,11 @@ function api_data_source_remove($local_data_id) {
 	db_execute("delete from data_local where id=$local_data_id");
 }
 
+/** api_data_source_remove_multi - remove multiple data sources along with all related objects
+ *
+ * @param unknown_type $local_data_ids - array of data sources to be removed
+ * @return unknown_type
+ */
 function api_data_source_remove_multi($local_data_ids) {
 	$ids_to_delete     = "";
 	$dtd_ids_to_delete = "";
@@ -105,16 +115,31 @@ function api_data_source_remove_multi($local_data_ids) {
 	}
 }
 
+/** api_data_source_enable - enable a data source
+ *
+ * @param int $local_data_id - the id of the data source to be enabled
+ * @return unknown_type
+ */
 function api_data_source_enable($local_data_id) {
 	db_execute("UPDATE data_template_data SET active='on' WHERE local_data_id=$local_data_id");
 	update_poller_cache($local_data_id, true);
  }
 
+ /** api_data_source_disable - disable a data source
+  *
+  * @param int $local_data_id - the id of the data source to be disabled
+  * @return unknown_type
+  */
 function api_data_source_disable($local_data_id) {
 	db_execute("DELETE FROM poller_item WHERE local_data_id=$local_data_id");
 	db_execute("UPDATE data_template_data SET active='' WHERE local_data_id=$local_data_id");
 }
 
+/** api_data_source_disable_multi - disable multiple data sources
+ *
+ * @param array $local_data_ids - array of ids of the data sources to be disabled
+ * @return unknown_type
+ */
 function api_data_source_disable_multi($local_data_ids) {
 	/* initialize variables */
 	$ids_to_disable = "";
@@ -147,6 +172,11 @@ function api_data_source_disable_multi($local_data_ids) {
 	}
 }
 
+/** api_reapply_suggested_data_source_title - reapply the suggested title to a data source
+ *
+ * @param int $local_data_id - the id of the data source to be treated
+ * @return unknown_type
+ */
 function api_reapply_suggested_data_source_title($local_data_id) {
 	global $config;
 

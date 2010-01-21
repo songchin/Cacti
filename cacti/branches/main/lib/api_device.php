@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-/* api_device_remove - removes a device
+/** api_device_remove - removes a device
    @param $device_id - the id of the device to remove */
 function api_device_remove($device_id) {
 	db_execute("delete from device             where id=$device_id");
@@ -39,7 +39,7 @@ function api_device_remove($device_id) {
 	db_execute("update graph_local set device_id=0 where device_id=$device_id");
 }
 
-/* api_device_remove_multi - removes multiple devices in one call
+/** api_device_remove_multi - removes multiple devices in one call
    @param $device_ids - an array of device id's to remove */
 function api_device_remove_multi($device_ids) {
 	$devices_to_delete = "";
@@ -77,7 +77,7 @@ function api_device_remove_multi($device_ids) {
 	}
 }
 
-/* api_device_dq_remove - removes a device->data query mapping
+/** api_device_dq_remove - removes a device->data query mapping
    @param $device_id - the id of the device which contains the mapping
    @param $data_query_id - the id of the data query to remove the mapping for */
 function api_device_dq_remove($device_id, $data_query_id) {
@@ -86,13 +86,43 @@ function api_device_dq_remove($device_id, $data_query_id) {
 	db_execute("delete from poller_reindex where data_query_id=$data_query_id and device_id=$device_id");
 }
 
-/* api_device_gt_remove - removes a device->graph template mapping
+/** api_device_gt_remove - removes a device->graph template mapping
    @param $device_id - the id of the device which contains the mapping
    @param $graph_template_id - the id of the graph template to remove the mapping for */
 function api_device_gt_remove($device_id, $graph_template_id) {
 	db_execute("delete from device_graph where graph_template_id=$graph_template_id and device_id=$device_id");
 }
 
+/** api_device_save - save a device to the database
+ *
+ * @param int $id
+ * @param int $site_id
+ * @param int $poller_id
+ * @param int $device_template_id
+ * @param string $description
+ * @param string $hostname
+ * @param string $snmp_community
+ * @param int $snmp_version
+ * @param string $snmp_username
+ * @param string $snmp_password
+ * @param int $snmp_port
+ * @param int $snmp_timeout
+ * @param string $disabled
+ * @param int $availability_method
+ * @param int $ping_method
+ * @param int $ping_port
+ * @param int $ping_timeout
+ * @param int $ping_retries
+ * @param string $notes
+ * @param string $snmp_auth_protocol
+ * @param string $snmp_priv_passphrase
+ * @param string $snmp_priv_protocol
+ * @param string $snmp_context
+ * @param int $max_oids
+ * @param int $device_threads
+ * @param string $template_enabled
+ * @return unknown_type
+ */
 function api_device_save($id, $site_id, $poller_id, $device_template_id, $description, $hostname, $snmp_community, $snmp_version,
 	$snmp_username, $snmp_password, $snmp_port, $snmp_timeout, $disabled,
 	$availability_method, $ping_method, $ping_port, $ping_timeout, $ping_retries,

@@ -22,6 +22,20 @@
  +-------------------------------------------------------------------------+
 */
 
+/** api_poller_cache_item_add - add an item to the poller cache
+ *
+ * @param int $device_id
+ * @param string $device_field_override
+ * @param int $local_data_id
+ * @param int $rrd_step
+ * @param int $poller_action_id
+ * @param string $data_source_item_name
+ * @param int $num_rrd_items
+ * @param string $arg1
+ * @param string $arg2
+ * @param string $arg3
+ * @return unknown_type
+ */
 function api_poller_cache_item_add($device_id, $device_field_override, $local_data_id, $rrd_step, $poller_action_id, $data_source_item_name, $num_rrd_items, $arg1 = "", $arg2 = "", $arg3 = "") {
 	static $devices = array();
 
@@ -97,6 +111,12 @@ function api_poller_cache_item_add($device_id, $device_field_override, $local_da
 	}
 }
 
+/** api_poller_get_rrd_next_step
+ *
+ * @param int $rrd_step
+ * @param int $num_rrd_items
+ * @return unknown_type
+ */
 function api_poller_get_rrd_next_step($rrd_step=300, $num_rrd_items=1) {
 	global $config;
 
