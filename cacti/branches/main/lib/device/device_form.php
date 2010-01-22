@@ -377,7 +377,6 @@ function api_device_form_actions() {
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='device_edit_actions'>\n";
 	html_start_box("<strong>" . $device_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
-print "<pre>POST:"; print_r($_POST); print "</pre>";
 
 	if (sizeof($device_array)) {
 		if (get_request_var_post("drp_action") === ACTION_NONE) { /* NONE */
