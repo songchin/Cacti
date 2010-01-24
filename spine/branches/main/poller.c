@@ -171,11 +171,11 @@ void poll_device(poller_thread_t poller_instructions) {
 
 	sysUptime[0] = '\0';
 	device_id      = poller_instructions.device_id;
-	thread_id    = poller_instructions.host_thread;
+	thread_id    = poller_instructions.device_thread;
 
 	/* determine the SQL limits using the poller instructions */
 	if (poller_instructions.device_data_ids > 0) {
-		snprintf(limits, SMALL_BUFSIZE, "LIMIT %i, %i", poller_instructions.device_data_ids * (poller_instructions.host_thread - 1), poller_instructions.device_data_ids);
+		snprintf(limits, SMALL_BUFSIZE, "LIMIT %i, %i", poller_instructions.device_data_ids * (poller_instructions.device_thread - 1), poller_instructions.device_data_ids);
 	}else{
 		limits[0] = '\0';
 	}
@@ -329,7 +329,7 @@ void poll_device(poller_thread_t poller_instructions) {
 			" WHERE device_id=%i"
 			" AND rrd_next_step < 0"
 			" AND poller_id=%i"
-			" GROUP BY snmp_port" %s, device_id, set.poller_id, limits);
+			" GROUP BY snmp_port %s", device_id, set.poller_id, limits);
 	}
 
 	/* query to add output records to the poller output table */
