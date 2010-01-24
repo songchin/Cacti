@@ -513,26 +513,7 @@ if (get_request_var_request("step") == "4") {
 <html>
 <head>
 	<title>cacti</title>
-	<style>
-	<!--
-		BODY,TABLE,TR,TD
-		{
-			font-size: 10pt;
-			font-family: Verdana, Arial, sans-serif;
-		}
-
-		.code
-		{
-			font-family: Courier New, Courier;
-		}
-
-		.header-text
-		{
-			color: white;
-			font-weight: bold;
-		}
-	-->
-	</style>
+    <link type="text/css" href="../include/main.css" rel="stylesheet">
 </head>
 
 <body>
