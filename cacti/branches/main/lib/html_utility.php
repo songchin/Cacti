@@ -47,19 +47,31 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
 			if (isset($field_array[$field_to_check]) && (is_array($form_array[$field_name][$field_to_check]))) {
 				/* if the field/sub-field combination is an array, resolve it recursively */
 				$form_array[$field_name][$field_to_check] = inject_form_variables($form_array[$field_name][$field_to_check], $arg1);
-			}elseif (isset($field_array[$field_to_check]) && (!is_array($field_array[$field_to_check])) && (preg_match("/\|(arg[123]):([a-zA-Z0-9_]*)\|/", $field_array[$field_to_check], $matches))) {
-				/* an empty field name in the variable means don't treat this as an array */
-				if ($matches[2] == "") {
-					if (is_array(${$matches[1]})) {
-						/* the existing value is already an array, leave it alone */
-						$form_array[$field_name][$field_to_check] = ${$matches[1]};
+			}elseif (isset($field_array[$field_to_check]) && (!is_array($field_array[$field_to_check])) && (ereg("\|(arg[123]):([a-zA-Z0-9_]*)\|", $field_array[$field_to_check], $matches))) {
+				$string = $field_array[$field_to_check];
+				while ( 1 ) { 
+					/* an empty field name in the variable means don't treat this as an array */
+					if ($matches[2] == "") {
+						if (is_array(${$matches[1]})) {
+							/* the existing value is already an array, leave it alone */
+							$form_array[$field_name][$field_to_check] = ${$matches[1]};
+							break;
+						}else{
+							/* the existing value is probably a single variable */
+							$form_array[$field_name][$field_to_check] = str_replace($matches[0], ${$matches[1]}, $field_array[$field_to_check]);
+							break;
+						}
 					}else{
-						/* the existing value is probably a single variable */
-						$form_array[$field_name][$field_to_check] = str_replace($matches[0], ${$matches[1]}, $field_array[$field_to_check]);
+						/* copy the value down from the array/key specified in the variable */
+						$string = str_replace($matches[0], ((isset(${$matches[1]}{$matches[2]})) ? ${$matches[1]}{$matches[2]} : ""), $string);
+
+						$matches = array();
+						ereg("\|(arg[123]):([a-zA-Z0-9_]*)\|", $string, $matches);
+						if (!sizeof($matches)) {
+							$form_array[$field_name][$field_to_check] = $string;
+							break;
+						}
 					}
-				}else{
-					/* copy the value down from the array/key specified in the variable */
-					$form_array[$field_name][$field_to_check] = str_replace($matches[0], ((isset(${$matches[1]}{$matches[2]})) ? ${$matches[1]}{$matches[2]} : ""), $field_array[$field_to_check]);
 				}
 			}
 		}
