@@ -44,6 +44,7 @@ Cacti CHANGELOG
 -bug#0001587: 64bit HEX Strings don't convert to Decimal on 32bit Systems
 -bug#0001600: Default action on lists should be "None"
 -bug#0001604: HEX Counter values enclosed in quotes not recognized as HEX
+-bug#0001609: Script server timeout too aggressive with 10 second poller interval
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: add_tree.php did not allow nodes with propagating sort options

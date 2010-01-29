@@ -46,6 +46,8 @@ function sig_handler($signo) {
 			exit;
 			break;
 		default:
+			cacti_log("WARNING: Script Server recieved signal '$signo' in file:'$include_file', function:'$function', params:'$parameters'", FALSE, "PHPSVR");
+
 			break;
 	}
 }
@@ -70,18 +72,22 @@ if (php_sapi_name() != "cli") {
 }
 
 /* record the script start time */
-list($micro,$seconds) = explode(" ", microtime());
+list($micro,$seconds) = split(" ", microtime());
 $start = $seconds + $micro;
+
+/* some debugging */
+$pid = getmypid();
+$ctr = 0;
 
 /* if multiple polling intervals are defined, compensate for them */
 $polling_interval = read_config_option("poller_interval");
 
 if (!empty($polling_interval)) {
 	$num_polling_items = db_fetch_cell("select count(*) from poller_item where rrd_next_step<=0");
-	define("MAX_POLLER_RUNTIME", ($polling_interval - 8));
+	define("MAX_POLLER_RUNTIME", $polling_interval);
 }else{
 	$num_polling_items = db_fetch_cell("select count(*) from poller_item");
-	define("MAX_POLLER_RUNTIME", 292);
+	define("MAX_POLLER_RUNTIME", 300);
 }
 
 /* Let PHP only run 1 second longer than the max runtime */
@@ -172,7 +178,7 @@ while (1) {
 				}
 
 				if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-					cacti_log("DEBUG: INC: '". $include_file . "' FUNC: '" .$function . "' PARMS: '" . $parameters . "'", false, "PHPSVR");
+					cacti_log("DEBUG: PID[$pid] CTR[$ctr] INC: '". basename($include_file) . "' FUNC: '" .$function . "' PARMS: '" . $parameters . "'", false, "PHPSVR");
 				}
 
 				/* validate the existance of the function, and include if applicable */
@@ -204,17 +210,14 @@ while (1) {
 						$result = call_user_func_array($function, $parameter_array);
 					}
 
-					if (!validate_result($result)) {
-						$result = "U";
+					fputs(STDOUT, trim($result) . "\n");
+					fflush(STDOUT);
+
+					if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
+						cacti_log("DEBUG: PID[$pid] CTR[$ctr] RESPONSE:'$value'", false, "PHPSVR");
 					}
 
-					if (strpos($result,"\n") != 0) {
-						fputs(STDOUT, $result);
-						fflush(STDOUT);
-					} else {
-						fputs(STDOUT, $result . "\n");
-						fflush(STDOUT);
-					}
+					$ctr++;
 				} else {
 					cacti_log("WARNING: Function does not exist", false, "PHPSVR");
 					fputs(STDOUT, __("WARNING: Function does not exist\n"));
