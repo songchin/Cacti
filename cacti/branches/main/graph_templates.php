@@ -366,7 +366,7 @@ function form_actions() {
 }
 
 function item() {
-	global $colors, $consolidation_functions, $graph_item_types;
+	global $colors, $graph_item_types;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));

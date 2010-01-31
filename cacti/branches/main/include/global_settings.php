@@ -22,6 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
+require_once(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
+
 /* tab information */
 $tabs = array(
 	"general"        => __("General"),
@@ -815,7 +817,7 @@ $settings = array(
 			"friendly_name" => __("Consolidation Function"),
 			"method" => "drop_array",
 			"array" => $consolidation_functions,
-			"default" => RRD_CF_LAST,
+			"default" => RRA_CF_TYPE_LAST,
 			"description" => __("How data for this item is represented statistically on the graph."),
 			),
 		"cl1_vdef_id" => array(
@@ -848,7 +850,7 @@ $settings = array(
 			"friendly_name" => __("Consolidation Function"),
 			"method" => "drop_array",
 			"array" => $consolidation_functions,
-			"default" => RRD_CF_AVERAGE,
+			"default" => RRA_CF_TYPE_AVERAGE,
 			"description" => __("How data for this item is represented statistically on the graph."),
 			),
 		"cl2_vdef_id" => array(
@@ -881,7 +883,7 @@ $settings = array(
 			"friendly_name" => __("Consolidation Function"),
 			"method" => "drop_array",
 			"array" => $consolidation_functions,
-			"default" => RRD_CF_MAX,
+			"default" => RRA_CF_TYPE_MAX,
 			"description" => __("How data for this item is represented statistically on the graph."),
 			),
 		"cl3_vdef_id" => array(

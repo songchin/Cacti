@@ -855,7 +855,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
    @param $disable_controls - whether to hide all edit/delete functionality on this form */
 function draw_graph_items_list($item_list, $filename, $url_data, $disable_controls) {
 	global $colors, $config, $graph_item_types, $rrd_textalign;
-
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	$header_items = array(__("Graph Item"), __("Data Source"), __("Graph Item Type"), __("CF Type"), __("CDEF"), __("GPRINT Type"), __("Item Color"));

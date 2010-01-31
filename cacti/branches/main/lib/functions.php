@@ -1432,7 +1432,8 @@ function generate_graph_best_cf($local_data_id, $requested_cf) {
     @param $local_data_id
     @returns - array of the CF functions */
 function get_rrd_cfs($local_data_id) {
-	global $rrd_cfs, $consolidation_functions;
+	global $rrd_cfs;
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
 
 	$rrdfile = get_data_source_path($local_data_id, TRUE);
 

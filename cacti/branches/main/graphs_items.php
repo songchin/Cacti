@@ -74,21 +74,21 @@ function form_save() {
 				0 => array(
 					"color_id" => "0",
 					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
-					"consolidation_function_id" => RRD_CF_LAST,
+					"consolidation_function_id" => RRA_CF_TYPE_LAST,
 					"text_format" => __("Current:"),
 					"hard_return" => ""
 					),
 				1 => array(
 					"color_id" => "0",
 					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
-					"consolidation_function_id" => RRD_CF_AVERAGE,
+					"consolidation_function_id" => RRA_CF_TYPE_AVERAGE,
 					"text_format" => __("Average:"),
 					"hard_return" => ""
 					),
 				2 => array(
 					"color_id" => "0",
 					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
-					"consolidation_function_id" => RRD_CF_MAX,
+					"consolidation_function_id" => RRA_CF_TYPE_MAX,
 					"text_format" => __("Maximum:"),
 					"hard_return" => CHECKED
 					));
@@ -257,7 +257,7 @@ function item_remove() {
 }
 
 function item_edit() {
-	global $colors, $struct_graph_item, $graph_item_types, $consolidation_functions;
+	global $colors, $struct_graph_item, $graph_item_types;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("id"));

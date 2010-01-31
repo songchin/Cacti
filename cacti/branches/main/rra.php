@@ -216,7 +216,8 @@ function form_save() {
    ------------------- */
 
 function rra_edit() {
-	global $colors, $fields_rra_edit;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));

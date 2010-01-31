@@ -133,13 +133,6 @@ $snmp_query_field_actions = array(1 =>
 	__("SNMP Output Type (Dropdown)"),
 	);
 
-$consolidation_functions = array(
-	RRD_CF_AVERAGE		=> "AVERAGE",
-	RRD_CF_MIN			=> "MIN",
-	RRD_CF_MAX			=> "MAX",
-	RRD_CF_LAST			=> "LAST"
-	);
-
 $rrd_font_render_modes = array(
 	RRD_FONT_RENDER_NORMAL	=> __("Normal"),
 	RRD_FONT_RENDER_LIGHT	=> __("Light"),

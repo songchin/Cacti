@@ -500,7 +500,7 @@ function gprint_preset_to_xml($gprint_preset_id) {
 }
 
 function round_robin_archive_to_xml($round_robin_archive_id) {
-	global $fields_rra_edit;
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_forms.php");
 
 	$hash = get_hash_version("round_robin_archive") . get_hash_round_robin_archive($round_robin_archive_id);
 	$xml_text = "";

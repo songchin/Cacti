@@ -217,7 +217,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 
 function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 	global $config;
-
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
 	include (CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	$data_source_path = get_data_source_path($local_data_id, true);
@@ -520,12 +520,12 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
 }
 
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrd_struc = array()) {
-	global $config, $consolidation_functions;
-
+	global $config;
 	include_once(CACTI_BASE_PATH . "/lib/cdef.php");
 	include_once(CACTI_BASE_PATH . "/lib/vdef.php");
 	include_once(CACTI_BASE_PATH . "/lib/graph_variables.php");
 	include_once(CACTI_BASE_PATH . "/lib/time.php");
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	/* set the rrdtool default font */
@@ -941,16 +941,16 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		}else{
 		/* if there is not a DEF defined for the current data source/cf combination, then we will have to
 		improvise. choose the first available cf in the following order: AVERAGE, MAX, MIN, LAST */
-			if (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRD_CF_AVERAGE])) {
-				$cf_id = RRD_CF_AVERAGE; /* CF: AVERAGE */
-			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRD_CF_MAX])) {
-				$cf_id = RRD_CF_MAX; /* CF: MAX */
-			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRD_CF_MIN])) {
-				$cf_id = RRD_CF_MIN; /* CF: MIN */
-			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRD_CF_LAST])) {
-				$cf_id = RRD_CF_LAST; /* CF: LAST */
+			if (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRA_CF_TYPE_AVERAGE])) {
+				$cf_id = RRA_CF_TYPE_AVERAGE; /* CF: AVERAGE */
+			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRA_CF_TYPE_MAX])) {
+				$cf_id = RRA_CF_TYPE_MAX; /* CF: MAX */
+			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRA_CF_TYPE_MIN])) {
+				$cf_id = RRA_CF_TYPE_MIN; /* CF: MIN */
+			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRA_CF_TYPE_LAST])) {
+				$cf_id = RRA_CF_TYPE_LAST; /* CF: LAST */
 			}else{
-				$cf_id = RRD_CF_AVERAGE; /* CF: AVERAGE */
+				$cf_id = RRA_CF_TYPE_AVERAGE; /* CF: AVERAGE */
 			}
 		}
 		/* now remember the correct CF reference */
@@ -1470,7 +1470,8 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 }
 
 function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$xport_meta, $rrd_struc = array()) {
-	global $config, $consolidation_functions;
+	global $config;
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
 
 	include_once(CACTI_BASE_PATH . "/lib/cdef.php");
 	include_once(CACTI_BASE_PATH . "/lib/graph_variables.php");
@@ -1785,16 +1786,16 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 		}else{
 		/* if there is not a DEF defined for the current data source/cf combination, then we will have to
 		improvise. choose the first available cf in the following order: AVERAGE, MAX, MIN, LAST */
-			if (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRD_CF_AVERAGE])) {
-				$cf_id = RRD_CF_AVERAGE; /* CF: AVERAGE */
-			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRD_CF_MAX])) {
-				$cf_id = RRD_CF_MAX; /* CF: MAX */
-			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRD_CF_MIN])) {
-				$cf_id = RRD_CF_MIN; /* CF: MIN */
-			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRD_CF_LAST])) {
-				$cf_id = RRD_CF_LAST; /* CF: LAST */
+			if (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRA_CF_TYPE_AVERAGE])) {
+				$cf_id = RRA_CF_TYPE_AVERAGE; /* CF: AVERAGE */
+			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRA_CF_TYPE_MAX])) {
+				$cf_id = RRA_CF_TYPE_MAX; /* CF: MAX */
+			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRA_CF_TYPE_MIN])) {
+				$cf_id = RRA_CF_TYPE_MIN; /* CF: MIN */
+			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRA_CF_TYPE_LAST])) {
+				$cf_id = RRA_CF_TYPE_LAST; /* CF: LAST */
 			}else{
-				$cf_id = RRD_CF_AVERAGE; /* CF: AVERAGE */
+				$cf_id = RRA_CF_TYPE_AVERAGE; /* CF: AVERAGE */
 			}
 		}
 		/* now remember the correct CF reference */
@@ -2647,7 +2648,8 @@ function rrdgraph_item_opts($graph_item, $graph_data_array, $hardreturn, $graph_
  * returns					array build like $info defining html class in case of error
  */
 function rrdtool_cacti_compare($data_source_id, &$info) {
-	global $data_source_types, $consolidation_functions;
+	global $data_source_types;
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
 
 	/* get cacti header information for given data source id */
 	$cacti_header_array = db_fetch_row("SELECT " .
@@ -2761,7 +2763,7 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 	$resize = TRUE;		# assume a resize operation as long as no rra duplicates are found
 	# scan cacti rra information for duplicates of (CF, STEPS)
 	if (sizeof($cacti_rra_array) > 0) {
-		for ($i=0; $i<= sizeof($cacti_rra_array); $i++) {
+		for ($i=0; $i<= sizeof($cacti_rra_array)-1; $i++) {
 			$cf = $cacti_rra_array{$i}["cf"];
 			$steps = $cacti_rra_array{$i}["steps"];
 			foreach($cacti_rra_array as $cacti_rra_id => $cacti_rra) {
@@ -2775,7 +2777,7 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 	}
 	# scan file rra information for duplicates of (CF, PDP_PER_ROWS)
 	if (sizeof($info['rra']) > 0) {
-		for ($i=0; $i<= sizeof($info['rra']); $i++) {
+		for ($i=0; $i<= sizeof($info['rra'])-1; $i++) {
 			$cf = $info['rra']{$i}["cf"];
 			$steps = $info['rra']{$i}["pdp_per_row"];
 			foreach($info['rra'] as $file_rra_id => $file_rra) {
@@ -2881,7 +2883,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source=TRUE) {
 		print_leaves($diff, $nl);
 	}
 
-	if (sizeof($diff["tune"])) {
+	if (isset($diff["tune"]) && sizeof($diff["tune"])) {
 		# create tune commands
 		foreach ($diff["tune"] as $line) {
 			if ($show_source == true) {
@@ -2892,7 +2894,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source=TRUE) {
 		}
 	}
 
-	if (sizeof($diff["resize"])) {
+	if (isset($diff["resize"]) && sizeof($diff["resize"])) {
 		# each resize goes into an extra line
 		foreach ($diff["resize"] as $line) {
 			if ($show_source == true) {

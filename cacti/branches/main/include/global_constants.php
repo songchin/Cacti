@@ -49,11 +49,6 @@ define("RRDTOOL_OUTPUT_STDOUT", 1);
 define("RRDTOOL_OUTPUT_STDERR", 2);
 define("RRDTOOL_OUTPUT_GRAPH_DATA", 3);
 
-define("RRD_CF_AVERAGE", 1);
-define("RRD_CF_MIN", 2);
-define("RRD_CF_MAX", 3);
-define("RRD_CF_LAST", 4);
-
 define("RRD_VERSION_1_0",	"rrd-1.0.x");
 define("RRD_VERSION_1_2",	"rrd-1.2.x");
 define("RRD_VERSION_1_3",	"rrd-1.3.x");

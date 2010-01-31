@@ -142,7 +142,8 @@ function input_remove() {
 }
 
 function input_edit() {
-	global $colors, $consolidation_functions, $graph_item_types, $struct_graph_item, $fields_graph_template_input_edit;
+	global $colors, $graph_item_types, $struct_graph_item, $fields_graph_template_input_edit;
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));

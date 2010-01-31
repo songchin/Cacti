@@ -541,7 +541,7 @@ function graph_form_actions() {
    ----------------------- */
 
 function graph_item() {
-	global $colors, $consolidation_functions, $graph_item_types, $struct_graph_item;
+	global $colors;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -593,7 +593,8 @@ function graph_item() {
    ------------------------------------ */
 
 function graph_diff() {
-	global $colors, $struct_graph_item, $graph_item_types, $consolidation_functions;
+	global $colors, $struct_graph_item, $graph_item_types;
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -829,7 +830,7 @@ function graph_diff() {
 }
 
 function graph_edit() {
-	global $colors, $image_types, $consolidation_functions, $graph_item_types, $struct_graph_item;
+	global $colors, $image_types, $graph_item_types, $struct_graph_item;
 	global $struct_graph_labels, $struct_graph_right_axis, $struct_graph_size, $struct_graph_limits, $struct_graph_grid, $struct_graph_color, $struct_graph_legend, $struct_graph_misc, $struct_graph_cacti;
 
 	/* ================= input validation ================= */
