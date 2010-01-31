@@ -615,7 +615,7 @@ function device_template_to_xml($device_template_id) {
 }
 
 function data_query_to_xml($data_query_id) {
-	global $fields_data_query_edit, $fields_data_query_item_edit;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_forms.php");
 
 	$hash["data_query"] = get_hash_version("data_query") . get_hash_data_query($data_query_id);
 	$xml_text = "";

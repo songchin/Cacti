@@ -119,14 +119,6 @@ $input_types = array(
 	DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER => "Script Query - Script Server",
 	);
 
-$reindex_types = array(
-	DATA_QUERY_AUTOINDEX_NONE => __("None"),
-	DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME => __("Uptime Goes Backwards"),
-	DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE => __("Index Count Changed"),
-	DATA_QUERY_AUTOINDEX_VALUE_CHANGE => __("Index Value Changed"),
-	DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION => __("Verify All Fields"),
-	);
-
 $snmp_query_field_actions = array(1 =>
 	__("SNMP Field Name (Dropdown)"),
 	__("SNMP Field Value (From User)"),
@@ -350,20 +342,6 @@ $graph_color_alpha = array(
 		"E5" => " 90%",
 		"FF" => "100%"
 		);
-
-$tree_sort_types = array(
-	TREE_ORDERING_NONE => __("Manual Ordering (No Sorting)"),
-	TREE_ORDERING_ALPHABETIC => __("Alphabetic Ordering"),
-	TREE_ORDERING_NATURAL => __("Natural Ordering"),
-	TREE_ORDERING_NUMERIC => __("Numeric Ordering"),
-	);
-
-$tree_sort_types_cli = array(
-	TREE_ORDERING_NONE => __("manual"),
-	TREE_ORDERING_ALPHABETIC => __("alpha"),
-	TREE_ORDERING_NATURAL => __("natural"),
-	TREE_ORDERING_NUMERIC => __("numeric"),
-	);
 
 $tree_types = array(
 	TREE_TYPE_TREE => __("Tree"),

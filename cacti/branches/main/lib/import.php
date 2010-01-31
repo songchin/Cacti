@@ -406,7 +406,7 @@ function xml_to_data_template($hash, &$xml_array, &$hash_cache, $import_custom_r
 }
 
 function xml_to_data_query($hash, &$xml_array, &$hash_cache) {
-	global $fields_data_query_edit, $fields_data_query_item_edit;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_forms.php");
 
 	/* import into: snmp_query */
 	$_data_query_id = db_fetch_cell("select id from snmp_query where hash='$hash'");

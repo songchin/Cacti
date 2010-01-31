@@ -135,8 +135,9 @@ function form_save() {
    ----------------------- */
 
 function item_edit() {
-	global $colors, $tree_sort_types;
+	global $colors;
 	global $tree_item_types, $device_group_types;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -206,7 +207,7 @@ function item_edit() {
 		if (empty($_GET["id"])) {
 			$default_sorting_type = db_fetch_cell("select sort_children_type from graph_tree_items where id=" . $_GET["parent_id"]);
 		}else{
-			$default_sorting_type = TREE_ORDERING_NONE;
+			$default_sorting_type = DATA_QUERY_INDEX_SORT_TYPE_NONE;
 		}
 
 		form_alternate_row_color("item_title"); ?>
@@ -220,7 +221,7 @@ function item_edit() {
 		<?php
 		form_end_row();
 		/* don't allow the user to change the tree item ordering if a tree order has been specified */
-		if ($tree_sort_type == TREE_ORDERING_NONE) {
+		if ($tree_sort_type == DATA_QUERY_INDEX_SORT_TYPE_NONE) {
 			form_alternate_row_color("sorting_type"); ?>
 				<td width="50%">
 					<font class="textEditTitle"><?php print __("Sorting Type");?></font><br>
@@ -233,7 +234,7 @@ function item_edit() {
 			form_end_row();
 		}
 
-		if ((!empty($_GET["id"])) && ($tree_sort_type == TREE_ORDERING_NONE)) {
+		if ((!empty($_GET["id"])) && ($tree_sort_type == DATA_QUERY_INDEX_SORT_TYPE_NONE)) {
 			form_alternate_row_color("propagate"); ?>
 				<td width="50%">
 					<font class="textEditTitle"><?php print __("Propagate Changes");?></font><br>

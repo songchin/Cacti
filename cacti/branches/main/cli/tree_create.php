@@ -31,6 +31,7 @@ if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($
 $no_http_headers = true;
 
 include(dirname(__FILE__)."/../include/global.php");
+require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 include_once(CACTI_BASE_PATH."/lib/api_automation_tools.php");
 include_once(CACTI_BASE_PATH.'/lib/api_tree.php');
 include_once(CACTI_BASE_PATH.'/lib/tree.php');
@@ -184,7 +185,7 @@ if (sizeof($parms)) {
 
 				# optional parameters must be defined for api call
 				if (!isset($tree_item["parent_node"])) 			$tree_item["parent_node"] 			= 0;
-				if (!isset($tree_item["sort_children_type"]))	$tree_item["sort_children_type"]	= TREE_ORDERING_NONE;
+				if (!isset($tree_item["sort_children_type"]))	$tree_item["sort_children_type"]	= DATA_QUERY_INDEX_SORT_TYPE_NONE;
 				if (!isset($tree_item["local_graph_id"])) 		$tree_item["local_graph_id"] 		= 0;
 				if (!isset($tree_item["rra_id"])) 				$tree_item["rra_id"] 				= 1;
 				if (!isset($tree_item["device_id"])) 				$tree_item["device_id"] 				= 0;

@@ -603,7 +603,7 @@ function device_remove() {
 }
 
 function device_edit() {
-	global $colors, $fields_device_edit, $fields_device_edit_availability, $reindex_types;
+	global $colors, $fields_device_edit, $fields_device_edit_availability;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -708,7 +708,8 @@ function device_edit() {
 }
 
 function device_display_general($device, $device_text) {
-	global $colors, $fields_device_edit, $fields_device_edit_availability, $reindex_types;
+	global $colors, $fields_device_edit, $fields_device_edit_availability;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 
 	if (isset($device["id"])) {
 		html_start_box($device_text, "100", $colors["header"], "3", "center", "", true);

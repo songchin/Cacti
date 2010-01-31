@@ -389,7 +389,8 @@ function template_item_remove_dq() {
 }
 
 function template_edit() {
-	global $colors, $fields_device_template_edit, $reindex_types;
+	global $colors, $fields_device_template_edit;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));

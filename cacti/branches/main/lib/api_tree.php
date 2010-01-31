@@ -61,6 +61,7 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 	input_validate_input_number($tree_id);
 	input_validate_input_number($parent_tree_item_id);
 
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 
 	$parent_order_key = db_fetch_cell("select order_key from graph_tree_items where id=$parent_tree_item_id");
@@ -118,15 +119,15 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 			$tree_sort_type = db_fetch_cell("select sort_type from graph_tree where id='$tree_id'");
 
 			/* tree item ordering */
-			if ($tree_sort_type == TREE_ORDERING_NONE) {
+			if ($tree_sort_type == DATA_QUERY_INDEX_SORT_TYPE_NONE) {
 				/* resort our parent */
 				$parent_sorting_type = db_fetch_cell("select sort_children_type from graph_tree_items where id=$parent_tree_item_id");
-				if ((!empty($parent_tree_item_id)) && ($parent_sorting_type != TREE_ORDERING_NONE)) {
+				if ((!empty($parent_tree_item_id)) && ($parent_sorting_type != DATA_QUERY_INDEX_SORT_TYPE_NONE)) {
 					sort_tree(SORT_TYPE_TREE_ITEM, $parent_tree_item_id, $parent_sorting_type);
 				}
 
 				/* if this is a header, sort direct children */
-				if (($type == TREE_ITEM_TYPE_HEADER) && ($sort_children_type != TREE_ORDERING_NONE)) {
+				if (($type == TREE_ITEM_TYPE_HEADER) && ($sort_children_type != DATA_QUERY_INDEX_SORT_TYPE_NONE)) {
 					sort_tree(SORT_TYPE_TREE_ITEM, $tree_item_id, $sort_children_type);
 				}
 			/* tree ordering */
@@ -156,7 +157,7 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 					foreach ($tree_items as $item) {
 						db_execute("update graph_tree_items set sort_children_type = '$sort_children_type' where id = '" . $item["id"] . "'");
 
-						if ($sort_children_type != TREE_ORDERING_NONE) {
+						if ($sort_children_type != DATA_QUERY_INDEX_SORT_TYPE_NONE) {
 							sort_tree(SORT_TYPE_TREE_ITEM, $item["id"], $sort_children_type);
 						}
 					}

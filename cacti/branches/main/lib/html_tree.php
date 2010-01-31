@@ -184,6 +184,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 function grow_edit_graph_tree($tree_id, $user_id, $options) {
 	global $config, $colors;
 
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 
 	$tree_sorting_type = db_fetch_cell("select sort_type from graph_tree where id='$tree_id'");
@@ -250,7 +251,7 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 			}
 
 			if ($visible) {
-				if ( ((isset($sort_cache{$tier-1})) && ($sort_cache{$tier-1} != TREE_ORDERING_NONE)) || ($tree_sorting_type != TREE_ORDERING_NONE) )  {
+				if ( ((isset($sort_cache{$tier-1})) && ($sort_cache{$tier-1} != DATA_QUERY_INDEX_SORT_TYPE_NONE)) || ($tree_sorting_type != DATA_QUERY_INDEX_SORT_TYPE_NONE) )  {
 					print "<td bgcolor='#$row_color' width='80'></td>\n";
 				}else{
 					print "<td bgcolor='#$row_color' width='80' align='center'>\n

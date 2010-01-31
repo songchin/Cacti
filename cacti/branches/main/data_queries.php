@@ -372,7 +372,8 @@ function data_query_item_remove() {
 }
 
 function data_query_item_edit() {
-	global $colors, $fields_data_query_item_edit;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -633,7 +634,8 @@ function data_query_remove($id) {
 }
 
 function data_query_edit() {
-	global $colors, $fields_data_query_edit, $config;
+	global $colors, $config;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));

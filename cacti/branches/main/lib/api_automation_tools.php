@@ -473,7 +473,7 @@ function getSNMPQueries() {
  * @return array
  */
 function getSNMPQueriesByDevices($devices, $snmp_query_id='', &$header) {
-	global $reindex_types;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 
 	$header = array();	# provides header info for printout
 	$sql_where = "";
@@ -1078,7 +1078,7 @@ function displayPerms($perm, $quietMode = FALSE) {
  * @param bool $quietMode
  */
 function displayTrees($quietMode = FALSE) {
-	global $tree_sort_types;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 
 	if (!$quietMode) {
 		echo __("Known Trees: (id, sort method, name)") . "\n";
@@ -1111,7 +1111,8 @@ function displayTrees($quietMode = FALSE) {
  * @param bool $quietMode
  */
 function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode = FALSE) {
-	global $tree_sort_types, $tree_item_types, $device_group_types;
+	global $tree_item_types, $device_group_types;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 
 	if (!$quietMode) {
 		echo __("Known Tree Nodes: (type, id, parentid, text)") . "\n";
@@ -1540,11 +1541,12 @@ function verifyDevice(&$device, $ri_check=false) {
 /**
  * verifyDataQuery	- verifies all array items for a data query array
  * 					  recodes the array, if necessary
- * @param $data_query	- data query array (part of device_snmp_query)
- * @param $ri_check	- request a referential integrity test
+ * @param array $data_query	- data query array (part of device_snmp_query)
+ * @param bool  $ri_check	- request a referential integrity test
  * returns			- if ok, returns true with array recoded; otherwise array containg error message
  */
 function verifyDataQuery(&$data_query, $ri_check=false) {
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 
 	foreach($data_query as $key => $value) {
 
@@ -1624,6 +1626,7 @@ function verifyDataQuery(&$data_query, $ri_check=false) {
  * returns			- if ok, returns true with array recoded; otherwise array containg error message
  */
 function verifyDQGraph(&$dqGraph, $ri_check=false) {
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 
 	if (($dqGraph["snmp_query_id"] == "") ||
 	($dqGraph["snmp_query_graph_id"] == "") ||
@@ -1908,7 +1911,7 @@ function verifyPermissions(&$perm, $delim, $ri_check=false) {
  * @param bool $ri_check
  */
 function verifyTree(&$tree, $ri_check=false) {
-	global $tree_sort_types_cli;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 
 	foreach($tree as $key => $value) {
 
@@ -1928,14 +1931,14 @@ function verifyTree(&$tree, $ri_check=false) {
 			case "name":
 				break;
 			case "sort_type_cli":
-				if ($value == $tree_sort_types_cli[TREE_ORDERING_NONE]) {
-					$tree["sort_type"] = TREE_ORDERING_NONE;
-				} elseif ($value == $tree_sort_types_cli[TREE_ORDERING_ALPHABETIC]) {
-					$tree["sort_type"] = TREE_ORDERING_ALPHABETIC;
-				} elseif ($value == $tree_sort_types_cli[TREE_ORDERING_NATURAL]) {
-					$tree["sort_type"] = TREE_ORDERING_NATURAL;
-				} elseif ($value == $tree_sort_types_cli[TREE_ORDERING_NUMERIC]) {
-					$tree["sort_type"] = TREE_ORDERING_NUMERIC;
+				if ($value == $tree_sort_types_cli[DATA_QUERY_INDEX_SORT_TYPE_NONE]) {
+					$tree["sort_type"] = DATA_QUERY_INDEX_SORT_TYPE_NONE;
+				} elseif ($value == $tree_sort_types_cli[DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC]) {
+					$tree["sort_type"] = DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC;
+				} elseif ($value == $tree_sort_types_cli[DATA_QUERY_INDEX_SORT_TYPE_NATURAL]) {
+					$tree["sort_type"] = DATA_QUERY_INDEX_SORT_TYPE_NATURAL;
+				} elseif ($value == $tree_sort_types_cli[DATA_QUERY_INDEX_SORT_TYPE_NUMERIC]) {
+					$tree["sort_type"] = DATA_QUERY_INDEX_SORT_TYPE_NUMERIC;
 				} else {
 					$check["err_msg"] = __("ERROR: Invalid Sort Type: (%s)", $tree["sort_type_cli"]);
 					return $check;
@@ -1953,7 +1956,7 @@ function verifyTree(&$tree, $ri_check=false) {
  * @param bool $ri_check
  */
 function verifyTreeItem(&$tree_item, $ri_check=false) {
-	global $tree_sort_types_cli;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 
 	foreach($tree_item as $key => $value) {
 
@@ -2047,20 +2050,20 @@ function verifyTreeItem(&$tree_item, $ri_check=false) {
 				}
 				break;
 			case "sort_children_type":
-				if ($value != TREE_ORDERING_NONE && $value != TREE_ORDERING_ALPHABETIC && $value != TREE_ORDERING_NUMERIC && $value != TREE_ORDERING_NATURAL) {
-					$check["err_msg"] = __("ERROR: Sort Children Type must be one of (%d, %d, %d, %d) (Manual, Alphabetic, Numeric, Natural)", TREE_ORDERING_NONE, TREE_ORDERING_ALPHABETIC, TREE_ORDERING_NUMERIC, TREE_ORDERING_NATURAL) . "\n";
+				if ($value != DATA_QUERY_INDEX_SORT_TYPE_NONE && $value != DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC && $value != DATA_QUERY_INDEX_SORT_TYPE_NUMERIC && $value != DATA_QUERY_INDEX_SORT_TYPE_NATURAL) {
+					$check["err_msg"] = __("ERROR: Sort Children Type must be one of (%d, %d, %d, %d) (Manual, Alphabetic, Numeric, Natural)", DATA_QUERY_INDEX_SORT_TYPE_NONE, DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC, DATA_QUERY_INDEX_SORT_TYPE_NUMERIC, DATA_QUERY_INDEX_SORT_TYPE_NATURAL) . "\n";
 					return $check;
 				}
 				break;
 			case "sort_type_cli":
-				if ($value == $tree_sort_types_cli[TREE_ORDERING_NONE]) {
-					$tree_item["sort_children_type"] = TREE_ORDERING_NONE;
-				} elseif ($value == $tree_sort_types_cli[TREE_ORDERING_ALPHABETIC]) {
-					$tree_item["sort_children_type"] = TREE_ORDERING_ALPHABETIC;
-				} elseif ($value == $tree_sort_types_cli[TREE_ORDERING_NATURAL]) {
-					$tree_item["sort_children_type"] = TREE_ORDERING_NATURAL;
-				} elseif ($value == $tree_sort_types_cli[TREE_ORDERING_NUMERIC]) {
-					$tree_item["sort_children_type"] = TREE_ORDERING_NUMERIC;
+				if ($value == $tree_sort_types_cli[DATA_QUERY_INDEX_SORT_TYPE_NONE]) {
+					$tree_item["sort_children_type"] = DATA_QUERY_INDEX_SORT_TYPE_NONE;
+				} elseif ($value == $tree_sort_types_cli[DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC]) {
+					$tree_item["sort_children_type"] = DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC;
+				} elseif ($value == $tree_sort_types_cli[DATA_QUERY_INDEX_SORT_TYPE_NATURAL]) {
+					$tree_item["sort_children_type"] = DATA_QUERY_INDEX_SORT_TYPE_NATURAL;
+				} elseif ($value == $tree_sort_types_cli[DATA_QUERY_INDEX_SORT_TYPE_NUMERIC]) {
+					$tree_item["sort_children_type"] = DATA_QUERY_INDEX_SORT_TYPE_NUMERIC;
 				} else {
 					$check["err_msg"] = __("ERROR: Invalid Sort Type: (%s)", $tree_item["sort_type_cli"]);
 					return $check;

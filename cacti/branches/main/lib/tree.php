@@ -205,16 +205,17 @@ function reset_session_variables($pre_tree) {
      SORT_TYPE_TREE_ITEM (2) - sort a single tree branch
    @param $item_id - the id tree or tree item to sort
    @param $sort_style - the type of sorting to perform. available options are:
-     TREE_ORDERING_NONE (1) - no sorting
-     TREE_ORDERING_ALPHABETIC (2) - alphabetic sorting
-     TREE_ORDERING_NUMERIC (3) - numeric sorting */
+     DATA_QUERY_INDEX_SORT_TYPE_NONE (1) - no sorting
+     DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC (2) - alphabetic sorting
+     DATA_QUERY_INDEX_SORT_TYPE_NUMERIC (3) - numeric sorting */
 function sort_tree($sort_type, $item_id, $sort_style) {
 	global $config;
 
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/sort.php");
 
 	if (empty($item_id)) { return 0; }
-	if ($sort_style == TREE_ORDERING_NONE) { return 0; }
+	if ($sort_style == DATA_QUERY_INDEX_SORT_TYPE_NONE) { return 0; }
 
 	$search_key = "";
 
@@ -267,11 +268,11 @@ function sort_tree($sort_type, $item_id, $sort_style) {
 	/* do the actual sort */
 	while (list($_tier_key, $tier_array) = each($leaf_sort_array)) {
 		while (list($_search_key, $search_array) = each($tier_array)) {
-			if ($sort_style == TREE_ORDERING_NUMERIC) {
+			if ($sort_style == DATA_QUERY_INDEX_SORT_TYPE_NUMERIC) {
 				uasort($leaf_sort_array[$_tier_key][$_search_key], "usort_numeric");
-			}elseif ($sort_style == TREE_ORDERING_ALPHABETIC) {
+			}elseif ($sort_style == DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC) {
 				uasort($leaf_sort_array[$_tier_key][$_search_key], "usort_alphabetic");
-			}elseif ($sort_style == TREE_ORDERING_NATURAL) {
+			}elseif ($sort_style == DATA_QUERY_INDEX_SORT_TYPE_NATURAL) {
 				uasort($leaf_sort_array[$_tier_key][$_search_key], "usort_natural");
 			}
 		}
