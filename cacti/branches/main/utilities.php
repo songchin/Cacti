@@ -294,8 +294,10 @@ function display_general() {
 		$out_array = array();
 		exec(read_config_option("path_rrdtool"), $out_array);
 
-		if (sizeof($out_array) > 0) {
-			if (preg_match("/^RRDtool 1\.3/", $out_array[0])) {
+        if (sizeof($out_array) > 0) {
+            if (preg_match("/^RRDtool 1\.4/", $out_array[0])) {
+                $rrdtool_version = RRD_VERSION_1_4;
+            }else if (preg_match("/^RRDtool 1\.3/", $out_array[0])) {
 				$rrdtool_version = RRD_VERSION_1_3;
 			}else if (preg_match("/^RRDtool 1\.2\./", $out_array[0])) {
 				$rrdtool_version = RRD_VERSION_1_2;
