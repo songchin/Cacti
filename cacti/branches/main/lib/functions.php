@@ -2326,3 +2326,17 @@ function sanitize_search_string($string) {
 
 	return $string;
 }
+/* cacti_wiki_url - determines the http://docs.cacti.net reference URL,
+    which is based on CACTI_WIKI_URL, which is defined in global.php. It
+    takes into account action=shift and tab setting
+    @returns - the namespace and subpage if applicable */
+function cacti_wiki_url() {
+    $ref_ns = rtrim(basename($_SERVER["PHP_SELF"], ".php"));
+    $ref_sp = '';
+    if (isset($_GET["action"]) && ($_GET["action"] !== NULL ) && ($_GET["action"] !== "shift" )) {
+        $ref_sp = ":" . $_GET["action"];
+    } elseif (isset($_GET["action"]) && ($_GET["tab"] != NULL)) {
+        $ref_sp = ":" . $_GET["tab"];
+    }
+    return CACTI_WIKI_URL . $ref_ns . $ref_sp;
+}
