@@ -472,7 +472,7 @@ function xaxis_to_xml($xaxis_id) {
 }
 
 function gprint_preset_to_xml($gprint_preset_id) {
-	global $fields_grprint_presets_edit;
+	require(CACTI_BASE_PATH . "/include/presets/preset_gprint_forms.php");
 
 	$hash = get_hash_version("gprint_preset") . get_hash_gprint($gprint_preset_id);
 	$xml_text = "";

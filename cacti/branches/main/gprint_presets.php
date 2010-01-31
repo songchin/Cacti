@@ -198,7 +198,8 @@ function form_save() {
    ----------------------------------- */
 
 function gprint_presets_edit() {
-	global $colors, $fields_grprint_presets_edit;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/presets/preset_gprint_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
