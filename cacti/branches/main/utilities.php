@@ -1797,7 +1797,7 @@ function utilities() {
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<a href='<?php print htmlspecialchars("utilities.php?action=view_tech");?>'><?php print __("Technical Support");?></a>
+			<a href='<?php print htmlspecialchars("utilities.php?action=view_tech&tab=general");?>'><?php print __("Technical Support");?></a>
 		</td>
 		<td class="textAreaNotes">
 			<?php print __("Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues.");?>

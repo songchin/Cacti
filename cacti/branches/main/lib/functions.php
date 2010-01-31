@@ -2334,7 +2334,11 @@ function cacti_wiki_url() {
     $ref_ns = rtrim(basename($_SERVER["PHP_SELF"], ".php"));
     $ref_sp = '';
     if (isset($_GET["action"]) && ($_GET["action"] !== NULL ) && ($_GET["action"] !== "shift" )) {
-        $ref_sp = ":" . $_GET["action"];
+        if (isset($_GET["tab"])) {
+            $ref_sp = ":" . $_GET["action"] . ":" . $_GET["tab"];
+        } else {
+            $ref_sp = ":" . $_GET["action"];
+        }
     } elseif (isset($_GET["action"]) && ($_GET["tab"] != NULL)) {
         $ref_sp = ":" . $_GET["tab"];
     }
