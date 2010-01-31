@@ -418,7 +418,7 @@ function vdef_to_xml($vdef_id) {
 }
 
 function xaxis_to_xml($xaxis_id) {
-	global $fields_xaxis_edit, $fields_xaxis_item_edit;
+	require(CACTI_BASE_PATH . "/include/presets/preset_xaxis_forms.php");
 
 	$hash["xaxis"] = get_hash_version("xaxis") . get_hash_xaxis($xaxis_id);
 	$xml_text = "";

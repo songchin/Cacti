@@ -440,7 +440,8 @@ function color_remove() {
 }
 
 function color_edit() {
-	global $colors, $fields_color_edit;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/presets/preset_color_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -635,9 +636,9 @@ function color() {
 	$i = 0;
 
 	while ($i < get_request_var_request("columns")) {
-		print "<th id='Hex' class='textSubHeaderDark'>" . __("Hex") . "</th>" 
-		. "<th id='Class' class='textSubHeaderDark'>" . __("Color") . "</th>" 
-		. "<th id='spacer' class='textSubHeaderDark'>&nbsp;</th>"; 
+		print "<th id='Hex' class='textSubHeaderDark'>" . __("Hex") . "</th>"
+		. "<th id='Class' class='textSubHeaderDark'>" . __("Color") . "</th>"
+		. "<th id='spacer' class='textSubHeaderDark'>&nbsp;</th>";
 		$i++;
 	}
 

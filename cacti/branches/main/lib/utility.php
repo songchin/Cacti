@@ -800,7 +800,7 @@ function duplicate_vdef($_vdef_id, $vdef_title) {
 }
 
 function duplicate_xaxis($_xaxis_id, $xaxis_title) {
-	global $fields_xaxis_item_edit;
+	require(CACTI_BASE_PATH . "/include/presets/preset_xaxis_forms.php");
 
 	$xaxis = db_fetch_row("select * from graph_templates_xaxis where id=$_xaxis_id");
 	$xaxis_items = db_fetch_assoc("select * from graph_templates_xaxis_items where xaxis_id=$_xaxis_id ORDER BY timespan");

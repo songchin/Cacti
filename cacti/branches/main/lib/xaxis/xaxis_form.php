@@ -235,7 +235,8 @@ function item_remove() {
 }
 
 function item_edit() {
-	global $colors, $fields_xaxis_item_edit;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/presets/preset_xaxis_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -275,7 +276,9 @@ function item_edit() {
 
 
 function xaxis_edit() {
-	global $colors, $fields_xaxis_edit, $rrd_xaxis_timespans;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/presets/preset_xaxis_arrays.php");
+	require(CACTI_BASE_PATH . "/include/presets/preset_xaxis_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));

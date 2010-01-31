@@ -67,14 +67,6 @@ define("COLORTAGS_TEMPLATE",	3);
 define("COLORTAGS_UTG",			4);
 define("COLORTAGS_TUG",			5);
 
-define("RRD_XAXIS_SECOND",		"SECOND");
-define("RRD_XAXIS_MINUTE",		"MINUTE");
-define("RRD_XAXIS_HOUR",		"HOUR");
-define("RRD_XAXIS_DAY",			"DAY");
-define("RRD_XAXIS_WEEK",		"WEEK");
-define("RRD_XAXIS_MONTH",		"MONTH");
-define("RRD_XAXIS_YEAR",		"YEAR");
-
 define("RRD_LEGEND_POS_NORTH",	"north");
 define("RRD_LEGEND_POS_SOUTH",	"south");
 define("RRD_LEGEND_POS_WEST",	"west");
