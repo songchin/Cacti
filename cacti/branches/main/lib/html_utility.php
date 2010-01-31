@@ -47,7 +47,7 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
 			if (isset($field_array[$field_to_check]) && (is_array($form_array[$field_name][$field_to_check]))) {
 				/* if the field/sub-field combination is an array, resolve it recursively */
 				$form_array[$field_name][$field_to_check] = inject_form_variables($form_array[$field_name][$field_to_check], $arg1);
-			}elseif (isset($field_array[$field_to_check]) && (!is_array($field_array[$field_to_check])) && (ereg("\|(arg[123]):([a-zA-Z0-9_]*)\|", $field_array[$field_to_check], $matches))) {
+			}elseif (isset($field_array[$field_to_check]) && (!is_array($field_array[$field_to_check])) && (preg_match("/\|(arg[123]):([a-zA-Z0-9_]*)\|/", $field_array[$field_to_check], $matches))) {
 				$string = $field_array[$field_to_check];
 				while ( 1 ) { 
 					/* an empty field name in the variable means don't treat this as an array */
@@ -66,7 +66,7 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
 						$string = str_replace($matches[0], ((isset(${$matches[1]}{$matches[2]})) ? ${$matches[1]}{$matches[2]} : ""), $string);
 
 						$matches = array();
-						ereg("\|(arg[123]):([a-zA-Z0-9_]*)\|", $string, $matches);
+						preg_match("/\|(arg[123]):([a-zA-Z0-9_]*)\|/", $string, $matches);
 						if (!sizeof($matches)) {
 							$form_array[$field_name][$field_to_check] = $string;
 							break;
