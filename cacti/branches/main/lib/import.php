@@ -269,7 +269,7 @@ function xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_data_template($hash, &$xml_array, &$hash_cache, $import_custom_rra_settings) {
-	global $struct_data_source, $struct_data_source_item;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
 
 	/* import into: data_template */
 	$_data_template_id = db_fetch_cell("select id from data_template where hash='$hash'");

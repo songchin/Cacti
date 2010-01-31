@@ -24,7 +24,7 @@
 
 include_once(CACTI_BASE_PATH . "/lib/time.php");
 
-global $colors, $config, $data_source_types;
+global $colors, $config;
 
 $page_title = api_plugin_hook_function('page_title', 'Cacti');
 

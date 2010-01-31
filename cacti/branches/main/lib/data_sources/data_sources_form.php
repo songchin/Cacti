@@ -619,7 +619,8 @@ function data_source_rrd_add() {
 }
 
 function data_source_edit() {
-	global $colors, $struct_data_source, $struct_data_source_item, $data_source_types;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));

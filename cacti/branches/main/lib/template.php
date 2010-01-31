@@ -113,7 +113,7 @@ function push_out_data_source_custom_data($data_template_id) {
 	children
    @param $data_template_rrd_id - the id of the data template item to push out values for */
 function push_out_data_source_item($data_template_rrd_id) {
-	global $struct_data_source_item;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
 
 	/* get information about this data template */
 	$data_template_rrd = db_fetch_row("select * from data_template_rrd where id=$data_template_rrd_id");
@@ -134,7 +134,7 @@ function push_out_data_source_item($data_template_rrd_id) {
 /* push_out_data_source - pushes out templated data template fields to all matching children
    @param $data_template_data_id - the id of the data template to push out values for */
 function push_out_data_source($data_template_data_id) {
-	global $struct_data_source;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
 
 	/* get information about this data template */
 	$data_template_data = db_fetch_row("select * from data_template_data where id=$data_template_data_id");
@@ -163,7 +163,7 @@ function push_out_data_source($data_template_data_id) {
    @param $data_template_id - id the of the data template to change to. specify '0' for no
 	data template */
 function change_data_template($local_data_id, $data_template_id) {
-	global $struct_data_source, $struct_data_source_item;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
 
 	/* always update tables to new data template (or no data template) */
 	db_execute("UPDATE data_local SET data_template_id=$data_template_id WHERE id=$local_data_id");

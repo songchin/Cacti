@@ -82,7 +82,8 @@ switch (get_request_var_request("action")) {
    -------------------------- */
 
 function form_save() {
-	global $data_source_types;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+
 	if (isset($_POST["save_component_template"])) {
 		/* ================= input validation ================= */
 		input_validate_input_number(get_request_var_post("data_input_id"));
@@ -443,7 +444,8 @@ function template_rrd_add() {
 }
 
 function template_edit() {
-	global $colors, $struct_data_source, $struct_data_source_item, $data_source_types, $fields_data_template_template_edit;
+	global $colors, $fields_data_template_template_edit;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));

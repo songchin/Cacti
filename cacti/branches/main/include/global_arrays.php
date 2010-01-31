@@ -155,14 +155,6 @@ $rrd_legend_direction = array(
 	RRD_LEGEND_DIR_BOTTOMUP	=> __("Bottom -> Up"),
 );
 
-$data_source_types = array(
-	DATA_SOURCE_TYPE_GAUGE		=> "GAUGE",
-	DATA_SOURCE_TYPE_COUNTER	=> "COUNTER",
-	DATA_SOURCE_TYPE_DERIVE		=> "DERIVE",
-	DATA_SOURCE_TYPE_ABSOLUTE	=> "ABSOLUTE",
-	DATA_SOURCE_TYPE_COMPUTE	=> "COMPUTE"
-	);
-
 $graph_item_types = array(
 	GRAPH_ITEM_TYPE_COMMENT			=> "COMMENT",
 	GRAPH_ITEM_TYPE_HRULE			=> "HRULE",

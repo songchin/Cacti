@@ -217,8 +217,9 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 
 function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 	global $config;
+	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
-	include (CACTI_BASE_PATH . "/include/global_arrays.php");
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	$data_source_path = get_data_source_path($local_data_id, true);
 
@@ -2648,8 +2649,8 @@ function rrdgraph_item_opts($graph_item, $graph_data_array, $hardreturn, $graph_
  * returns					array build like $info defining html class in case of error
  */
 function rrdtool_cacti_compare($data_source_id, &$info) {
-	global $data_source_types;
 	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	/* get cacti header information for given data source id */
 	$cacti_header_array = db_fetch_row("SELECT " .
@@ -2913,6 +2914,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source=TRUE) {
    @rerturn - (array) an array containing issues with the rrdtool file definition vs data source */
 function rrd_check($data_source_id) {
 	global $config, $rrd_tune_array;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
 	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
@@ -2926,6 +2928,7 @@ function rrd_check($data_source_id) {
    @rerturn - 1 success, 2 false */
 function rrd_repair($data_source_id) {
 	global $config, $rrd_tune_array;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
 	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};

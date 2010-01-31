@@ -229,7 +229,8 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
    @param $snmp_query_graph_id - if this data template is part of a data query, specify the graph id here. this
      will be used to determine if a given field is using suggested values */
 function draw_nontemplated_fields_data_source($data_template_id, $local_data_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true, $include_hidden_fields = true, $snmp_query_graph_id = 0) {
-	global $struct_data_source, $colors;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
 
 	$form_array = array();
 	$draw_any_items = false;
@@ -317,7 +318,8 @@ function draw_nontemplated_fields_data_source($data_template_id, $local_data_id,
    @param $snmp_query_graph_id - if this graph template is part of a data query, specify the graph id here. this
      will be used to determine if a given field is using suggested values */
 function draw_nontemplated_fields_data_source_item($data_template_id, &$values_array, $field_name_format = "|field_id|", $header_title = "", $draw_title_for_each_item = true, $alternate_colors = true, $include_hidden_fields = true, $snmp_query_graph_id = 0) {
-	global $struct_data_source_item, $colors;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
 
 	$draw_any_items = false;
 	$num_fields_drawn = 0;
