@@ -22,50 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-/* get_vdef_item_name - resolves a single VDEF item into its text-based representation
-   @param $vdef_item_id - the id of the individual vdef item
-   @returns - a text-based representation of the vdef item */
-function get_vdef_item_name($vdef_item_id) 	{
-	global $config;
-	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_arrays.php");
-
-	$vdef_item = db_fetch_row("select type,value from vdef_items where id=$vdef_item_id");
-	$current_vdef_value = $vdef_item["value"];
-
-	switch ($vdef_item["type"]) {
-		case '1': return $vdef_functions[$current_vdef_value];
-		case '4': return $current_vdef_value;
-		case '6': return $current_vdef_value;
-	}
-}
-
-/* get_vdef - resolves an entire VDEF into its text-based representation for use in the RRDTool 'graph'
-     string. this name will be resolved recursively if necessary
-   @param $vdef_id - the id of the vdef to resolve
-   @returns - a text-based representation of the vdef */
-function get_vdef($vdef_id) {
-	$vdef_items = db_fetch_assoc("select * from vdef_items where vdef_id=$vdef_id order by sequence");
-
-	$i = 0; $vdef_string = "";
-
-	if (sizeof($vdef_items) > 0) {
-		foreach ($vdef_items as $vdef_item) {
-			if ($i > 0) {
-				$vdef_string .= ",";
-			}
-
-			if ($vdef_item["type"] == 5) {
-				$current_vdef_id = $vdef_item["value"];
-				$vdef_string .= get_vdef($current_vdef_id);
-			}else{
-				$vdef_string .= get_vdef_item_name($vdef_item["id"]);
-			}
-
-			$i++;
-		}
-	}
-
-	return $vdef_string;
-}
-
-?>
+define("CVDEF_ITEM_TYPE_FUNCTION",		1);
+define("CVDEF_ITEM_TYPE_OPERATOR",		2);
+define("CVDEF_ITEM_TYPE_SPEC_DS",		4);
+define("CVDEF_ITEM_TYPE_CDEF",			5);
+define("CVDEF_ITEM_TYPE_STRING",		6);

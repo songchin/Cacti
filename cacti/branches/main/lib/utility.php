@@ -722,7 +722,7 @@ function duplicate_device_template($_device_template_id, $device_template_title)
 }
 
 function duplicate_cdef($_cdef_id, $cdef_title) {
-	global $fields_cdef_edit;
+	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_forms.php");
 
 	$cdef = db_fetch_row("select * from cdef where id=$_cdef_id");
 	$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=$_cdef_id");
@@ -761,7 +761,7 @@ function duplicate_cdef($_cdef_id, $cdef_title) {
 }
 
 function duplicate_vdef($_vdef_id, $vdef_title) {
-	global $fields_vdef_edit;
+	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_forms.php");
 
 	$vdef = db_fetch_row("select * from vdef where id=$_vdef_id");
 	$vdef_items = db_fetch_assoc("select * from vdef_items where vdef_id=$_vdef_id");

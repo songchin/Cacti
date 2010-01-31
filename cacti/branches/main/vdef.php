@@ -282,7 +282,9 @@ function item_remove() {
 }
 
 function item_edit() {
-	global $colors, $vdef_item_types, $vdef_functions, $vdef_operators, $custom_vdef_data_source_types;
+	global $colors, $custom_vdef_data_source_types;
+	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_constants.php");
+	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -398,7 +400,9 @@ function vdef_remove() {
 }
 
 function vdef_edit() {
-	global $colors, $vdef_item_types, $fields_vdef_edit;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_arrays.php");
+	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));

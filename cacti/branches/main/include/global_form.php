@@ -27,37 +27,6 @@ if (!defined('VALID_HOST_FIELDS')) {
 	define('VALID_HOST_FIELDS', $string);
 }
 
-/* file: cdef.php, action: edit */
-$fields_cdef_edit = array(
-	"name" => array(
-		"method" => "textbox",
-		"friendly_name" => __("Name"),
-		"description" => __("A useful name for this CDEF."),
-		"value" => "|arg1:name|",
-		"max_length" => "255",
-		"size" => "60"
-		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"save_component_cdef" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
-	);
-
-/* file: vdef.php, action: edit */
-$fields_vdef_edit = array(
-	"name" => array(
-		"method" => "textbox",
-		"friendly_name" => __("Name"),
-		"description" => __("A useful name for this VDEF."),
-		"value" => "|arg1:name|",
-		"max_length" => "255",
-		),
-	);
-
 /* file: xaxis.php, action: edit */
 $fields_xaxis_edit = array(
 	"name" => array(

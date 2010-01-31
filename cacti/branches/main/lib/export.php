@@ -310,13 +310,7 @@ function data_input_method_to_xml($data_input_id) {
 }
 
 function cdef_to_xml($cdef_id) {
-	global $fields_cdef_edit;
-
-	$fields_cdef_item_edit = array(
-		"sequence" => "sequence",
-		"type" => "type",
-		"value" => "value"
-		);
+	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_forms.php");
 
 	$hash["cdef"] = get_hash_version("cdef") . get_hash_cdef($cdef_id);
 	$xml_text = "";
@@ -370,13 +364,7 @@ function cdef_to_xml($cdef_id) {
 }
 
 function vdef_to_xml($vdef_id) {
-	global $fields_vdef_edit;
-
-	$fields_vdef_item_edit = array(
-		"sequence" => "sequence",
-		"type" => "type",
-		"value" => "value"
-		);
+	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_forms.php");
 
 	$hash["vdef"] = get_hash_version("vdef") . get_hash_vdef($vdef_id);
 	$xml_text = "";

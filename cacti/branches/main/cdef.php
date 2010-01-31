@@ -285,7 +285,9 @@ function item_remove() {
 }
 
 function item_edit() {
-	global $colors, $cdef_item_types, $cdef_functions, $cdef_operators, $custom_data_source_types;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_constants.php");
+	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -392,7 +394,9 @@ function cdef_remove() {
 }
 
 function cdef_edit() {
-	global $colors, $cdef_item_types, $fields_cdef_edit;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_arrays.php");
+	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));

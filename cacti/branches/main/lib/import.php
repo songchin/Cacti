@@ -662,13 +662,7 @@ function xml_to_device_template($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_cdef($hash, &$xml_array, &$hash_cache) {
-	global $fields_cdef_edit;
-
-	$fields_cdef_item_edit = array(
-		"sequence" => "sequence",
-		"type" => "type",
-		"value" => "value"
-		);
+	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_forms.php");
 
 	/* import into: cdef */
 	$_cdef_id = db_fetch_cell("select id from cdef where hash='$hash'");
@@ -725,13 +719,7 @@ function xml_to_cdef($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_vdef($hash, &$xml_array, &$hash_cache) {
-	global $fields_vdef_edit;
-
-	$fields_vdef_item_edit = array(
-		"sequence" => "sequence",
-		"type" => "type",
-		"value" => "value"
-		);
+	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_forms.php");
 
 	/* import into: vdef */
 	$_vdef_id = db_fetch_cell("select id from vdef where hash='$hash'");

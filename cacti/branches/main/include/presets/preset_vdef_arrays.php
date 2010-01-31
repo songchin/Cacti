@@ -22,50 +22,28 @@
  +-------------------------------------------------------------------------+
 */
 
-/* get_vdef_item_name - resolves a single VDEF item into its text-based representation
-   @param $vdef_item_id - the id of the individual vdef item
-   @returns - a text-based representation of the vdef item */
-function get_vdef_item_name($vdef_item_id) 	{
-	global $config;
-	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/presets/preset_cdef_constants.php");
 
-	$vdef_item = db_fetch_row("select type,value from vdef_items where id=$vdef_item_id");
-	$current_vdef_value = $vdef_item["value"];
+$vdef_functions = array(1 =>
+	"MAXIMUM",
+	"MINIMUM",
+	"AVERAGE",
+	"STDEV",
+	"LAST",
+	"FIRST",
+	"TOTAL",
+	"PERCENT",
+	"PERCENTNAN",
+	"LSLSLOPE",
+	"LSLINT",
+	"LSLCORREL");
 
-	switch ($vdef_item["type"]) {
-		case '1': return $vdef_functions[$current_vdef_value];
-		case '4': return $current_vdef_value;
-		case '6': return $current_vdef_value;
-	}
-}
+$vdef_item_types = array(
+	CVDEF_ITEM_TYPE_FUNCTION	=> __("Function"),
+	CVDEF_ITEM_TYPE_SPEC_DS		=> __("Special Data Source"),
+	CVDEF_ITEM_TYPE_STRING		=> __("Custom String"),
+	);
 
-/* get_vdef - resolves an entire VDEF into its text-based representation for use in the RRDTool 'graph'
-     string. this name will be resolved recursively if necessary
-   @param $vdef_id - the id of the vdef to resolve
-   @returns - a text-based representation of the vdef */
-function get_vdef($vdef_id) {
-	$vdef_items = db_fetch_assoc("select * from vdef_items where vdef_id=$vdef_id order by sequence");
-
-	$i = 0; $vdef_string = "";
-
-	if (sizeof($vdef_items) > 0) {
-		foreach ($vdef_items as $vdef_item) {
-			if ($i > 0) {
-				$vdef_string .= ",";
-			}
-
-			if ($vdef_item["type"] == 5) {
-				$current_vdef_id = $vdef_item["value"];
-				$vdef_string .= get_vdef($current_vdef_id);
-			}else{
-				$vdef_string .= get_vdef_item_name($vdef_item["id"]);
-			}
-
-			$i++;
-		}
-	}
-
-	return $vdef_string;
-}
-
-?>
+$custom_vdef_data_source_types = array( # this may change as soon as RRDTool supports math in VDEF, until then only reference to CDEF may help
+	"CURRENT_DATA_SOURCE"				=> __("Current Graph Item Data Source"),
+	);

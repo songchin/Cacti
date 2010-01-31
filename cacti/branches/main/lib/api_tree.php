@@ -22,9 +22,9 @@
  +-------------------------------------------------------------------------+
 */
 
-/** api_tree_add_tree_names_to_actions_array - add tree names to the action dropdown list
+/** api_tree_add_tree_names_to_actions_array - build an array to add tree names to the action dropdown list
  *
- * @return unknown_type
+ * @return array - tree names as entries to an array
  */
 function api_tree_add_tree_names_to_actions_array() {
 	/* add a list of tree names to the actions dropdown */

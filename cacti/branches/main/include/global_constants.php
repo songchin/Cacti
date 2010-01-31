@@ -164,13 +164,6 @@ define("GRAPH_ITEM_TYPE_TEXTALIGN",		12);
 define("GRAPH_ITEM_TYPE_LEGEND", 		98);
 define("GRAPH_ITEM_TYPE_CUSTOM_LEGEND",	99);
 
-define("CVDEF_ITEM_TYPE_FUNCTION",		1);
-define("CVDEF_ITEM_TYPE_OPERATOR",		2);
-define("CVDEF_ITEM_TYPE_SPEC_DS",		4);
-define("CVDEF_ITEM_TYPE_CDEF",			5);
-define("CVDEF_ITEM_TYPE_STRING",		6);
-
-
 define("IMAGE_TYPE_PNG", 1);
 define("IMAGE_TYPE_GIF", 2);
 define("IMAGE_TYPE_SVG", 3);
