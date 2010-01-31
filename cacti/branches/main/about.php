@@ -57,6 +57,8 @@ html_start_box("<strong>" . __("About Cacti") . "</strong>", "100", $colors["hea
 			</li>
 			<li><strong>Reinhard Scheck</strong> (gandalf) joined the Cacti team in June of 2007.  Reinhard is focusing on howto's and graph presentation as well as being the 'European Arm' of the Cacti Group.
 			</li>
+			<li><strong>Andreas Braun</strong> (browniebraun) joined the Cacti Group in July of 2009. As the second european developer Andreas is focusing on internationalization of Cacti.
+			</li>
 		</ul>
 
 		<p><strong>Thanks</strong><br></p>
