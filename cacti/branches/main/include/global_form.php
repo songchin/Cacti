@@ -146,42 +146,6 @@ $fields_data_input_field_edit = array(
 		)
 	);
 
-/* file: data_templates.php, action: template_edit */
-$fields_data_template_template_edit = array(
-	"template_name" => array(
-		"method" => "textbox",
-		"friendly_name" => __("Name"),
-		"description" => __("The name given to this data template."),
-		"value" => "|arg1:name|",
-		"max_length" => "150",
-		),
-	"description" => array(
-		"method" => "textarea",
-		"friendly_name" => __("Description"),
-		"description" => __("Additional details relative this template."),
-		"value" => "|arg1:description|",
-		"textarea_rows" => "5",
-		"textarea_cols" => "60",
-		"class" => "textAreaNotes"
-		),
-	"data_template_id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg2:data_template_id|"
-		),
-	"data_template_data_id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg2:id|"
-		),
-	"current_rrd" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg3:view_rrd|"
-		),
-	"save_component_template" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
-	);
-
 /* file: (graphs.php|graph_templates.php), action: (graph|template)_edit
  *
  * struct_graph was split into different parts to group options as man rrdgrapg suggests

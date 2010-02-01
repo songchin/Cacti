@@ -444,8 +444,9 @@ function template_rrd_add() {
 }
 
 function template_edit() {
-	global $colors, $fields_data_template_template_edit;
+	global $colors;
 	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
+	require(CACTI_BASE_PATH . "/include/data_template/data_template_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
