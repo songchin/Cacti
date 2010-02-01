@@ -110,15 +110,6 @@ $messages = array(
 		"type" => "error"),
 	);
 
-$input_types = array(
-	DATA_INPUT_TYPE_SNMP => "SNMP", // Action 0:
-	DATA_INPUT_TYPE_SNMP_QUERY => "SNMP Query",
-	DATA_INPUT_TYPE_SCRIPT => "Script/Command",  // Action 1:
-	DATA_INPUT_TYPE_SCRIPT_QUERY => "Script Query", // Action 1:
-	DATA_INPUT_TYPE_PHP_SCRIPT_SERVER => "Script - Script Server (PHP)",
-	DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER => "Script Query - Script Server",
-	);
-
 $snmp_query_field_actions = array(1 =>
 	__("SNMP Field Name (Dropdown)"),
 	__("SNMP Field Value (From User)"),

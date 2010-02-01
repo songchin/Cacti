@@ -201,7 +201,7 @@ function memory_readable($val) {
 
 
 function utilities_view_tech() {
-	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
+	global $colors, $config, $rrdtool_versions, $poller_options;
 
 	/* Remove all cached settings, cause read of database */
 	kill_session_var("sess_config_array");
@@ -264,7 +264,7 @@ function utilities_view_tech() {
 }
 
 function display_php() {
-	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
+	global $colors, $config, $rrdtool_versions, $poller_options;
 
 	$php_info = utilities_php_modules();
 
@@ -277,7 +277,7 @@ function display_php() {
 }
 
 function display_general() {
-	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
+	global $colors, $config, $rrdtool_versions, $poller_options;
 
 	/* Get poller stats */
 	$poller_item = db_fetch_assoc("SELECT action, count(action) as total FROM poller_item GROUP BY action");
@@ -494,7 +494,7 @@ function display_general() {
 }
 
 function display_database() {
-	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
+	global $colors, $config, $rrdtool_versions, $poller_options;
 
 	/* Get table status */
 	$table_status = db_fetch_assoc("SHOW TABLE STATUS");
@@ -536,7 +536,7 @@ function display_database() {
 }
 
 function display_database_processes() {
-	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
+	global $colors, $config, $rrdtool_versions, $poller_options;
 
 	/* Get table status */
 	$db_processes = db_fetch_assoc("SHOW PROCESSLIST");

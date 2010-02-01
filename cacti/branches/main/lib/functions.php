@@ -1129,6 +1129,7 @@ function validate_result(&$result) {
    @returns - the full script path or (bool) false for an error */
 function get_full_script_path($local_data_id) {
 	global $config;
+	require(CACTI_BASE_PATH . "/include/data_input/data_input_constants.php");
 
 	$data_source = db_fetch_row("select
 		data_template_data.id,

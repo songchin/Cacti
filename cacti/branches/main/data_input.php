@@ -300,7 +300,8 @@ function field_remove() {
 }
 
 function field_edit() {
-	global $colors, $registered_cacti_names, $fields_data_input_field_edit_1, $fields_data_input_field_edit_2, $fields_data_input_field_edit;
+	global $colors, $registered_cacti_names;
+	require(CACTI_BASE_PATH . "/include/data_input/data_input_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -396,7 +397,8 @@ function data_remove($id) {
 }
 
 function data_edit() {
-	global $colors, $fields_data_input_edit;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/data_input/data_input_forms.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -499,7 +501,8 @@ function data_edit() {
 }
 
 function data() {
-	global $colors, $input_types, $di_actions, $item_rows;
+	global $colors, $di_actions, $item_rows;
+	require(CACTI_BASE_PATH . "/include/data_input/data_input_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("page"));

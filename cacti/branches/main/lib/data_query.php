@@ -25,6 +25,7 @@
 function run_data_query($device_id, $snmp_query_id) {
 	global $config;
 
+	require(CACTI_BASE_PATH . "/include/data_input/data_input_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/poller.php");
 	include_once(CACTI_BASE_PATH . "/lib/utility.php");
 

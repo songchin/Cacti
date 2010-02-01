@@ -75,13 +75,6 @@ define("RRD_ALIGN_CENTER",		"center");
 define("RRD_LEGEND_DIR_TOPDOWN",	"topdown");
 define("RRD_LEGEND_DIR_BOTTOMUP",	"bottomup");
 
-define("DATA_INPUT_TYPE_SCRIPT", 1);
-define("DATA_INPUT_TYPE_SNMP", 2);
-define("DATA_INPUT_TYPE_SNMP_QUERY", 3);
-define("DATA_INPUT_TYPE_SCRIPT_QUERY", 4);
-define("DATA_INPUT_TYPE_PHP_SCRIPT_SERVER", 5);
-define("DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER", 6);
-
 define("GRAPH_TREE_VIEW", 1);
 define("GRAPH_LIST_VIEW", 2);
 define("GRAPH_PREVIEW_VIEW", 3);

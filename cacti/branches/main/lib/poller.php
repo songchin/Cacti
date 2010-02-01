@@ -152,6 +152,7 @@ function update_reindex_cache($device_id, $data_query_id) {
 	global $config;
 
 	require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	require(CACTI_BASE_PATH . "/include/data_input/data_input_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 	include_once(CACTI_BASE_PATH . "/lib/snmp.php");
 
