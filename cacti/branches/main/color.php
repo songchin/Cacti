@@ -441,7 +441,7 @@ function color_remove() {
 
 function color_edit() {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/presets/preset_color_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_color_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -462,7 +462,7 @@ function color_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_color_edit, (isset($color) ? $color : array()))
+		"fields" => inject_form_variables(preset_color_form_list(), (isset($color) ? $color : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

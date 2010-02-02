@@ -278,7 +278,7 @@ function item_edit() {
 function xaxis_edit() {
 	global $colors;
 	require(CACTI_BASE_PATH . "/include/presets/preset_xaxis_arrays.php");
-	require(CACTI_BASE_PATH . "/include/presets/preset_xaxis_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_xaxis_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -299,7 +299,7 @@ function xaxis_edit() {
 
 	draw_edit_form(array(
 		"config" => array("no_form_tag" => true),
-		"fields" => inject_form_variables($fields_xaxis_edit, (isset($xaxis) ? $xaxis : array()))
+		"fields" => inject_form_variables(preset_xaxis_form_list(), (isset($xaxis) ? $xaxis : array()))
 	));
 
 	print "</table></td></tr>";		/* end of html_header */

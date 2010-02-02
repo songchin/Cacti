@@ -37,17 +37,6 @@ $graph_actions = array(
 	GRAPH_ACTION_DISABLE_EXPORT => __("Disable Graph Export"),
 	);
 
-$device_actions = array(
-	DEVICE_ACTION_DELETE => __("Delete"),
-	DEVICE_ACTION_ENABLE => __("Enable"),
-	DEVICE_ACTION_DISABLE => __("Disable"),
-	DEVICE_ACTION_CHANGE_SNMP_OPTIONS => __("Change SNMP Options"),
-	DEVICE_ACTION_CLEAR_STATISTICS => __("Clear Statistics"),
-	DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS => __("Change Availability Options"),
-	DEVICE_ACTION_CHANGE_POLLER => __("Change Poller"),
-	DEVICE_ACTION_CHANGE_SITE => __("Change Site"),
-	);
-
 $ds_actions = array(
 	DS_ACTION_DELETE => __("Delete"),
 	DS_ACTION_CHANGE_TEMPLATE => __("Change Data Source Template"),
@@ -169,25 +158,6 @@ $image_types = array(
 	IMAGE_TYPE_SVG	=> "SVG",
 	);
 
-$snmp_versions = array(0 =>
-	__("Not In Use"),
-	__("Version 1"),
-	__("Version 2"),
-	__("Version 3"),
-	);
-
-$snmp_auth_protocols = array(
-	SNMP_AUTH_PROTOCOL_NONE 	=> __("[NONE]"),
-	SNMP_AUTH_PROTOCOL_MD5 		=> __("MD5 (default)"),
-	SNMP_AUTH_PROTOCOL_SHA 		=> __("SHA"),
-	);
-
-$snmp_priv_protocols = array(
-	SNMP_PRIV_PROTOCOL_NONE 	=> __("[None]"),
-	SNMP_PRIV_PROTOCOL_DES 		=> __("DES (default)"),
-	SNMP_PRIV_PROTOCOL_AES128 	=> __("AES"),
-	);
-
 $banned_snmp_strings = array(
 	"End of MIB",
 	"No Such");
@@ -196,20 +166,6 @@ $logfile_options = array(1 =>
 	__("Logfile Only"),
 	__("Logfile and Syslog/Eventlog"),
 	__("Syslog/Eventlog Only"),
-	);
-
-$availability_options = array(
-	AVAIL_NONE => __("None"),
-	AVAIL_SNMP_AND_PING => __("Ping and SNMP"),
-	AVAIL_SNMP_OR_PING => __("Ping or SNMP"),
-	AVAIL_SNMP => __("SNMP"),
-	AVAIL_PING => __("Ping"),
-	);
-
-$ping_methods = array(
-	PING_ICMP => __("ICMP Ping"),
-	PING_TCP => __("TCP Ping"),
-	PING_UDP => __("UDP Ping"),
 	);
 
 $logfile_verbosity = array(
@@ -232,15 +188,6 @@ $poller_intervals = array(
 	30 => __("Every %d Seconds", 30),
 	60 => __("Every Minute"),
 	300 => __("Every %d Minutes", 5),
-	);
-
-$device_threads = array(
-	1 => __("1 Thread (default)"),
-	2 => __("%s Threads", 2),
-	3 => __("%s Threads", 3),
-	4 => __("%s Threads", 4),
-	5 => __("%s Threads", 5),
-	6 => __("%s Threads", 6)
 	);
 
 $cron_intervals = array(
@@ -601,42 +548,6 @@ $hash_type_names = array(
 	"xaxis_item" => "X-Axis Preset Item",
 	);
 
-$device_struc = array(
-	"device_template_id",
-	"description",
-	"hostname",
-	"notes",
-	"snmp_community",
-	"snmp_version",
-	"snmp_username",
-	"snmp_password",
-	"snmp_auth_protocol",
-	"snmp_priv_passphrase",
-	"snmp_priv_protocol",
-	"snmp_context",
-	"snmp_port",
-	"snmp_timeout",
-	"max_oids",
-	"availability_method",
-	"ping_method",
-	"ping_port",
-	"ping_timeout",
-	"ping_retries",
-	"disabled",
-	"status",
-	"status_event_count",
-	"status_fail_date",
-	"status_rec_date",
-	"status_last_error",
-	"min_time",
-	"max_time",
-	"cur_time",
-	"avg_time",
-	"total_polls",
-	"failed_polls",
-	"availability"
-	);
-
 $graph_timespans = array(
 	GT_LAST_HALF_HOUR 	=> __("Last Half Hour"),
 	GT_LAST_HOUR 		=> __("Last Hour"),
@@ -714,6 +625,7 @@ $graph_datechar = array(
 	GDC_SLASH => "/",
 	GDC_DOT => "."
 	);
+
 $i18n_months = array(
 	"January"	=> __("__January_"),
 	"February"	=> __("__February_"),

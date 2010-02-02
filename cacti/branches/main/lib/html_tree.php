@@ -184,7 +184,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 function grow_edit_graph_tree($tree_id, $user_id, $options) {
 	global $config, $colors;
 
-	require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 
 	$tree_sorting_type = db_fetch_cell("select sort_type from graph_tree where id='$tree_id'");

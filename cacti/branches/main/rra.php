@@ -217,7 +217,7 @@ function form_save() {
 
 function rra_edit() {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/presets/preset_rra_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_rra_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -238,7 +238,7 @@ function rra_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_rra_edit, (isset($rra) ? $rra : array()))
+		"fields" => inject_form_variables(preset_rra_form_list(), (isset($rra) ? $rra : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

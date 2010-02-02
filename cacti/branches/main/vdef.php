@@ -283,7 +283,6 @@ function item_remove() {
 
 function item_edit() {
 	global $colors, $custom_vdef_data_source_types;
-	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_constants.php");
 	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_arrays.php");
 
 	/* ================= input validation ================= */
@@ -402,7 +401,7 @@ function vdef_remove() {
 function vdef_edit() {
 	global $colors;
 	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_arrays.php");
-	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_vdef_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -424,7 +423,7 @@ function vdef_edit() {
 
 	draw_edit_form(array(
 		"config" => array("no_form_tag" => true),
-		"fields" => inject_form_variables($fields_vdef_edit, (isset($vdef) ? $vdef : array()))
+		"fields" => inject_form_variables(preset_vdef_form_list(), (isset($vdef) ? $vdef : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

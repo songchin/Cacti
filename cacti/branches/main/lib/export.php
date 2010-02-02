@@ -310,7 +310,7 @@ function data_input_method_to_xml($data_input_id) {
 }
 
 function cdef_to_xml($cdef_id) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_cdef_info.php");
 
 	$hash["cdef"] = get_hash_version("cdef") . get_hash_cdef($cdef_id);
 	$xml_text = "";
@@ -326,6 +326,7 @@ function cdef_to_xml($cdef_id) {
 	$xml_text .= "<hash_" . $hash["cdef"] . ">\n";
 
 	/* XML Branch: <> */
+	$fields_cdef_edit = preset_cdef_form_list();
 	reset($fields_cdef_edit);
 	while (list($field_name, $field_array) = each($fields_cdef_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
@@ -364,7 +365,7 @@ function cdef_to_xml($cdef_id) {
 }
 
 function vdef_to_xml($vdef_id) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_vdef_info.php");
 
 	$hash["vdef"] = get_hash_version("vdef") . get_hash_vdef($vdef_id);
 	$xml_text = "";
@@ -380,6 +381,7 @@ function vdef_to_xml($vdef_id) {
 	$xml_text .= "<hash_" . $hash["vdef"] . ">\n";
 
 	/* XML Branch: <> */
+	$fields_vdef_edit = preset_vdef_form_list();
 	reset($fields_vdef_edit);
 	while (list($field_name, $field_array) = each($fields_vdef_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
@@ -397,7 +399,7 @@ function vdef_to_xml($vdef_id) {
 		$hash["vdef_item"] = get_hash_version("vdef_item") . get_hash_vdef($item["id"], "vdef_item");
 
 		$xml_text .= "\t\t<hash_" . $hash["vdef_item"] . ">\n";
-
+		$fields_vdef_item_edit = preset_vdef_item_form_list();
 		reset($fields_vdef_item_edit);
 		while (list($field_name, $field_array) = each($fields_vdef_item_edit)) {
 			if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
@@ -418,7 +420,7 @@ function vdef_to_xml($vdef_id) {
 }
 
 function xaxis_to_xml($xaxis_id) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_xaxis_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_xaxis_info.php");
 
 	$hash["xaxis"] = get_hash_version("xaxis") . get_hash_xaxis($xaxis_id);
 	$xml_text = "";
@@ -434,6 +436,7 @@ function xaxis_to_xml($xaxis_id) {
 	$xml_text .= "<hash_" . $hash["xaxis"] . ">\n";
 
 	/* XML Branch: <> */
+	$fields_xaxis_edit = preset_xaxis_form_list();
 	reset($fields_xaxis_edit);
 	while (list($field_name, $field_array) = each($fields_xaxis_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
@@ -452,6 +455,7 @@ function xaxis_to_xml($xaxis_id) {
 
 		$xml_text .= "\t\t<hash_" . $hash["xaxis_item"] . ">\n";
 
+		$fields_xaxis_item_edit = preset_xaxis_item_form_list();
 		reset($fields_xaxis_item_edit);
 		while (list($field_name, $field_array) = each($fields_xaxis_item_edit)) {
 			if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
@@ -472,7 +476,7 @@ function xaxis_to_xml($xaxis_id) {
 }
 
 function gprint_preset_to_xml($gprint_preset_id) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_gprint_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_gprint_info.php");
 
 	$hash = get_hash_version("gprint_preset") . get_hash_gprint($gprint_preset_id);
 	$xml_text = "";
@@ -487,8 +491,9 @@ function gprint_preset_to_xml($gprint_preset_id) {
 	$xml_text .= "<hash_$hash>\n";
 
 	/* XML Branch: <> */
-	reset($fields_grprint_presets_edit);
-	while (list($field_name, $field_array) = each($fields_grprint_presets_edit)) {
+	$fields_gprint_presets_edit = preset_gprint_form_list();
+	reset($fields_gprint_presets_edit);
+	while (list($field_name, $field_array) = each($fields_gprint_presets_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
 			$xml_text .= "\t<$field_name>" . xml_character_encode($graph_templates_gprint{$field_name}) . "</$field_name>\n";
 		}
@@ -500,7 +505,7 @@ function gprint_preset_to_xml($gprint_preset_id) {
 }
 
 function round_robin_archive_to_xml($round_robin_archive_id) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_rra_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_rra_info.php");
 
 	$hash = get_hash_version("round_robin_archive") . get_hash_round_robin_archive($round_robin_archive_id);
 	$xml_text = "";
@@ -516,6 +521,7 @@ function round_robin_archive_to_xml($round_robin_archive_id) {
 	$xml_text .= "<hash_$hash>\n";
 
 	/* XML Branch: <> */
+	$fields_rra_edit = preset_rra_form_list();
 	reset($fields_rra_edit);
 	while (list($field_name, $field_array) = each($fields_rra_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {

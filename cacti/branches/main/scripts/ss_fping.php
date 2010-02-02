@@ -12,6 +12,7 @@ $no_http_headers = true;
 error_reporting(0);
 
 include_once(dirname(__FILE__) . "/../include/global.php");
+include_once(dirname(__FILE__) . "/../include/device/device_constants.php");
 include_once(dirname(__FILE__) . "/../lib/snmp.php");
 include_once(dirname(__FILE__) . "/../lib/ping.php");
 

@@ -817,6 +817,8 @@ function tail_file($file_name, $number_of_lines, $message_type = -1, $filter = "
 	     $devices - (array) a memory resident device table for speed
 		  $ping - (class array) results of the ping command			*/
 function update_device_status($status, $device_id, &$devices, &$ping, $ping_availability, $print_data_to_stdout) {
+	require_once(CACTI_BASE_PATH . "/include/device/device_constants.php");
+
 	$issue_log_message   = false;
 	$ping_failure_count  = read_config_option("ping_failure_count");
 	$ping_recovery_count = read_config_option("ping_recovery_count");
@@ -1129,7 +1131,7 @@ function validate_result(&$result) {
    @returns - the full script path or (bool) false for an error */
 function get_full_script_path($local_data_id) {
 	global $config;
-	require(CACTI_BASE_PATH . "/include/data_input/data_input_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_input/data_input_constants.php");
 
 	$data_source = db_fetch_row("select
 		data_template_data.id,

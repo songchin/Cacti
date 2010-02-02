@@ -20,7 +20,7 @@
  +-------------------------------------------------------------------------+
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
-*/
+ */
 
 /* file: cdef.php, action: edit */
 $fields_cdef_edit = array(
@@ -39,11 +39,11 @@ $fields_cdef_edit = array(
 	"save_component_cdef" => array(
 		"method" => "hidden",
 		"value" => "1"
-		)
+		),
 	);
 
-	$fields_cdef_item_edit = array(
-		"sequence" => "sequence",
-		"type" => "type",
-		"value" => "value"
-		);
+$fields_cdef_item_edit = array(
+	"sequence" => "sequence",
+	"type" => "type",
+	"value" => "value"
+	);

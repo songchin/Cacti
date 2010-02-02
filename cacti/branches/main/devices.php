@@ -23,6 +23,7 @@
 */
 
 include("./include/auth.php");
+require_once(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 include_once(CACTI_BASE_PATH . "/lib/utility.php");
 include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
 include_once(CACTI_BASE_PATH . "/lib/device/device_form.php");

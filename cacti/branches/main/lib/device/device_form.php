@@ -171,7 +171,8 @@ function api_device_form_save() {
    ------------------------ */
 
 function api_device_form_actions() {
-	global $colors, $device_actions, $fields_device_edit, $fields_device_edit_availability;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/device/device_forms.php");
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -603,7 +604,7 @@ function device_remove() {
 }
 
 function device_edit() {
-	global $colors, $fields_device_edit, $fields_device_edit_availability;
+	global $colors;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -708,8 +709,9 @@ function device_edit() {
 }
 
 function device_display_general($device, $device_text) {
-	global $colors, $fields_device_edit, $fields_device_edit_availability;
+	global $colors;
 	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+	require(CACTI_BASE_PATH . "/include/device/device_forms.php");
 
 	if (isset($device["id"])) {
 		html_start_box($device_text, "100", $colors["header"], "3", "center", "", true);
@@ -1421,7 +1423,8 @@ function device_display_general($device, $device_text) {
 }
 
 function device() {
-	global $colors, $device_actions, $item_rows;
+	global $colors, $item_rows;
+	require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("template_id"));

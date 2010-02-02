@@ -535,15 +535,16 @@ function xml_to_data_query($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_gprint_preset($hash, &$xml_array, &$hash_cache) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_gprint_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_gprint_info.php");
 
 	/* import into: graph_templates_gprint */
 	$_gprint_preset_id = db_fetch_cell("select id from graph_templates_gprint where hash='$hash'");
 	$save["id"] = (empty($_gprint_preset_id) ? "0" : $_gprint_preset_id);
 	$save["hash"] = $hash;
 
-	reset($fields_grprint_presets_edit);
-	while (list($field_name, $field_array) = each($fields_grprint_presets_edit)) {
+	$fields_gprint_presets_edit = preset_gprint_form_list();
+	reset($fields_gprint_presets_edit);
+	while (list($field_name, $field_array) = each($fields_gprint_presets_edit)) {
 		/* make sure this field exists in the xml array first */
 		if (isset($xml_array[$field_name])) {
 			$save[$field_name] = addslashes(xml_character_decode($xml_array[$field_name]));
@@ -563,13 +564,14 @@ function xml_to_gprint_preset($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_round_robin_archive($hash, &$xml_array, &$hash_cache) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_rra_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_rra_info.php");
 
 	/* import into: rra */
 	$_rra_id = db_fetch_cell("select id from rra where hash='$hash'");
 	$save["id"] = (empty($_rra_id) ? "0" : $_rra_id);
 	$save["hash"] = $hash;
 
+	$fields_rra_edit = preset_rra_form_list();
 	reset($fields_rra_edit);
 	while (list($field_name, $field_array) = each($fields_rra_edit)) {
 		/* make sure this field exists in the xml array first */
@@ -662,13 +664,14 @@ function xml_to_device_template($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_cdef($hash, &$xml_array, &$hash_cache) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_cdef_info.php");
 
 	/* import into: cdef */
 	$_cdef_id = db_fetch_cell("select id from cdef where hash='$hash'");
 	$save["id"] = (empty($_cdef_id) ? "0" : $_cdef_id);
 	$save["hash"] = $hash;
 
+	$fields_cdef_edit = preset_cdef_form_list();
 	reset($fields_cdef_edit);
 	while (list($field_name, $field_array) = each($fields_cdef_edit)) {
 		/* make sure this field exists in the xml array first */
@@ -719,13 +722,14 @@ function xml_to_cdef($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_vdef($hash, &$xml_array, &$hash_cache) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_vdef_info.php");
 
 	/* import into: vdef */
 	$_vdef_id = db_fetch_cell("select id from vdef where hash='$hash'");
 	$save["id"] = (empty($_vdef_id) ? "0" : $_vdef_id);
 	$save["hash"] = $hash;
 
+	$fields_vdef_edit = preset_vdef_form_list();
 	reset($fields_vdef_edit);
 	while (list($field_name, $field_array) = each($fields_vdef_edit)) {
 		/* make sure this field exists in the xml array first */
@@ -753,6 +757,7 @@ function xml_to_vdef($hash, &$xml_array, &$hash_cache) {
 			$save["hash"] = $parsed_hash["hash"];
 			$save["vdef_id"] = $vdef_id;
 
+			$fields_vdef_item_edit = preset_vdef_item_form_list();
 			reset($fields_vdef_item_edit);
 			while (list($field_name, $field_array) = each($fields_vdef_item_edit)) {
 				/* make sure this field exists in the xml array first */
@@ -776,13 +781,14 @@ function xml_to_vdef($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_xaxis($hash, &$xml_array, &$hash_cache) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_xaxis_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_xaxis_info.php");
 
 	/* import into: xaxis */
 	$_xaxis_id = db_fetch_cell("select id from graph_templates_xaxis where hash='$hash'");
 	$save["id"] = (empty($_xaxis_id) ? "0" : $_xaxis_id);
 	$save["hash"] = $hash;
 
+	$fields_xaxis_edit = preset_xaxis_form_list();
 	reset($fields_xaxis_edit);
 	while (list($field_name, $field_array) = each($fields_xaxis_edit)) {
 		/* make sure this field exists in the xml array first */
@@ -810,6 +816,7 @@ function xml_to_xaxis($hash, &$xml_array, &$hash_cache) {
 			$save["hash"] = $parsed_hash["hash"];
 			$save["xaxis_id"] = $xaxis_id;
 
+			$fields_xaxis_item_edit = preset_xaxis_item_form_list();
 			reset($fields_xaxis_item_edit);
 			while (list($field_name, $field_array) = each($fields_xaxis_item_edit)) {
 				/* make sure this field exists in the xml array first */

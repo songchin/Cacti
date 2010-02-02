@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-require(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 
 $data_source_types = array(
 	DATA_SOURCE_TYPE_GAUGE		=> "GAUGE",

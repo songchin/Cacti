@@ -1313,6 +1313,7 @@ function displayGroups($quietMode = FALSE) {
  * returns			- if ok, returns true with array recoded; otherwise array containg error message
  */
 function verifyDevice(&$device, $ri_check=false) {
+	require_once(CACTI_BASE_PATH . "/include/device/device_constants.php");
 
 	foreach($device as $key => $value) {
 
@@ -1546,7 +1547,7 @@ function verifyDevice(&$device, $ri_check=false) {
  * returns			- if ok, returns true with array recoded; otherwise array containg error message
  */
 function verifyDataQuery(&$data_query, $ri_check=false) {
-	require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 
 	foreach($data_query as $key => $value) {
 
@@ -1626,7 +1627,7 @@ function verifyDataQuery(&$data_query, $ri_check=false) {
  * returns			- if ok, returns true with array recoded; otherwise array containg error message
  */
 function verifyDQGraph(&$dqGraph, $ri_check=false) {
-	require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 
 	if (($dqGraph["snmp_query_id"] == "") ||
 	($dqGraph["snmp_query_graph_id"] == "") ||

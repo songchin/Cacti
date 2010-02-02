@@ -199,7 +199,7 @@ function form_save() {
 
 function gprint_presets_edit() {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/presets/preset_gprint_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_gprint_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -220,7 +220,7 @@ function gprint_presets_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_grprint_presets_edit, (isset($gprint_preset) ? $gprint_preset : array()))
+		"fields" => inject_form_variables(preset_gprint_form_list(), (isset($gprint_preset) ? $gprint_preset : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

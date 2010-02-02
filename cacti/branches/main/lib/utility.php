@@ -56,7 +56,7 @@ function update_poller_cache_from_query($device_id, $data_query_id) {
 function update_poller_cache($local_data_id, $commit = false) {
 	global $config;
 
-	require(CACTI_BASE_PATH . "/include/data_input/data_input_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_input/data_input_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 	include_once(CACTI_BASE_PATH . "/lib/api_poller.php");
 	$poller_items = array();
@@ -723,7 +723,7 @@ function duplicate_device_template($_device_template_id, $device_template_title)
 }
 
 function duplicate_cdef($_cdef_id, $cdef_title) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_cdef_info.php");
 
 	$cdef = db_fetch_row("select * from cdef where id=$_cdef_id");
 	$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=$_cdef_id");
@@ -735,6 +735,7 @@ function duplicate_cdef($_cdef_id, $cdef_title) {
 	$save["id"] = 0;
 	$save["hash"] = get_hash_cdef(0);
 
+	$fields_cdef_edit = preset_cdef_form_list();
 	reset($fields_cdef_edit);
 	while (list($field, $array) = each($fields_cdef_edit)) {
 		if (!preg_match("/^hidden/", $array["method"])) {
@@ -762,7 +763,7 @@ function duplicate_cdef($_cdef_id, $cdef_title) {
 }
 
 function duplicate_vdef($_vdef_id, $vdef_title) {
-	require(CACTI_BASE_PATH . "/include/presets/preset_vdef_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_vdef_info.php");
 
 	$vdef = db_fetch_row("select * from vdef where id=$_vdef_id");
 	$vdef_items = db_fetch_assoc("select * from vdef_items where vdef_id=$_vdef_id");
@@ -774,6 +775,7 @@ function duplicate_vdef($_vdef_id, $vdef_title) {
 	$save["id"] = 0;
 	$save["hash"] = get_hash_vdef(0);
 
+	$fields_vdef_edit = preset_vdef_form_list();
 	reset($fields_vdef_edit);
 	while (list($field, $array) = each($fields_vdef_edit)) {
 		if (!preg_match("/^hidden/", $array["method"])) {

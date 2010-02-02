@@ -33,6 +33,7 @@ $no_http_headers = true;
 
 include(dirname(__FILE__)."/../include/global.php");
 require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/device/device_constants.php");
 include_once(CACTI_BASE_PATH."/lib/api_automation_tools.php");
 include_once(CACTI_BASE_PATH."/lib/data_query.php");
 

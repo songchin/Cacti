@@ -286,7 +286,6 @@ function item_remove() {
 
 function item_edit() {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_constants.php");
 	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_arrays.php");
 
 	/* ================= input validation ================= */
@@ -396,7 +395,7 @@ function cdef_remove() {
 function cdef_edit() {
 	global $colors;
 	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_arrays.php");
-	require(CACTI_BASE_PATH . "/include/presets/preset_cdef_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/presets/preset_cdef_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -417,7 +416,7 @@ function cdef_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_cdef_edit, (isset($cdef) ? $cdef : array()))
+		"fields" => inject_form_variables(preset_cdef_form_list(), (isset($cdef) ? $cdef : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

@@ -23,7 +23,7 @@
 */
 
 /* file: grprint_presets.php, action: edit */
-$fields_grprint_presets_edit = array(
+$fields_gprint_presets_edit = array(
 	"name" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Name"),

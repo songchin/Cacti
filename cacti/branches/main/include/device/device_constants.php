@@ -22,13 +22,35 @@
  +-------------------------------------------------------------------------+
 */
 
-require_once(CACTI_BASE_PATH . "/include/data_input/data_input_constants.php");
+define("DEVICE_ACTION_DELETE", "0");
+define("DEVICE_ACTION_ENABLE", "1");
+define("DEVICE_ACTION_DISABLE", "2");
+define("DEVICE_ACTION_CHANGE_SNMP_OPTIONS", "3");
+define("DEVICE_ACTION_CLEAR_STATISTICS", "4");
+define("DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS", "5");
+define("DEVICE_ACTION_CHANGE_POLLER", "6");
+define("DEVICE_ACTION_CHANGE_SITE", "7");
 
-$input_types = array(
-	DATA_INPUT_TYPE_SNMP => "SNMP", // Action 0:
-	DATA_INPUT_TYPE_SNMP_QUERY => "SNMP Query",
-	DATA_INPUT_TYPE_SCRIPT => "Script/Command",  // Action 1:
-	DATA_INPUT_TYPE_SCRIPT_QUERY => "Script Query", // Action 1:
-	DATA_INPUT_TYPE_PHP_SCRIPT_SERVER => "Script - Script Server (PHP)",
-	DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER => "Script Query - Script Server",
-	);
+define("DEVICE_UNKNOWN", 0);
+define("DEVICE_DOWN", 1);
+define("DEVICE_RECOVERING", 2);
+define("DEVICE_UP", 3);
+define("DEVICE_ERROR", 4);
+
+define("SNMP_AUTH_PROTOCOL_NONE", 	'');
+define("SNMP_AUTH_PROTOCOL_MD5", 	'MD5');
+define("SNMP_AUTH_PROTOCOL_SHA", 	'SHA');
+
+define("SNMP_PRIV_PROTOCOL_NONE", 	'');
+define("SNMP_PRIV_PROTOCOL_DES", 	'DES');
+define("SNMP_PRIV_PROTOCOL_AES128", 'AES');
+
+define("AVAIL_NONE", 0);
+define("AVAIL_SNMP_AND_PING", 1);
+define("AVAIL_SNMP", 2);
+define("AVAIL_PING", 3);
+define("AVAIL_SNMP_OR_PING", 4);
+
+define("PING_ICMP", 1);
+define("PING_UDP", 2);
+define("PING_TCP", 3);

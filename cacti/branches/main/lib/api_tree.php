@@ -61,7 +61,7 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 	input_validate_input_number($tree_id);
 	input_validate_input_number($parent_tree_item_id);
 
-	require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 
 	$parent_order_key = db_fetch_cell("select order_key from graph_tree_items where id=$parent_tree_item_id");

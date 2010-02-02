@@ -94,15 +94,6 @@ define("GRAPH_ALT_AUTOSCALE_MIN",		2);
 define("GRAPH_ALT_AUTOSCALE_MAX",		3);
 define("GRAPH_ALT_AUTOSCALE_LIMITS",	4);
 
-define("DEVICE_ACTION_DELETE", "0");
-define("DEVICE_ACTION_ENABLE", "1");
-define("DEVICE_ACTION_DISABLE", "2");
-define("DEVICE_ACTION_CHANGE_SNMP_OPTIONS", "3");
-define("DEVICE_ACTION_CLEAR_STATISTICS", "4");
-define("DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS", "5");
-define("DEVICE_ACTION_CHANGE_POLLER", "6");
-define("DEVICE_ACTION_CHANGE_SITE", "7");
-
 define("DS_ACTION_DELETE", "0");
 define("DS_ACTION_CHANGE_TEMPLATE", "1");
 define("DS_ACTION_CHANGE_HOST", "2");
@@ -131,14 +122,6 @@ define("IMAGE_TYPE_PNG", 1);
 define("IMAGE_TYPE_GIF", 2);
 define("IMAGE_TYPE_SVG", 3);
 
-define("SNMP_AUTH_PROTOCOL_NONE", 	'');
-define("SNMP_AUTH_PROTOCOL_MD5", 	'MD5');
-define("SNMP_AUTH_PROTOCOL_SHA", 	'SHA');
-
-define("SNMP_PRIV_PROTOCOL_NONE", 	'');
-define("SNMP_PRIV_PROTOCOL_DES", 	'DES');
-define("SNMP_PRIV_PROTOCOL_AES128", 'AES');
-
 define("POLLER_ACTION_SNMP", 0);
 define("POLLER_ACTION_SCRIPT", 1);
 define("POLLER_ACTION_SCRIPT_PHP", 2);
@@ -152,22 +135,6 @@ define("POLLER_VERBOSITY_MEDIUM", 3);
 define("POLLER_VERBOSITY_HIGH", 4);
 define("POLLER_VERBOSITY_DEBUG", 5);
 define("POLLER_VERBOSITY_DEVDBG", 6);
-
-define("AVAIL_NONE", 0);
-define("AVAIL_SNMP_AND_PING", 1);
-define("AVAIL_SNMP", 2);
-define("AVAIL_PING", 3);
-define("AVAIL_SNMP_OR_PING", 4);
-
-define("PING_ICMP", 1);
-define("PING_UDP", 2);
-define("PING_TCP", 3);
-
-define("DEVICE_UNKNOWN", 0);
-define("DEVICE_DOWN", 1);
-define("DEVICE_RECOVERING", 2);
-define("DEVICE_UP", 3);
-define("DEVICE_ERROR", 4);
 
 define("GT_CUSTOM", 0);
 define("GT_LAST_HALF_HOUR", 1);

@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-require(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 
 $reindex_types = array(
 	DATA_QUERY_AUTOINDEX_NONE => __("None"),
