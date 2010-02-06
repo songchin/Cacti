@@ -445,8 +445,8 @@ function template_rrd_add() {
 
 function template_edit() {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
-	require(CACTI_BASE_PATH . "/include/data_template/data_template_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -470,7 +470,7 @@ function template_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_data_template_template_edit, (isset($template) ? $template : array()), (isset($template_data) ? $template_data : array()), $_GET)
+		"fields" => inject_form_variables(data_template_form_list(), (isset($template) ? $template : array()), (isset($template_data) ? $template_data : array()), $_GET)
 		));
 
 	print "</table></td></tr>";		/* end of html_header */
@@ -482,6 +482,7 @@ function template_edit() {
 	html_header($header_items, 2, true, 'header_data_source');
 
 	/* make sure 'data source path' doesn't show up for a template... we should NEVER template this field */
+	$struct_data_source = data_source_form_list();
 	unset($struct_data_source["data_source_path"]);
 
 	$form_array = array();
@@ -556,6 +557,7 @@ function template_edit() {
 	html_header($header_items, 3, true, 'data_source_item');
 
 	/* data input fields list */
+	$struct_data_source_item = data_source_item_form_list();
 	if ((empty($template_data["data_input_id"])) ||
 		((db_fetch_cell("select type_id from data_input where id=" . $template_data["data_input_id"]) != "1") &&
 		(db_fetch_cell("select type_id from data_input where id=" . $template_data["data_input_id"]) != "5"))) {

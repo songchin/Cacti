@@ -113,7 +113,7 @@ function push_out_data_source_custom_data($data_template_id) {
 	children
    @param $data_template_rrd_id - the id of the data template item to push out values for */
 function push_out_data_source_item($data_template_rrd_id) {
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	/* get information about this data template */
 	$data_template_rrd = db_fetch_row("select * from data_template_rrd where id=$data_template_rrd_id");
@@ -122,6 +122,7 @@ function push_out_data_source_item($data_template_rrd_id) {
 	if (empty($data_template_rrd["data_template_id"])) { return 0; }
 
 	/* loop through each data source column name (from the above array) */
+	$struct_data_source_item = data_source_item_form_list();
 	reset($struct_data_source_item);
 	while (list($field_name, $field_array) = each($struct_data_source_item)) {
 		/* are we allowed to push out the column? */
@@ -134,7 +135,7 @@ function push_out_data_source_item($data_template_rrd_id) {
 /* push_out_data_source - pushes out templated data template fields to all matching children
    @param $data_template_data_id - the id of the data template to push out values for */
 function push_out_data_source($data_template_data_id) {
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	/* get information about this data template */
 	$data_template_data = db_fetch_row("select * from data_template_data where id=$data_template_data_id");
@@ -143,6 +144,7 @@ function push_out_data_source($data_template_data_id) {
 	if (empty($data_template_data["data_template_id"])) { return 0; }
 
 	/* loop through each data source column name (from the above array) */
+	$struct_data_source = data_source_form_list();
 	reset($struct_data_source);
 	while (list($field_name, $field_array) = each($struct_data_source)) {
 		/* are we allowed to push out the column? */
@@ -163,7 +165,7 @@ function push_out_data_source($data_template_data_id) {
    @param $data_template_id - id the of the data template to change to. specify '0' for no
 	data template */
 function change_data_template($local_data_id, $data_template_id) {
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	/* always update tables to new data template (or no data template) */
 	db_execute("UPDATE data_local SET data_template_id=$data_template_id WHERE id=$local_data_id");
@@ -187,6 +189,7 @@ function change_data_template($local_data_id, $data_template_id) {
 	$save["data_template_id"] = $data_template_id;
 
 	/* loop through the "templated field names" to find to the rest... */
+	$struct_data_source = data_source_form_list();
 	reset($struct_data_source);
 	while (list($field_name, $field_array) = each($struct_data_source)) {
 		if ((isset($data[$field_name])) || (isset($template_data[$field_name]))) {

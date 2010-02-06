@@ -230,7 +230,7 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
      will be used to determine if a given field is using suggested values */
 function draw_nontemplated_fields_data_source($data_template_id, $local_data_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true, $include_hidden_fields = true, $snmp_query_graph_id = 0) {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	$form_array = array();
 	$draw_any_items = false;
@@ -238,6 +238,7 @@ function draw_nontemplated_fields_data_source($data_template_id, $local_data_id,
 	/* fetch information about the data template */
 	$data_template = db_fetch_row("select * from data_template_data where data_template_id=$data_template_id and local_data_id=0");
 
+	$struct_data_source = data_source_form_list();
 	reset($struct_data_source);
 	while (list($field_name, $field_array) = each($struct_data_source)) {
 		/* find our field name */
@@ -319,7 +320,7 @@ function draw_nontemplated_fields_data_source($data_template_id, $local_data_id,
      will be used to determine if a given field is using suggested values */
 function draw_nontemplated_fields_data_source_item($data_template_id, &$values_array, $field_name_format = "|field_id|", $header_title = "", $draw_title_for_each_item = true, $alternate_colors = true, $include_hidden_fields = true, $snmp_query_graph_id = 0) {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	$draw_any_items = false;
 	$num_fields_drawn = 0;
@@ -332,6 +333,7 @@ function draw_nontemplated_fields_data_source_item($data_template_id, &$values_a
 	}
 
 	if (sizeof($values_array) > 0) {
+		$struct_data_source_item = data_source_item_form_list();
 	foreach ($values_array as $rrd) {
 		reset($struct_data_source_item);
 		$form_array = array();

@@ -580,7 +580,7 @@ function duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title) {
 }
 
 function duplicate_data_source($_local_data_id, $_data_template_id, $data_source_title) {
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	if (!empty($_local_data_id)) {
 		$data_local = db_fetch_row("select * from data_local where id=$_local_data_id");
@@ -617,6 +617,7 @@ function duplicate_data_source($_local_data_id, $_data_template_id, $data_source
 	}
 
 	unset($save);
+	$struct_data_source = data_source_form_list();
 	unset($struct_data_source["rra_id"]);
 	unset($struct_data_source["data_source_path"]);
 	reset($struct_data_source);
@@ -640,26 +641,27 @@ function duplicate_data_source($_local_data_id, $_data_template_id, $data_source
 
 	/* create new entry(s): data_template_rrd */
 	if (sizeof($data_template_rrds) > 0) {
-	foreach ($data_template_rrds as $data_template_rrd) {
-		unset($save);
-		reset($struct_data_source_item);
+		$struct_data_source_item = data_source_item_form_list();
+		foreach ($data_template_rrds as $data_template_rrd) {
+			unset($save);
+			reset($struct_data_source_item);
 
-		$save["id"]                         = 0;
-		$save["local_data_id"]              = (isset($local_data_id) ? $local_data_id : 0);
-		$save["local_data_template_rrd_id"] = (isset($data_template_rrd["local_data_template_rrd_id"]) ? $data_template_rrd["local_data_template_rrd_id"] : 0);
-		$save["data_template_id"]           = (!empty($_local_data_id) ? $data_template_rrd["data_template_id"] : $data_template_id);
-		if ($save["local_data_id"] == 0) {
-			$save["hash"]                   = get_hash_data_template($data_template_rrd["local_data_template_rrd_id"], "data_template_item");
-		} else {
-			$save["hash"] = '';
+			$save["id"]                         = 0;
+			$save["local_data_id"]              = (isset($local_data_id) ? $local_data_id : 0);
+			$save["local_data_template_rrd_id"] = (isset($data_template_rrd["local_data_template_rrd_id"]) ? $data_template_rrd["local_data_template_rrd_id"] : 0);
+			$save["data_template_id"]           = (!empty($_local_data_id) ? $data_template_rrd["data_template_id"] : $data_template_id);
+			if ($save["local_data_id"] == 0) {
+				$save["hash"]                   = get_hash_data_template($data_template_rrd["local_data_template_rrd_id"], "data_template_item");
+			} else {
+				$save["hash"] = '';
+			}
+
+			while (list($field, $array) = each($struct_data_source_item)) {
+				$save{$field} = $data_template_rrd{$field};
+			}
+
+			$data_template_rrd_id = sql_save($save, "data_template_rrd");
 		}
-
-		while (list($field, $array) = each($struct_data_source_item)) {
-			$save{$field} = $data_template_rrd{$field};
-		}
-
-		$data_template_rrd_id = sql_save($save, "data_template_rrd");
-	}
 	}
 
 	/* create new entry(s): data_input_data */

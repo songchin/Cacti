@@ -373,7 +373,7 @@ function data_query_item_remove() {
 
 function data_query_item_edit() {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/data_query/data_query_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -399,7 +399,7 @@ function data_query_item_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_data_query_item_edit, (isset($snmp_query_item) ? $snmp_query_item : array()), $_GET)
+		"fields" => inject_form_variables(data_query_item_form_list(), (isset($snmp_query_item) ? $snmp_query_item : array()), $_GET)
 		));
 
 	print "</table></td></tr>";		/* end of html_header */
@@ -635,7 +635,7 @@ function data_query_remove($id) {
 
 function data_query_edit() {
 	global $colors, $config;
-	require(CACTI_BASE_PATH . "/include/data_query/data_query_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -656,7 +656,7 @@ function data_query_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_data_query_edit, (isset($snmp_query) ? $snmp_query : array()))
+		"fields" => inject_form_variables(data_query_form_list(), (isset($snmp_query) ? $snmp_query : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

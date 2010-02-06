@@ -22,64 +22,14 @@
  +-------------------------------------------------------------------------+
 */
 
-include ("./include/auth.php");
-include_once(CACTI_BASE_PATH . "/lib/utility.php");
-include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
-include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
-include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
-include_once(CACTI_BASE_PATH . "/lib/template.php");
-include_once(CACTI_BASE_PATH . "/lib/html_form_template.php");
-include_once(CACTI_BASE_PATH . "/lib/rrd.php");
-include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+function &device_form_list() {
+	require(CACTI_BASE_PATH . "/include/device/device_forms.php");
 
-define("MAX_DISPLAY_PAGES", 21);
+	return $fields_device_edit;
+}
 
-/* set default action */
-if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+function &device_availability_form_list() {
+	require(CACTI_BASE_PATH . "/include/device/device_forms.php");
 
-switch (get_request_var_request("action")) {
-	case 'save':
-		data_source_form_save();
-
-		break;
-	case 'actions':
-		data_source_form_actions();
-
-		break;
-	case 'rrd_add':
-		data_source_rrd_add();
-
-		break;
-	case 'rrd_remove':
-		data_source_rrd_remove();
-
-		break;
-	case 'data_source_data_edit':
-		include_once(CACTI_BASE_PATH . "/include/top_header.php");
-
-		data_source_data_edit();
-
-		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
-		break;
-	case 'ds_remove':
-		ds_remove();
-
-		header ("Location: data_sources.php");
-		break;
-	case 'data_source_edit':
-		data_source_edit();
-
-		break;
-
-	case 'data_source_toggle_status':
-		data_source_toggle_status();
-
-		break;
-	default:
-		include_once(CACTI_BASE_PATH . "/include/top_header.php");
-
-		data_source();
-
-		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
-		break;
+	return $fields_device_edit_availability;
 }

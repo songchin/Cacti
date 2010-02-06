@@ -172,8 +172,10 @@ function api_device_form_save() {
 
 function api_device_form_actions() {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/device/device_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
 
+	$fields_device_edit = device_form_list();
+	$fields_device_edit_availability = device_availability_form_list();
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
@@ -674,7 +676,7 @@ function device_edit() {
 
 			break;
 		case "datasources":
-			include_once(CACTI_BASE_PATH . "/lib/data_sources/data_sources_form.php");
+			include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 			include_once(CACTI_BASE_PATH . "/lib/utility.php");
 			include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
 			include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
@@ -711,7 +713,7 @@ function device_edit() {
 function device_display_general($device, $device_text) {
 	global $colors;
 	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
-	require(CACTI_BASE_PATH . "/include/device/device_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
 
 	if (isset($device["id"])) {
 		html_start_box($device_text, "100", $colors["header"], "3", "center", "", true);
@@ -826,6 +828,7 @@ function device_display_general($device, $device_text) {
 	html_header($header_items, 1, true, 'device');
 
 	/* preserve the device template id if passed in via a GET variable */
+	$fields_device_edit = device_form_list();
 	if (!empty($_GET["template_id"])) {
 //		$fields_device_edit["device_template_id"]["value"] = $_GET["template_id"];
 //		$fields_device_edit["device_template_id"]["method"] = "hidden";
@@ -884,7 +887,7 @@ function device_display_general($device, $device_text) {
 	/* for a given device, display all availability options as well */
 	draw_edit_form(array(
 		"config" => array("form_name" => "chk", "no_form_tag" => true),
-		"fields" => inject_form_variables($fields_device_edit_availability, (isset($template_settings) ? $template_settings : $device))
+		"fields" => inject_form_variables(device_availability_form_list(), (isset($template_settings) ? $template_settings : $device))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

@@ -620,7 +620,7 @@ function data_source_rrd_add() {
 
 function data_source_edit() {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -681,7 +681,7 @@ function data_source_edit() {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&info=' . (isset($_SESSION["ds_info_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_info_mode"]) ? __("Off") : __(CHECKED)) . "</strong> " . __("RRD Info Mode") . "</a><td></tr>";
 	}
 	if (!empty($data_template["id"])) {
-		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=" . htmlspecialchars('data_templates.php?action=template_edit&id=' . (isset($data_template["id"]) ? $data_template["id"] : "0")) . "\\'>" . __("Edit Data Source Template") . "<br></a></td></td>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_templates.php?action=template_edit&id=' . (isset($data_template["id"]) ? $data_template["id"] : "0")) . "\\'>" . __("Edit Data Source Template") . "<br></a></td></td>";
 	}
 	if (!empty($_GET["device_id"]) || !empty($data_local["device_id"])) {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('devices.php?action=edit&id=' . (isset($_GET["device_id"]) ? $_GET["device_id"] : $data_local["device_id"])) . "\\'>" . __("Edit Host") . "</a></td></tr>";
@@ -803,6 +803,7 @@ function data_source_edit() {
 
 		$form_array = array();
 
+		$struct_data_source = data_source_form_list();
 		while (list($field_name, $field_array) = each($struct_data_source)) {
 			$form_array += array($field_name => $struct_data_source[$field_name]);
 
@@ -888,6 +889,7 @@ function data_source_edit() {
 				</td>
 			</tr>\n";
 
+		$struct_data_source_item = data_source_item_form_list();
 		/* data input fields list */
 		if ((empty($data["data_input_id"])) || (db_fetch_cell("select type_id from data_input where id=" . $data["data_input_id"]) > "1")) {
 			unset($struct_data_source_item["data_input_field_id"]);

@@ -136,7 +136,7 @@ function graph_template_to_xml($graph_template_id) {
 }
 
 function data_template_to_xml($data_template_id) {
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	$hash["data_template"] = get_hash_version("data_template") . get_hash_data_template($data_template_id);
 	$xml_text = "";
@@ -157,6 +157,7 @@ function data_template_to_xml($data_template_id) {
 	$xml_text .= "\t<description>" . xml_character_encode($data_template["description"]) . "</description>\n\t<ds>\n";
 
 	/* XML Branch: <ds> */
+	$struct_data_source = data_source_form_list();
 	reset($struct_data_source);
 	while (list($field_name, $field_array) = each($struct_data_source)) {
 		if (isset($data_template_data{"t_" . $field_name})) {
@@ -201,6 +202,7 @@ function data_template_to_xml($data_template_id) {
 
 		$xml_text .= "\t\t<hash_" . $hash["data_template_item"] . ">\n";
 
+		$struct_data_source_item = data_source_item_form_list();
 		reset($struct_data_source_item);
 		while (list($field_name, $field_array) = each($struct_data_source_item)) {
 			if (isset($item{"t_" . $field_name})) {
@@ -622,7 +624,7 @@ function device_template_to_xml($device_template_id) {
 }
 
 function data_query_to_xml($data_query_id) {
-	require(CACTI_BASE_PATH . "/include/data_query/data_query_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	$hash["data_query"] = get_hash_version("data_query") . get_hash_data_query($data_query_id);
 	$xml_text = "";
@@ -638,6 +640,7 @@ function data_query_to_xml($data_query_id) {
 	$xml_text .= "<hash_" . $hash["data_query"] . ">\n";
 
 	/* XML Branch: <> */
+	$fields_data_query_edit = data_query_form_list();
 	reset($fields_data_query_edit);
 	while (list($field_name, $field_array) = each($fields_data_query_edit)) {
 		if (($field_name == "data_input_id") && (!empty($snmp_query{$field_name}))) {
@@ -660,6 +663,7 @@ function data_query_to_xml($data_query_id) {
 
 		$xml_text .= "\t\t<hash_" . $hash["data_query_graph"] . ">\n";
 
+		$fields_data_query_item_edit = data_query_item_form_list();
 		reset($fields_data_query_item_edit);
 		while (list($field_name, $field_array) = each($fields_data_query_item_edit)) {
 			if (($field_name == "graph_template_id") && (!empty($item{$field_name}))) {
