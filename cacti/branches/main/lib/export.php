@@ -251,10 +251,10 @@ function data_template_to_xml($data_template_id) {
 }
 
 function data_input_method_to_xml($data_input_id) {
-	require(CACTI_BASE_PATH . "/include/data_input/data_input_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_input/data_input_info.php");
 
 	/* aggregate field arrays */
-	$fields_data_input_field_edit += $fields_data_input_field_edit_1;
+	$fields_data_input_field_edit = data_input_field_form_list() + data_input_field1_form_list();
 
 	$hash["data_input_method"] = get_hash_version("data_input_method") . get_hash_data_input($data_input_id);
 	$xml_text = "";
@@ -270,6 +270,7 @@ function data_input_method_to_xml($data_input_id) {
 	$xml_text .= "<hash_" . $hash["data_input_method"] . ">\n";
 
 	/* XML Branch: <> */
+	$fields_data_input_edit = data_input_form_list();
 	reset($fields_data_input_edit);
 	while (list($field_name, $field_array) = each($fields_data_input_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {

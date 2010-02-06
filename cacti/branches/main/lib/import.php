@@ -840,16 +840,17 @@ function xml_to_xaxis($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
-	require(CACTI_BASE_PATH . "/include/data_input/data_input_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_input/data_input_info.php");
 
 	/* aggregate field arrays */
-	$fields_data_input_field_edit += $fields_data_input_field_edit_1;
+	$fields_data_input_field_edit = data_input_field_form_list() + data_input_field1_form_list();
 
 	/* import into: data_input */
 	$_data_input_id = db_fetch_cell("select id from data_input where hash='$hash'");
 	$save["id"] = (empty($_data_input_id) ? "0" : $_data_input_id);
 	$save["hash"] = $hash;
 
+	$fields_data_input_edit = data_input_form_list();
 	reset($fields_data_input_edit);
 	while (list($field_name, $field_array) = each($fields_data_input_edit)) {
 		/* make sure this field exists in the xml array first */

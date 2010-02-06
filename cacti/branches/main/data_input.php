@@ -301,7 +301,7 @@ function field_remove() {
 
 function field_edit() {
 	global $colors, $registered_cacti_names;
-	require(CACTI_BASE_PATH . "/include/data_input/data_input_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_input/data_input_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -349,7 +349,7 @@ function field_edit() {
 
 	/* field name */
 	if ((($data_input["type_id"] == "1") || ($data_input["type_id"] == "5")) && ($current_field_type == "in")) { /* script */
-		$form_array = inject_form_variables($fields_data_input_field_edit_1, $header_name, $array_field_names, (isset($field) ? $field : array()));
+		$form_array = inject_form_variables(data_input_field1_form_list(), $header_name, $array_field_names, (isset($field) ? $field : array()));
 	}elseif (($data_input["type_id"] == "2") ||
 			($data_input["type_id"] == "3") ||
 			($data_input["type_id"] == "4") ||
@@ -357,9 +357,10 @@ function field_edit() {
 			($data_input["type_id"] == "7") ||
 			($data_input["type_id"] == "8") ||
 			($current_field_type == "out")) { /* snmp */
-		$form_array = inject_form_variables($fields_data_input_field_edit_2, $header_name, (isset($field) ? $field : array()));
+		$form_array = inject_form_variables(data_input_field2_form_list(), $header_name, (isset($field) ? $field : array()));
 	}
 
+	$fields_data_input_field_edit = data_input_field_form_list();
 	/* ONLY if the field is an input */
 	if ($current_field_type == "in") {
 		unset($fields_data_input_field_edit["update_rra"]);
@@ -398,7 +399,7 @@ function data_remove($id) {
 
 function data_edit() {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/data_input/data_input_forms.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_input/data_input_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -419,7 +420,7 @@ function data_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_data_input_edit, (isset($data_input) ? $data_input : array()))
+		"fields" => inject_form_variables(data_input_form_list(), (isset($data_input) ? $data_input : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */
