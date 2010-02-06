@@ -389,8 +389,9 @@ function template_item_remove_dq() {
 }
 
 function template_edit() {
-	global $colors, $fields_device_template_edit;
+	global $colors;
 	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/device_template/device_template_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -429,7 +430,7 @@ function template_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_device_template_edit, (isset($device_template) ? $device_template : array()))
+		"fields" => inject_form_variables(device_template_form_list(), (isset($device_template) ? $device_template : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

@@ -105,59 +105,6 @@ $snmp_query_field_actions = array(1 =>
 	__("SNMP Output Type (Dropdown)"),
 	);
 
-$rrd_font_render_modes = array(
-	RRD_FONT_RENDER_NORMAL	=> __("Normal"),
-	RRD_FONT_RENDER_LIGHT	=> __("Light"),
-	RRD_FONT_RENDER_MONO	=> __("Mono"),
-	);
-
-$rrd_graph_render_modes = array(
-	RRD_GRAPH_RENDER_NORMAL	=> __("Normal"),
-	RRD_GRAPH_RENDER_MONO	=> __("Mono"),
-	);
-
-$rrd_legend_position = array(
-	RRD_LEGEND_POS_NORTH	=> __("North"),
-	RRD_LEGEND_POS_SOUTH	=> __("South"),
-	RRD_LEGEND_POS_WEST		=> __("West"),
-	RRD_LEGEND_POS_EAST		=> __("East"),
-);
-
-$rrd_textalign = array(
-	RRD_ALIGN_LEFT			=> __("Left"),
-	RRD_ALIGN_RIGHT			=> __("Right"),
-	RRD_ALIGN_JUSTIFIED		=> __("Justified"),
-	RRD_ALIGN_CENTER		=> __("Center"),
-);
-
-$rrd_legend_direction = array(
-	RRD_LEGEND_DIR_TOPDOWN	=> __("Top -> Down"),
-	RRD_LEGEND_DIR_BOTTOMUP	=> __("Bottom -> Up"),
-);
-
-$graph_item_types = array(
-	GRAPH_ITEM_TYPE_COMMENT			=> "COMMENT",
-	GRAPH_ITEM_TYPE_HRULE			=> "HRULE",
-	GRAPH_ITEM_TYPE_VRULE			=> "VRULE",
-	GRAPH_ITEM_TYPE_LINE1			=> "LINE1",
-	GRAPH_ITEM_TYPE_LINE2			=> "LINE2",
-	GRAPH_ITEM_TYPE_LINE3			=> "LINE3",
-	GRAPH_ITEM_TYPE_AREA			=> "AREA",
-	GRAPH_ITEM_TYPE_AREASTACK		=> "AREA:STACK",
-	GRAPH_ITEM_TYPE_GPRINT			=> "GPRINT",
-	GRAPH_ITEM_TYPE_LINESTACK		=> "LINE:STACK",
-	GRAPH_ITEM_TYPE_TICK			=> "TICK",
-	GRAPH_ITEM_TYPE_TEXTALIGN		=> "TEXTALIGN",
-	GRAPH_ITEM_TYPE_LEGEND			=> __("Legend"),
-	GRAPH_ITEM_TYPE_CUSTOM_LEGEND	=> __("Custom Legend"),
-	);
-
-$image_types = array(
-	IMAGE_TYPE_PNG 	=> "PNG",
-	IMAGE_TYPE_GIF	=> "GIF",
-	IMAGE_TYPE_SVG	=> "SVG",
-	);
-
 $banned_snmp_strings = array(
 	"End of MIB",
 	"No Such");
@@ -176,10 +123,6 @@ $logfile_verbosity = array(
 	POLLER_VERBOSITY_DEBUG 	=> __("DEBUG - Statistics, Errors, Results, I/O and Program Flow"),
 	POLLER_VERBOSITY_DEVDBG => __("DEVEL - Developer DEBUG Level"),
 	);
-
-$poller_options = array(1 =>
-	"cmd.php",
-	"spine");
 
 $poller_intervals = array(
 	10 => __("Every %d Seconds", 10),
@@ -259,36 +202,6 @@ $i18n_modes = array(
     2 => __("Enabled (strict mode)"),
     );
 
-$graph_color_alpha = array(
-		"00" => "  0%",
-		"19" => " 10%",
-		"33" => " 20%",
-		"4C" => " 30%",
-		"66" => " 40%",
-		"7F" => " 50%",
-		"99" => " 60%",
-		"B2" => " 70%",
-		"CC" => " 80%",
-		"E5" => " 90%",
-		"FF" => "100%"
-		);
-
-$tree_types = array(
-	TREE_TYPE_TREE => __("Tree"),
-	TREE_TYPE_NODE => __("Node"),
-	);
-
-$tree_item_types = array(
-	TREE_ITEM_TYPE_HEADER => __("Header"),
-	TREE_ITEM_TYPE_GRAPH => __("Graph"),
-	TREE_ITEM_TYPE_DEVICE => __("Device"),
-	);
-
-$device_group_types = array(
-	HOST_GROUPING_GRAPH_TEMPLATE => __("Graph Template"),
-	HOST_GROUPING_DATA_QUERY_INDEX => __("Data Query Index"),
-	);
-
 $menu = array(
 	__("Management") => array(
 		"tree.php" => __("Trees"),
@@ -327,14 +240,6 @@ $menu = array(
 		"user_admin.php" => __("User Management"),
 		"logout.php" => __("Logout User"),
 	));
-
-$colortag_sequence = array(
-	COLORTAGS_GLOBAL 	=> __("Accept global colortags only, if any"),
-	COLORTAGS_USER	 	=> __("Accept user colortags only, if any"),
-	COLORTAGS_TEMPLATE 	=> __("Accept graph template colortags only, if any"),
-	COLORTAGS_UTG	 	=> __("Accept user colortags, template next, global last"),
-	COLORTAGS_TUG	 	=> __("Accept template colortags, user next, global last"),
-	);
 
 $log_tail_lines = array(
 	-1 => __("All Lines"),

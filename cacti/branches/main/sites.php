@@ -87,7 +87,7 @@ function form_save() {
    ------------------------ */
 
 function form_actions() {
-	global $colors, $config, $site_actions, $fields_site_edit;
+	global $colors, $config, $site_actions;
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -410,7 +410,8 @@ function site_get_site_records(&$sql_where, $rows = 30, $apply_limits = TRUE) {
 }
 
 function site_edit() {
-	global $colors, $fields_site_edit;
+	global $colors;
+	require_once(CACTI_BASE_PATH . "/lib/site/site_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -433,7 +434,7 @@ function site_edit() {
 
 	draw_edit_form(array(
 		"config" => array("form_name" => "chk", "no_form_tag" => true),
-		"fields" => inject_form_variables($fields_site_edit, (isset($site) ? $site : array()))
+		"fields" => inject_form_variables(site_form_list(), (isset($site) ? $site : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

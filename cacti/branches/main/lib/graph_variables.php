@@ -267,7 +267,6 @@ function bandwidth_summation($local_data_id, $start_time, $end_time, $rra_steps,
      varies depending on the RRA in use
    @returns - a string containg the Nth percentile suitable for placing on the graph */
 function variable_nth_percentile(&$regexp_match_array, &$graph_item, &$graph_items, $graph_start, $graph_end) {
-	global $graph_item_types;
 
 	if (sizeof($regexp_match_array) == 0) {
 		return 0;
@@ -468,7 +467,7 @@ function variable_nth_percentile(&$regexp_match_array, &$graph_item, &$graph_ite
    @param $ds_step - how many seconds each period represents
    @returns - a string containg the bandwidth summation suitable for placing on the graph */
 function variable_bandwidth_summation(&$regexp_match_array, &$graph_item, &$graph_items, $graph_start, $graph_end, $rra_step, $ds_step) {
-	global $graph_item_types;
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
 	if (sizeof($regexp_match_array) == 0) {
 		return 0;

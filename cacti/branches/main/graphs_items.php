@@ -62,8 +62,9 @@ switch (get_request_var_request("action")) {
    -------------------------- */
 
 function form_save() {
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+
 	if (isset($_POST["save_component_item"])) {
-		global $graph_item_types;
 
 		$items[0] = array();
 
@@ -205,7 +206,7 @@ function form_save() {
    ----------------------- */
 
 function item_movedown() {
-	global $graph_item_types;
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -227,7 +228,7 @@ function item_movedown() {
 }
 
 function item_moveup() {
-	global $graph_item_types;
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -257,7 +258,8 @@ function item_remove() {
 }
 
 function item_edit() {
-	global $colors, $struct_graph_item, $graph_item_types;
+	global $colors;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("id"));
@@ -354,6 +356,7 @@ function item_edit() {
 	}
 
 	/* by default, select the LAST DS chosen to make everyone's lives easier */
+	$struct_graph_item = graph_item_form_list();
 	if (!empty($_REQUEST["local_graph_id"])) {
 		$default = db_fetch_row("select task_item_id from graph_templates_item where local_graph_id=" . get_request_var_request("local_graph_id") . " order by sequence DESC");
 

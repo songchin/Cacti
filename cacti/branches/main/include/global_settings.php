@@ -25,6 +25,8 @@
 require_once(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
 require_once(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 require_once(CACTI_BASE_PATH . "/include/device/device_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/poller/poller_arrays.php");
 
 /* tab information */
 $tabs = array(

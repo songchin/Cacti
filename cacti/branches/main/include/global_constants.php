@@ -25,15 +25,16 @@
 define("CHECKED", "on");
 define("ACTION_NONE", "-1");
 
-define("HOST_GROUPING_GRAPH_TEMPLATE", 1);
-define("HOST_GROUPING_DATA_QUERY_INDEX", 2);
+define("POLLER_VERBOSITY_NONE", 1);
+define("POLLER_VERBOSITY_LOW", 2);
+define("POLLER_VERBOSITY_MEDIUM", 3);
+define("POLLER_VERBOSITY_HIGH", 4);
+define("POLLER_VERBOSITY_DEBUG", 5);
+define("POLLER_VERBOSITY_DEVDBG", 6);
 
-define("TREE_TYPE_TREE", 1);
-define("TREE_TYPE_NODE", 2);
-
-define("TREE_ITEM_TYPE_HEADER", 1);
-define("TREE_ITEM_TYPE_GRAPH", 2);
-define("TREE_ITEM_TYPE_DEVICE", 3);
+define("SNMP_POLLER", 0);
+define("SNMP_CMDPHP", 1);
+define("SNMP_WEBUI", 2);
 
 define("RRDTOOL_PIPE_CHILD_READ", 0);
 define("RRDTOOL_PIPE_CHILD_WRITE", 1);
@@ -49,32 +50,6 @@ define("RRD_VERSION_1_2",	"rrd-1.2.x");
 define("RRD_VERSION_1_3",	"rrd-1.3.x");
 define("RRD_VERSION_1_4",	"rrd-1.4.x");
 
-define("RRD_FONT_RENDER_NORMAL", "normal");
-define("RRD_FONT_RENDER_LIGHT","light");
-define("RRD_FONT_RENDER_MONO", "mono");
-
-define("RRD_GRAPH_RENDER_NORMAL", "normal");
-define("RRD_GRAPH_RENDER_MONO", "mono");
-
-define("COLORTAGS_GLOBAL",		1);
-define("COLORTAGS_USER",		2);
-define("COLORTAGS_TEMPLATE",	3);
-define("COLORTAGS_UTG",			4);
-define("COLORTAGS_TUG",			5);
-
-define("RRD_LEGEND_POS_NORTH",	"north");
-define("RRD_LEGEND_POS_SOUTH",	"south");
-define("RRD_LEGEND_POS_WEST",	"west");
-define("RRD_LEGEND_POS_EAST",	"east");
-
-define("RRD_ALIGN_LEFT", 		"left");
-define("RRD_ALIGN_RIGHT",		"right");
-define("RRD_ALIGN_JUSTIFIED",	"justified");
-define("RRD_ALIGN_CENTER",		"center");
-
-define("RRD_LEGEND_DIR_TOPDOWN",	"topdown");
-define("RRD_LEGEND_DIR_BOTTOMUP",	"bottomup");
-
 define("GRAPH_TREE_VIEW", 1);
 define("GRAPH_LIST_VIEW", 2);
 define("GRAPH_PREVIEW_VIEW", 3);
@@ -89,11 +64,6 @@ define("GRAPH_ACTION_RESIZE", "6");
 define("GRAPH_ACTION_ENABLE_EXPORT", "7");
 define("GRAPH_ACTION_DISABLE_EXPORT", "8");
 
-define("GRAPH_ALT_AUTOSCALE",			1);
-define("GRAPH_ALT_AUTOSCALE_MIN",		2);
-define("GRAPH_ALT_AUTOSCALE_MAX",		3);
-define("GRAPH_ALT_AUTOSCALE_LIMITS",	4);
-
 define("DS_ACTION_DELETE", "0");
 define("DS_ACTION_CHANGE_TEMPLATE", "1");
 define("DS_ACTION_CHANGE_HOST", "2");
@@ -102,39 +72,6 @@ define("DS_ACTION_CONVERT_TO_TEMPLATE", "4");
 define("DS_ACTION_ENABLE", "5");
 define("DS_ACTION_DISABLE", "6");
 define("DS_ACTION_REAPPLY_SUGGESTED_NAMES", "7");
-
-define("GRAPH_ITEM_TYPE_COMMENT",		1);
-define("GRAPH_ITEM_TYPE_HRULE",			2);
-define("GRAPH_ITEM_TYPE_VRULE",			3);
-define("GRAPH_ITEM_TYPE_LINE1",			4);
-define("GRAPH_ITEM_TYPE_LINE2",			5);
-define("GRAPH_ITEM_TYPE_LINE3",			6);
-define("GRAPH_ITEM_TYPE_AREA",			7);
-define("GRAPH_ITEM_TYPE_AREASTACK",		8);
-define("GRAPH_ITEM_TYPE_GPRINT",		9);
-define("GRAPH_ITEM_TYPE_LINESTACK",		10);
-define("GRAPH_ITEM_TYPE_TICK",			11);
-define("GRAPH_ITEM_TYPE_TEXTALIGN",		12);
-define("GRAPH_ITEM_TYPE_LEGEND", 		98);
-define("GRAPH_ITEM_TYPE_CUSTOM_LEGEND",	99);
-
-define("IMAGE_TYPE_PNG", 1);
-define("IMAGE_TYPE_GIF", 2);
-define("IMAGE_TYPE_SVG", 3);
-
-define("POLLER_ACTION_SNMP", 0);
-define("POLLER_ACTION_SCRIPT", 1);
-define("POLLER_ACTION_SCRIPT_PHP", 2);
-
-define("POLLER_COMMAND_REINDEX", 1);
-define("POLLER_COMMAND_RRDPURGE", 2);
-
-define("POLLER_VERBOSITY_NONE", 1);
-define("POLLER_VERBOSITY_LOW", 2);
-define("POLLER_VERBOSITY_MEDIUM", 3);
-define("POLLER_VERBOSITY_HIGH", 4);
-define("POLLER_VERBOSITY_DEBUG", 5);
-define("POLLER_VERBOSITY_DEVDBG", 6);
 
 define("GT_CUSTOM", 0);
 define("GT_LAST_HALF_HOUR", 1);
@@ -212,10 +149,6 @@ define("GDC_HYPHEN", 0);
 define("GDC_SLASH", 1);
 define("GDC_DOT", 2);
 
-define("SNMP_POLLER", 0);
-define("SNMP_CMDPHP", 1);
-define("SNMP_WEBUI", 2);
-
 define("PERM_GRAPHS", 1);
 define("PERM_TREES", 2);
 define("PERM_DEVICES", 3);
@@ -230,6 +163,3 @@ define('OPER_MODE_IFRAME_NONAV', 2);
 
 define("CHARS_PER_TIER", 3);
 define("MAX_TREE_DEPTH", 30);
-
-define("SORT_TYPE_TREE", 1);
-define("SORT_TYPE_TREE_ITEM", 2);

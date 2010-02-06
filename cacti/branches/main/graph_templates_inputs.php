@@ -142,8 +142,10 @@ function input_remove() {
 }
 
 function input_edit() {
-	global $colors, $graph_item_types, $struct_graph_item, $fields_graph_template_input_edit;
+	global $colors;
 	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -159,6 +161,7 @@ function input_edit() {
 	}
 
 	/* get a list of all graph item field names and populate an array for user display */
+	$struct_graph_item = graph_item_form_list;
 	while (list($field_name, $field_array) = each($struct_graph_item)) {
 		if ($field_array["method"] != "view") {
 			$graph_template_items[$field_name] = $field_array["friendly_name"];
@@ -173,7 +176,7 @@ function input_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_graph_template_input_edit, (isset($graph_template_input) ? $graph_template_input : array()), (isset($graph_template_items) ? $graph_template_items : array()), $_GET)
+		"fields" => inject_form_variables(graph_template_input_form_list(), (isset($graph_template_input) ? $graph_template_input : array()), (isset($graph_template_items) ? $graph_template_items : array()), $_GET)
 		));
 
 	if (!(isset($_GET["id"]))) { $_GET["id"] = 0; }

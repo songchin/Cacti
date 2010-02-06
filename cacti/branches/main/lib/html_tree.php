@@ -459,6 +459,8 @@ function grow_dhtml_trees() {
 }
 
 function create_dhtml_tree() {
+	require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
+
 	/* Record Start Time */
 	list($micro,$seconds) = explode(" ", microtime());
 	$start = $seconds + $micro;
@@ -522,7 +524,7 @@ function create_dhtml_tree() {
 							$dhtml_tree[$i] = "\t\t\tou" . ($tier) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "\"\n";
 
 							if (read_graph_config_option("expand_devices") == CHECKED) {
-								if ($leaf["device_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
+								if ($leaf["device_grouping_type"] == TREE_DEVICE_GROUPING_GRAPH_TEMPLATE) {
 									$graph_templates = db_fetch_assoc("select
 									graph_templates.id,
 									graph_templates.name
@@ -541,7 +543,7 @@ function create_dhtml_tree() {
 											$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "_hgd_gt_" . $graph_template["id"] . "\"\n";
 										}
 									}
-								}else if ($leaf["device_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
+								}else if ($leaf["device_grouping_type"] == TREE_DEVICE_GROUPING_DATA_QUERY_INDEX) {
 									$data_queries = db_fetch_assoc("select
 									snmp_query.id,
 									snmp_query.name
@@ -756,6 +758,7 @@ function get_trees($tree_id) {
 
 function get_tree_leaf_items($tree_id, $leaf_id, $device_group_type, $include_parent = false) {
 	global $current_user, $config;
+	require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
 
 	// prototype
 	// $items = array($tree_id, $leaf_id, $type, $id, $name);
@@ -868,7 +871,7 @@ function get_tree_leaf_items($tree_id, $leaf_id, $device_group_type, $include_pa
 			return $items;
 		}elseif ($leaf_type == "device") {
 			if (read_graph_config_option("expand_devices") == CHECKED) {
-				if ($leaf["device_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
+				if ($leaf["device_grouping_type"] == TREE_DEVICE_GROUPING_GRAPH_TEMPLATE) {
 					if ((isset($device_group_type)) && ($device_group_type[0] != 'gt')) {
 						$items = get_device_grouping_graph_templates($leaf, $user);
 					}
@@ -1005,10 +1008,11 @@ function get_graph_tree_content($tree_id, $leaf_id, $device_group_data) {
 	global $current_user, $colors, $config, $graphs_per_page;
 
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
+	require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 	include_once(CACTI_BASE_PATH . "/lib/html_utility.php");
-	include_once(CACTI_BASE_PATH . "/lib/graph_view/graph_view_form.php");
+	include_once(CACTI_BASE_PATH . "/lib/graph/graph_view_form.php");
 	define("MAX_DISPLAY_PAGES", 21);
 
 	if (empty($tree_id)) { return; }
@@ -1147,7 +1151,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $device_group_data) {
 			ORDER BY graph_tree_items.order_key");
 	}elseif ($leaf_type == "device") {
 		/* graph template grouping */
-		if ($leaf["device_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
+		if ($leaf["device_grouping_type"] == TREE_DEVICE_GROUPING_GRAPH_TEMPLATE) {
 			$graph_templates = db_fetch_assoc("SELECT
 				graph_templates.id,
 				graph_templates.name
@@ -1196,7 +1200,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $device_group_data) {
 				}
 			}
 			/* data query index grouping */
-		}elseif ($leaf["device_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
+		}elseif ($leaf["device_grouping_type"] == TREE_DEVICE_GROUPING_DATA_QUERY_INDEX) {
 			$data_queries = db_fetch_assoc("SELECT
 				snmp_query.id,
 				snmp_query.name

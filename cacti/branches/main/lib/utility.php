@@ -55,10 +55,10 @@ function update_poller_cache_from_query($device_id, $data_query_id) {
 
 function update_poller_cache($local_data_id, $commit = false) {
 	global $config;
-
 	require_once(CACTI_BASE_PATH . "/include/data_input/data_input_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 	include_once(CACTI_BASE_PATH . "/lib/api_poller.php");
+
 	$poller_items = array();
 
 	$data_input = db_fetch_row("select
@@ -476,7 +476,7 @@ function push_out_device($device_id, $local_data_id = 0, $data_template_id = 0) 
 }
 
 function duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title) {
-	global $struct_graph, $struct_graph_item;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	if (!empty($_local_graph_id)) {
 		$graph_local = db_fetch_row("select * from graph_local where id=$_local_graph_id");
@@ -508,6 +508,7 @@ function duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title) {
 	}
 
 	unset($save);
+	$struct_graph = graph_form_list();
 	reset($struct_graph);
 
 	/* create new entry: graph_templates_graph */
@@ -527,6 +528,7 @@ function duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title) {
 
 	/* create new entry(s): graph_templates_item */
 	if (sizeof($graph_template_items) > 0) {
+		$struct_graph_item = graph_item_form_list();
 	foreach ($graph_template_items as $graph_template_item) {
 		unset($save);
 		reset($struct_graph_item);
@@ -687,7 +689,7 @@ function duplicate_data_source($_local_data_id, $_data_template_id, $data_source
 }
 
 function duplicate_device_template($_device_template_id, $device_template_title) {
-	global $fields_device_template_edit;
+	require_once(CACTI_BASE_PATH . "/lib/device_template/device_template_info.php");
 
 	$device_template = db_fetch_row("select * from device_template where id=$_device_template_id");
 	$device_template_graphs = db_fetch_assoc("select * from device_template_graph where device_template_id=$_device_template_id");
@@ -700,6 +702,7 @@ function duplicate_device_template($_device_template_id, $device_template_title)
 	$save["id"] = 0;
 	$save["hash"] = get_hash_device_template(0);
 
+	$fields_device_template_edit = device_template_form_list();
 	reset($fields_device_template_edit);
 	while (list($field, $array) = each($fields_device_template_edit)) {
 		if (!preg_match("/^hidden/", $array["method"])) {

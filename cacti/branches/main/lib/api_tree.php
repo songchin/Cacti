@@ -57,6 +57,7 @@ function api_tree_add_tree_names_to_actions_array() {
 function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, $local_graph_id, $rra_id,
 	$device_id, $device_grouping_type, $sort_children_type, $propagate_changes) {
 	global $config;
+	require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
 
 	input_validate_input_number($tree_id);
 	input_validate_input_number($parent_tree_item_id);

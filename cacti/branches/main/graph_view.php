@@ -26,7 +26,7 @@ $guest_account = true;
 include_once("./include/auth.php");
 include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 include_once(CACTI_BASE_PATH . "/lib/timespan_settings.php");
-include_once(CACTI_BASE_PATH . "/lib/graph_view/graph_view_form.php");
+include_once(CACTI_BASE_PATH . "/lib/graph/graph_view_form.php");
 
 if (isset($_REQUEST["action"])) {
 switch(get_request_var_request("action")){

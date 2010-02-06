@@ -111,7 +111,9 @@ function import_xml_data(&$xml_data, $import_custom_rra_settings) {
 }
 
 function xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
-	global $struct_graph, $struct_graph_item, $fields_graph_template_input_edit, $hash_version_codes;
+	global $hash_version_codes;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 
 	/* import into: graph_templates */
 	$_graph_template_id = db_fetch_cell("select id from graph_templates where hash='$hash'");
@@ -130,6 +132,7 @@ function xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 	/* parse information from the hash */
 	$parsed_hash = parse_xml_hash($hash);
 
+	$struct_graph = graph_form_list();
 	reset($struct_graph);
 	while (list($field_name, $field_array) = each($struct_graph)) {
 		/* make sure this field exists in the xml array first */
@@ -151,6 +154,7 @@ function xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 
 	/* import into: graph_templates_item */
 	if (is_array($xml_array["items"])) {
+		$struct_graph_item = graph_item_form_list();
 		while (list($item_hash, $item_array) = each($xml_array["items"])) {
 			/* parse information from the hash */
 			$parsed_hash = parse_xml_hash($item_hash);
@@ -215,6 +219,7 @@ function xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 	}
 
 	/* import into: graph_template_input */
+	$fields_graph_template_input_edit = graph_template_input_form_list();
 	if (is_array($xml_array["inputs"])) {
 		while (list($item_hash, $item_array) = each($xml_array["inputs"])) {
 			/* parse information from the hash */
@@ -606,13 +611,14 @@ function xml_to_round_robin_archive($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_device_template($hash, &$xml_array, &$hash_cache) {
-	global $fields_device_template_edit;
+	require_once(CACTI_BASE_PATH . "/lib/device_template/device_template_info.php");
 
 	/* import into: graph_templates_gprint */
 	$_device_template_id = db_fetch_cell("select id from device_template where hash='$hash'");
 	$save["id"] = (empty($_device_template_id) ? "0" : $_device_template_id);
 	$save["hash"] = $hash;
 
+	$fields_device_template_edit = device_template_form_list();
 	reset($fields_device_template_edit);
 	while (list($field_name, $field_array) = each($fields_device_template_edit)) {
 		/* make sure this field exists in the xml array first */

@@ -270,7 +270,7 @@ function change_data_template($local_data_id, $data_template_id) {
 /* push_out_graph - pushes out templated graph template fields to all matching children
    @param $graph_template_graph_id - the id of the graph template to push out values for */
 function push_out_graph($graph_template_graph_id) {
-	global $struct_graph;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* get information about this graph template */
 	$graph_template_graph = db_fetch_row("select * from graph_templates_graph where id=$graph_template_graph_id");
@@ -279,6 +279,7 @@ function push_out_graph($graph_template_graph_id) {
 	if ($graph_template_graph["graph_template_id"] == 0) { return 0; }
 
 	/* loop through each graph column name (from the above array) */
+	$struct_graph = graph_form_list();
 	reset($struct_graph);
 	while (list($field_name, $field_array) = each($struct_graph)) {
 		/* are we allowed to push out the column? */
@@ -349,7 +350,7 @@ function push_out_graph_input($graph_template_input_id, $graph_template_item_id,
 	pushed out
    @param $graph_template_item_id - the id of the graph template item to push out values for */
 function push_out_graph_item($graph_template_item_id) {
-	global $struct_graph_item;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* get information about this graph template */
 	$graph_template_item = db_fetch_row("select * from graph_templates_item where id=$graph_template_item_id");
@@ -383,6 +384,7 @@ function push_out_graph_item($graph_template_item_id) {
 	$graph_item_inputs = array_rekey($graph_item_inputs, "column_name", "graph_template_item_id");
 
 	/* loop through each graph item column name (from the above array) */
+	$struct_graph_item = graph_item_form_list();
 	reset($struct_graph_item);
 	while (list($field_name, $field_array) = each($struct_graph_item)) {
 		/* are we allowed to push out the column? */
@@ -401,7 +403,7 @@ function push_out_graph_item($graph_template_item_id) {
 	the current graph, remove or add the items from the current graph to make them equal.
 	(false) leave the graph item count alone */
 function change_graph_template($local_graph_id, $graph_template_id, $intrusive) {
-	global $struct_graph, $struct_graph_item;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* always update tables to new graph template (or no graph template) */
 	db_execute("update graph_local set graph_template_id=$graph_template_id where id=$local_graph_id");
@@ -425,6 +427,7 @@ function change_graph_template($local_graph_id, $graph_template_id, $intrusive) 
 	$save["graph_template_id"] = $graph_template_id;
 
 	/* loop through the "templated field names" to find to the rest... */
+	$struct_graph = graph_form_list();
 	reset($struct_graph);
 	while (list($field_name, $field_array) = each($struct_graph)) {
 		$value_type = "t_$field_name";
@@ -450,6 +453,7 @@ function change_graph_template($local_graph_id, $graph_template_id, $intrusive) 
 
 	$k=0;
 	if (sizeof($template_items_list) > 0) {
+		$struct_graph_item = graph_item_form_list();
 	foreach ($template_items_list as $template_item) {
 		unset($save);
 		reset($struct_graph_item);

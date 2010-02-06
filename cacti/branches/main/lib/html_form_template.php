@@ -36,7 +36,8 @@
    @param $snmp_query_graph_id - if this graph template is part of a data query, specify the graph id here. this
      will be used to determine if a given field is using suggested values */
 function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true, $include_hidden_fields = true, $snmp_query_graph_id = 0) {
-	global $colors, $struct_graph;
+	global $colors;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	$form_array = array();
 	$draw_any_items = false;
@@ -44,6 +45,7 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
 	/* fetch information about the graph template */
 	$graph_template = db_fetch_row("select * from graph_templates_graph where graph_template_id=$graph_template_id and local_graph_id=0");
 
+	$struct_graph = graph_form_list();
 	reset($struct_graph);
 	while (list($field_name, $field_array) = each($struct_graph)) {
 		/* find our field name */
@@ -108,7 +110,8 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
    @param $header_title - the title to use on the header for this form
    @param $alternate_colors (bool) - whether to alternate colors for each row on the form or not */
 function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id, $field_name_format = "|field|_|id|", $header_title = "", $alternate_colors = true) {
-	global $struct_graph_item, $colors;
+	global $colors;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	$form_array = array();
 	$draw_any_items = false;
@@ -120,6 +123,7 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
 		ORDER BY column_name,name");
 
 	/* modifications to the default graph items array */
+	$struct_graph_item = graph_item_form_list();
 	if (!empty($local_graph_id)) {
 		$device_id = db_fetch_cell("SELECT device_id FROM graph_local WHERE id=$local_graph_id");
 

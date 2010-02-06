@@ -522,12 +522,13 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
 
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrd_struc = array()) {
 	global $config;
+	include(CACTI_BASE_PATH . "/include/global_arrays.php");
+	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 	include_once(CACTI_BASE_PATH . "/lib/cdef.php");
 	include_once(CACTI_BASE_PATH . "/lib/vdef.php");
 	include_once(CACTI_BASE_PATH . "/lib/graph_variables.php");
 	include_once(CACTI_BASE_PATH . "/lib/time.php");
-	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
-	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	/* set the rrdtool default font */
 	if (read_config_option("path_rrdtool_default_font")) {
@@ -2292,7 +2293,7 @@ function rrdgraph_scale($graph) {
  * returns						--imgformat string
  */
 function rrdgraph_image_format($image_format_id, $rrdtool_version) {
-	global $image_types;
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
 	$format = "--imgformat=";
 

@@ -1111,8 +1111,8 @@ function displayTrees($quietMode = FALSE) {
  * @param bool $quietMode
  */
 function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode = FALSE) {
-	global $tree_item_types, $device_group_types;
 	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+	require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
 
 	if (!$quietMode) {
 		echo __("Known Tree Nodes: (type, id, parentid, text)") . "\n";
@@ -1203,7 +1203,7 @@ function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode
 												FROM device
 												WHERE id = " . $node["device_id"]);
 						echo $name . "\t";
-						echo $device_group_types[$node["device_grouping_type"]]."\t";
+						echo $tree_device_group_types[$node["device_grouping_type"]]."\t";
 						echo "\n";
 					}
 					break;
@@ -1958,6 +1958,7 @@ function verifyTree(&$tree, $ri_check=false) {
  */
 function verifyTreeItem(&$tree_item, $ri_check=false) {
 	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+	require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
 
 	foreach($tree_item as $key => $value) {
 
@@ -2045,8 +2046,8 @@ function verifyTreeItem(&$tree_item, $ri_check=false) {
 				}
 				break;
 			case "device_grouping_type":
-				if ($value != HOST_GROUPING_GRAPH_TEMPLATE && $value != HOST_GROUPING_DATA_QUERY_INDEX) {
-					$check["err_msg"] = __("ERROR: Host Group Type must be %d or %d (Graph Template or Data Query Index)", HOST_GROUPING_GRAPH_TEMPLATE, HOST_GROUPING_DATA_QUERY_INDEX) . "\n";
+				if ($value != TREE_DEVICE_GROUPING_GRAPH_TEMPLATE && $value != TREE_DEVICE_GROUPING_DATA_QUERY_INDEX) {
+					$check["err_msg"] = __("ERROR: Host Group Type must be %d or %d (Graph Template or Data Query Index)", TREE_DEVICE_GROUPING_GRAPH_TEMPLATE, TREE_DEVICE_GROUPING_DATA_QUERY_INDEX) . "\n";
 					return $check;
 				}
 				break;

@@ -70,13 +70,13 @@ switch (get_request_var_request("action")) {
    -------------------------- */
 
 function form_save() {
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+
 	if (isset($_POST["save_component_item"])) {
 		/* ================= input validation ================= */
 		input_validate_input_number(get_request_var_post("graph_template_id"));
 		input_validate_input_number(get_request_var_post("task_item_id"));
 		/* ==================================================== */
-
-		global $graph_item_types;
 
 		$items[0] = array();
 
@@ -287,12 +287,12 @@ function form_save() {
    ----------------------- */
 
 function item_movedown() {
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	input_validate_input_number(get_request_var("graph_template_id"));
 	/* ==================================================== */
-
-	global $graph_item_types;
 
 	$arr = get_graph_group(get_request_var("id"));
 	$next_id = get_graph_parent(get_request_var("id"), "next");
@@ -315,12 +315,12 @@ function item_movedown() {
 }
 
 function item_moveup() {
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	input_validate_input_number(get_request_var("graph_template_id"));
 	/* ==================================================== */
-
-	global $graph_item_types;
 
 	$arr = get_graph_group(get_request_var("id"));
 	$next_id = get_graph_parent(get_request_var("id"), "previous");
@@ -372,7 +372,8 @@ function item_remove() {
 }
 
 function item_edit() {
-	global $colors, $struct_graph_item, $graph_item_types;
+	global $colors;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -384,6 +385,7 @@ function item_edit() {
 	}
 
 	/* by default, select the LAST DS chosen to make everyone's lives easier */
+	$struct_graph_item = graph_item_form_list();
 	if (!empty($_GET["graph_template_id"])) {
 		$default = db_fetch_row("select task_item_id from graph_templates_item where graph_template_id=" . get_request_var("graph_template_id") . " and local_graph_id=0 order by sequence DESC");
 

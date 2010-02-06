@@ -87,6 +87,8 @@ switch (get_request_var_request("action")) {
     The Save Function
    -------------------------- */
 function form_save() {
+	require_once(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_constants.php");
+
 	if (isset($_POST["save_component_tree"])) {
 		$save["id"] = $_POST["id"];
 		$save["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
@@ -136,8 +138,8 @@ function form_save() {
 
 function item_edit() {
 	global $colors;
-	global $tree_item_types, $device_group_types;
 	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+	require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -288,7 +290,7 @@ function item_edit() {
 				<?php print __("Choose how graphs are grouped when drawn for this particular device on the tree.");?>
 			</td>
 			<td>
-				<?php form_dropdown("device_grouping_type", $device_group_types, "", "", (isset($tree_item["device_grouping_type"]) ? $tree_item["device_grouping_type"] : "1"), "", "");?>
+				<?php form_dropdown("device_grouping_type", $tree_device_group_types, "", "", (isset($tree_item["device_grouping_type"]) ? $tree_item["device_grouping_type"] : "1"), "", "");?>
 			</td>
 		<?php
 		form_end_row();
@@ -379,7 +381,8 @@ function tree_remove() {
 }
 
 function tree_edit() {
-	global $colors, $fields_tree_edit;
+	global $colors;
+	require_once(CACTI_BASE_PATH . "/lib/graph_tree/graph_tree_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -405,7 +408,7 @@ function tree_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_tree_edit, (isset($tree) ? $tree : array()))
+		"fields" => inject_form_variables(graph_tree_form_list(), (isset($tree) ? $tree : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

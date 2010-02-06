@@ -33,50 +33,6 @@ $poller_actions = array(
 	"2" => __("Duplicate")
 	);
 
-/* file: pollers.php, action: edit */
-$fields_poller_edit = array(
-	"device_header" => array(
-		"method" => "spacer",
-		"friendly_name" => __("General Poller Options")
-		),
-	"description" => array(
-		"method" => "textbox",
-		"friendly_name" => __("Description"),
-		"description" => __("Give this poller a meaningful description."),
-		"value" => "|arg1:description|",
-		"max_length" => "250",
-		),
-	"hostname" => array(
-		"method" => "textbox",
-		"friendly_name" => __("Hostname"),
-		"description" => __("Fully qualified hostname of the poller device."),
-		"value" => "|arg1:hostname|",
-		"max_length" => "250",
-		),
-	"ip_address" => array(
-		"method" => "textbox",
-		"friendly_name" => __("IP Address"),
-		"description" => __("The IP Address of this poller for status checking."),
-		"value" => "|arg1:ip_address|",
-		"max_length" => "250",
-		),
-	"disabled" => array(
-		"method" => "checkbox",
-		"friendly_name" => __("Disabled"),
-		"description" => __("Check this box if you wish for this poller to be disabled."),
-		"value" => "|arg1:disabled|",
-		"default" => ""
-		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"save_component_poller" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
-	);
-
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
@@ -266,7 +222,8 @@ function form_actions() {
    --------------------- */
 
 function poller_edit() {
-	global $colors, $fields_poller_edit;
+	global $colors;
+	require_once(CACTI_BASE_PATH . "/lib/poller/poller_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -305,7 +262,7 @@ function poller_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_poller_edit, (isset($poller) ? $poller : array()))
+		"fields" => inject_form_variables(poller_form_list(), (isset($poller) ? $poller : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

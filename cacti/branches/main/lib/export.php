@@ -23,7 +23,8 @@
 */
 
 function graph_template_to_xml($graph_template_id) {
-	global $struct_graph, $fields_graph_template_input_edit, $struct_graph_item;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 
 	$hash["graph_template"] = get_hash_version("graph_template") . get_hash_graph_template($graph_template_id);
 	$xml_text = "";
@@ -43,6 +44,7 @@ function graph_template_to_xml($graph_template_id) {
 	$xml_text .= "\t\t<image>" . $graph_template["image"] . "</image>\n\t<graph>\n";
 
 	/* XML Branch: <graph> */
+	$struct_graph = graph_form_list();
 	reset($struct_graph);
 	while (list($field_name, $field_array) = each($struct_graph)) {
 		$xml_text .= "\t\t<t_$field_name>" . xml_character_encode($graph_template_graph{"t_" . $field_name}) . "</t_$field_name>\n";
@@ -57,6 +59,7 @@ function graph_template_to_xml($graph_template_id) {
 
 	$i = 0;
 	if (sizeof($graph_template_items) > 0) {
+		$struct_graph_item = graph_item_form_list();
 	foreach ($graph_template_items as $item) {
 		$hash["graph_template_item"] = get_hash_version("graph_template_item") . get_hash_graph_template($item["id"], "graph_template_item");
 
@@ -93,6 +96,7 @@ function graph_template_to_xml($graph_template_id) {
 
 	$i = 0;
 	if (sizeof($graph_template_inputs) > 0) {
+		$fields_graph_template_input_edit = graph_template_input_form_list();
 	foreach ($graph_template_inputs as $item) {
 		$hash["graph_template_input"] = get_hash_version("graph_template_input") . get_hash_graph_template($item["id"], "graph_template_input");
 
@@ -558,7 +562,7 @@ function round_robin_archive_to_xml($round_robin_archive_id) {
 }
 
 function device_template_to_xml($device_template_id) {
-	global $fields_device_template_edit;
+	require_once(CACTI_BASE_PATH . "/lib/device_template/device_template_info.php");
 
 	$hash = get_hash_version("device_template") . get_hash_device_template($device_template_id);
 	$xml_text = "";
@@ -575,6 +579,7 @@ function device_template_to_xml($device_template_id) {
 	$xml_text .= "<hash_$hash>\n";
 
 	/* XML Branch: <> */
+	$fields_device_template_edit = device_template_form_list();
 	reset($fields_device_template_edit);
 	while (list($field_name, $field_array) = each($fields_device_template_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {

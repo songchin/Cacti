@@ -143,7 +143,6 @@ function query_script_device($device_id, $snmp_query_id) {
 
 function query_snmp_device($device_id, $snmp_query_id) {
 	global $config;
-
 	include_once(CACTI_BASE_PATH . "/lib/snmp.php");
 
 	$device = db_fetch_row("SELECT

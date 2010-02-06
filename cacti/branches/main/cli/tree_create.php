@@ -31,10 +31,11 @@ if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($
 $no_http_headers = true;
 
 include(dirname(__FILE__)."/../include/global.php");
-require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
-include_once(CACTI_BASE_PATH."/lib/api_automation_tools.php");
-include_once(CACTI_BASE_PATH.'/lib/api_tree.php');
-include_once(CACTI_BASE_PATH.'/lib/tree.php');
+require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
+require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+include_once(CACTI_BASE_PATH . "/lib/api_automation_tools.php");
+include_once(CACTI_BASE_PATH . '/lib/api_tree.php');
+include_once(CACTI_BASE_PATH . '/lib/tree.php');
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
@@ -152,7 +153,7 @@ if (sizeof($parms)) {
 						$tree_item["local_graph_id"]    	= 0;
 						$tree_item["rra_id"]         		= 0;
 						$tree_item["device_id"]         		= 0;
-						$tree_item["device_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
+						$tree_item["device_grouping_type"] 	= TREE_DEVICE_GROUPING_GRAPH_TEMPLATE;
 						break;
 					case strtolower($tree_item_types[TREE_ITEM_TYPE_GRAPH]):
 						if (!isset($tree_item["local_graph_id"])) {
@@ -163,7 +164,7 @@ if (sizeof($parms)) {
 						$itemType 							= TREE_ITEM_TYPE_GRAPH;
 						$tree_item["title"]					= '';
 						$tree_item["device_id"]         		= 0;
-						$tree_item["device_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
+						$tree_item["device_grouping_type"] 	= TREE_DEVICE_GROUPING_GRAPH_TEMPLATE;
 						break;
 					case strtolower($tree_item_types[TREE_ITEM_TYPE_DEVICE]):
 						if (!isset($tree_item["device_id"])) {
@@ -189,7 +190,7 @@ if (sizeof($parms)) {
 				if (!isset($tree_item["local_graph_id"])) 		$tree_item["local_graph_id"] 		= 0;
 				if (!isset($tree_item["rra_id"])) 				$tree_item["rra_id"] 				= 1;
 				if (!isset($tree_item["device_id"])) 				$tree_item["device_id"] 				= 0;
-				if (!isset($tree_item["device_grouping_type"])) 	$tree_item["device_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
+				if (!isset($tree_item["device_grouping_type"])) 	$tree_item["device_grouping_type"] 	= TREE_DEVICE_GROUPING_GRAPH_TEMPLATE;
 
 				# $nodeId could be a Header Node, a Graph Node, or a Host node.
 				$nodeId = api_tree_item_save(0, $tree_item["graph_tree_id"], $itemType, $tree_item["parent_node"],

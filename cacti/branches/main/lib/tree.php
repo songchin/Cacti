@@ -212,6 +212,7 @@ function sort_tree($sort_type, $item_id, $sort_style) {
 	global $config;
 
 	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/sort.php");
 
 	if (empty($item_id)) { return 0; }

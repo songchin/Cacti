@@ -239,6 +239,8 @@ function graph_form_save() {
 
 function graph_form_actions() {
 	global $colors, $graph_actions;
+	require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
+
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
@@ -593,8 +595,9 @@ function graph_item() {
    ------------------------------------ */
 
 function graph_diff() {
-	global $colors, $struct_graph_item, $graph_item_types;
+	global $colors;
 	require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -665,6 +668,7 @@ function graph_diff() {
 	$group_counter = 0; $i = 0; $mode = "normal"; $_graph_type_name = "";
 
 	if (sizeof($items) > 0) {
+		$struct_graph_item = graph_item_form_list();
 	foreach ($items as $item) {
 		reset($struct_graph_item);
 
@@ -830,8 +834,8 @@ function graph_diff() {
 }
 
 function graph_edit() {
-	global $colors, $image_types, $graph_item_types, $struct_graph_item;
-	global $struct_graph_labels, $struct_graph_right_axis, $struct_graph_size, $struct_graph_limits, $struct_graph_grid, $struct_graph_color, $struct_graph_legend, $struct_graph_misc, $struct_graph_cacti;
+	global $colors;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -1019,34 +1023,34 @@ function graph_edit() {
 
 		############
 		html_start_box("<strong>" . __("Labels") . "</strong>", "100", $colors["header"], "0", "center", "", true);
-		draw_template_edit_form('header_graph_labels', $struct_graph_labels, $graphs, $use_graph_template);
+		draw_template_edit_form('header_graph_labels', graph_labels_form_list(), $graphs, $use_graph_template);
 		html_end_box(false);
 		/* TODO: we should not use rrd version in the code, when going data-driven */
 		if ( read_config_option("rrdtool_version") != RRD_VERSION_1_0 && read_config_option("rrdtool_version") != RRD_VERSION_1_2) {
 			html_start_box("<strong>" . __("Right Axis Settings") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_right_axis");
-			draw_template_edit_form('header_graph_right_axis', $struct_graph_right_axis, $graphs, $use_graph_template);
+			draw_template_edit_form('header_graph_right_axis', graph_right_axis_form_list(), $graphs, $use_graph_template);
 		}
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Size") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_size");
-		draw_template_edit_form('header_graph_size', $struct_graph_size, $graphs, $use_graph_template);
+		draw_template_edit_form('header_graph_size', graph_size_form_list(), $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Limits") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_limits");
-		draw_template_edit_form('header_graph_limits', $struct_graph_limits, $graphs, $use_graph_template);
+		draw_template_edit_form('header_graph_limits', graph_limits_form_list(), $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Grid") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_grid");
-		draw_template_edit_form('header_graph_grid', $struct_graph_grid, $graphs, $use_graph_template);
+		draw_template_edit_form('header_graph_grid', graph_grid_form_list(), $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Color") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_color");
-		draw_template_edit_form('header_graph_color', $struct_graph_color, $graphs, $use_graph_template);
+		draw_template_edit_form('header_graph_color', graph_color_form_list(), $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Legend") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
-		draw_template_edit_form('header_graph_legend', $struct_graph_legend, $graphs, $use_graph_template);
+		draw_template_edit_form('header_graph_legend', graph_legend_form_list(), $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Misc") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
-		draw_template_edit_form('header_graph_misc', $struct_graph_misc, $graphs, $use_graph_template);
+		draw_template_edit_form('header_graph_misc', graph_misc_form_list(), $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Cacti Specifics") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_cacti");
-		draw_template_edit_form('header_graph_cacti', $struct_graph_cacti, $graphs, $use_graph_template);
+		draw_template_edit_form('header_graph_cacti', graph_cacti_form_list(), $graphs, $use_graph_template);
 		html_end_box(false);
 	}
 

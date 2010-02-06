@@ -173,6 +173,7 @@ function api_device_form_save() {
 function api_device_form_actions() {
 	global $colors;
 	require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
+	require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
 
 	$fields_device_edit = device_form_list();
 	$fields_device_edit_availability = device_availability_form_list();
@@ -665,7 +666,7 @@ function device_edit() {
 
 	switch (get_request_var_request("tab")) {
 		case "newgraphs":
-			include_once(CACTI_BASE_PATH . "/lib/graphs_new/graphs_new_form.php");
+			include_once(CACTI_BASE_PATH . "/lib/graph/graphs_new_form.php");
 			include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 			include_once(CACTI_BASE_PATH . "/lib/utility.php");
 			include_once(CACTI_BASE_PATH . "/lib/sort.php");
@@ -689,7 +690,7 @@ function device_edit() {
 
 			break;
 		case "graphs":
-			include_once(CACTI_BASE_PATH . "/lib/graphs/graphs_form.php");
+			include_once(CACTI_BASE_PATH . "/lib/graph/graphs_form.php");
 			include_once(CACTI_BASE_PATH . "/lib/utility.php");
 			include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
 			include_once(CACTI_BASE_PATH . "/lib/api_tree.php");

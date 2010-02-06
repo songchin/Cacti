@@ -35,6 +35,7 @@ $no_http_headers = true;
 
 include(dirname(__FILE__) . "/include/global.php");
 require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/poller/poller_constants.php");
 include_once(CACTI_BASE_PATH . "/lib/snmp.php");
 include_once(CACTI_BASE_PATH . "/lib/poller.php");
 include_once(CACTI_BASE_PATH . "/lib/rrd.php");
