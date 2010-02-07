@@ -24,6 +24,17 @@
 
 require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 
+$ds_actions = array(
+	DS_ACTION_DELETE => __("Delete"),
+	DS_ACTION_CHANGE_TEMPLATE => __("Change Data Source Template"),
+	DS_ACTION_DUPLICATE => __("Duplicate"),
+	DS_ACTION_CONVERT_TO_TEMPLATE => __("Convert to Data Source Template"),
+	DS_ACTION_CHANGE_HOST => __("Change Host"),
+	DS_ACTION_REAPPLY_SUGGESTED_NAMES => __("Reapply Suggested Names"),
+	DS_ACTION_ENABLE => __("Enable"),
+	DS_ACTION_DISABLE => __("Disable"),
+	);
+
 $data_source_types = array(
 	DATA_SOURCE_TYPE_GAUGE		=> "GAUGE",
 	DATA_SOURCE_TYPE_COUNTER	=> "COUNTER",

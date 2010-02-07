@@ -50,15 +50,6 @@ define("RRD_VERSION_1_2",	"rrd-1.2.x");
 define("RRD_VERSION_1_3",	"rrd-1.3.x");
 define("RRD_VERSION_1_4",	"rrd-1.4.x");
 
-define("DS_ACTION_DELETE", "0");
-define("DS_ACTION_CHANGE_TEMPLATE", "1");
-define("DS_ACTION_CHANGE_HOST", "2");
-define("DS_ACTION_DUPLICATE", "3");
-define("DS_ACTION_CONVERT_TO_TEMPLATE", "4");
-define("DS_ACTION_ENABLE", "5");
-define("DS_ACTION_DISABLE", "6");
-define("DS_ACTION_REAPPLY_SUGGESTED_NAMES", "7");
-
 define("PERM_GRAPHS", 1);
 define("PERM_TREES", 2);
 define("PERM_DEVICES", 3);

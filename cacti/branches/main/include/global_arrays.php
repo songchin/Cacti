@@ -25,17 +25,6 @@ $actions_none = array(
 	ACTION_NONE => __("None"),
 	);
 
-$ds_actions = array(
-	DS_ACTION_DELETE => __("Delete"),
-	DS_ACTION_CHANGE_TEMPLATE => __("Change Data Source Template"),
-	DS_ACTION_DUPLICATE => __("Duplicate"),
-	DS_ACTION_CONVERT_TO_TEMPLATE => __("Convert to Data Source Template"),
-	DS_ACTION_CHANGE_HOST => __("Change Host"),
-	DS_ACTION_REAPPLY_SUGGESTED_NAMES => __("Reapply Suggested Names"),
-	DS_ACTION_ENABLE => __("Enable"),
-	DS_ACTION_DISABLE => __("Disable"),
-	);
-
 $messages = array(
 	1  => array(
 		"message" => __('Save Successful.'),
