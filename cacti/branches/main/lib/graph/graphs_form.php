@@ -238,8 +238,9 @@ function graph_form_save() {
    ------------------------ */
 
 function graph_form_actions() {
-	global $colors, $graph_actions;
+	global $colors;
 	require(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -380,7 +381,7 @@ function graph_form_actions() {
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	/* add a list of tree names to the actions dropdown */
-	$graph_actions = array_merge($graph_actions, api_tree_add_tree_names_to_actions_array());
+	$graph_actions = array_merge(graph_actions_list(), api_tree_add_tree_names_to_actions_array());
 
 	$graph_actions[ACTION_NONE] = __("None");
 
@@ -1081,7 +1082,8 @@ function graph_edit() {
 
 
 function graph() {
-	global $colors, $graph_actions, $item_rows;
+	global $colors, $item_rows;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("device_id"));
@@ -1381,7 +1383,7 @@ function graph() {
 	print "</table>\n";	# end table of html_header_sort_checkbox
 
 	/* add a list of tree names to the actions dropdown */
-	$graph_actions = array_merge($graph_actions, api_tree_add_tree_names_to_actions_array());
+	$graph_actions = array_merge(graph_actions_list(), api_tree_add_tree_names_to_actions_array());
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($graph_actions);

@@ -57,7 +57,9 @@ if (read_graph_config_option("timespan_sel") == "") {
 /* save session variables */
 finalize_timespan($timespan);
 
-/* initialize the timespan selector for first use */
+/** initialize_timespan		initialize the timespan selector for first use
+ * @param array $timespan	initial timespan
+ */
 function initialize_timespan(&$timespan) {
 	/* initialize the default timespan if not set */
 	if ((!isset($_SESSION["sess_current_timespan"])) || (isset($_REQUEST["button_clear_x"]))) {
@@ -72,8 +74,11 @@ function initialize_timespan(&$timespan) {
 	}
 }
 
-/* preformat for timespan selector */
+/** initialize_timespan 	preformat for timespan selector
+ */
 function process_html_variables() {
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+
 	if (isset($_REQUEST["predefined_timespan"])) {
 		if (!is_numeric(get_request_var_request("predefined_timespan"))) {
 			if (isset($_SESSION["sess_current_timespan"])) {
@@ -119,8 +124,11 @@ function process_html_variables() {
 	load_current_session_value("predefined_timeshift", "sess_current_timeshift", read_graph_config_option("default_timeshift"));
 }
 
-/* when a span time preselection has been defined update the span time fields */
-/* someone hit a button and not a dropdown */
+/** initialize_timespan		when a span time preselection has been defined update the span time fields
+							someone hit a button and not a dropdown
+ * @param array $timespan	timespan
+ * @param int $timeshift	amount of time to be shifted
+*/
 function process_user_input(&$timespan, $timeshift) {
 	if (isset($_REQUEST["date1"])) {
 		/* the dates have changed, therefore, I am now custom */
@@ -181,7 +189,10 @@ function process_user_input(&$timespan, $timeshift) {
 	}
 }
 
-/* establish graph timespan from either a user select or the default */
+/** $timeshift 				establish graph timespan from either a user select or the default
+ * @param array $timespan	given timespan
+ * @return array $_SESSION	preset timespan initialized
+ */
 function set_preset_timespan(&$timespan) {
 	# no current timespan: get default timespan
 	if ((!isset($_SESSION["sess_current_timespan"])) || (read_graph_config_option("timespan_sel") == "")) {
@@ -196,6 +207,11 @@ function set_preset_timespan(&$timespan) {
 	$_SESSION["custom"] = 0;
 }
 
+/**
+ * finalize_timespan
+ * @param array $timespan
+ * @return array $_SESSION
+ */
 function finalize_timespan(&$timespan) {
 	if (!isset($timespan["current_value_date1"])) {
 		/* Default end date is now default time span */
@@ -236,9 +252,13 @@ function finalize_timespan(&$timespan) {
 	}
 }
 
-/* establish graph timeshift from either a user select or the default */
+/**set_timeshift 		establish graph timeshift from either a user select or the default
+ * @param int return	timeshift
+ */
+
 function set_timeshift() {
-	global $config, $graph_timeshifts;
+	global $config;
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
 	# no current timeshift: get default timeshift
 	if ((!isset($_SESSION["sess_current_timeshift"])) ||

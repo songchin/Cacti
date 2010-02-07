@@ -312,6 +312,8 @@ function get_colored_poller_status($disabled, $last_update) {
      the timespan selector
    @returns - the number of seconds relative to now where the graph should begin */
 function get_current_graph_start() {
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+
 	if (isset($_SESSION["sess_current_timespan_begin_now"])) {
 		return $_SESSION["sess_current_timespan_begin_now"];
 	}else{

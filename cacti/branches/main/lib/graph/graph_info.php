@@ -87,3 +87,10 @@ function &graph_item_form_list() {
 
 	return $struct_graph_item;
 }
+
+function graph_actions_list() {
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+	global $graph_actions;
+
+	return $graph_actions;
+}

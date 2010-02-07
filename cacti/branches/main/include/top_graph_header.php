@@ -23,6 +23,7 @@
 */
 
 include_once(CACTI_BASE_PATH . "/lib/time.php");
+include_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
 include_once(CACTI_BASE_PATH . "/lib/graph/graph_view_form.php");
 
 $using_guest_account = false;

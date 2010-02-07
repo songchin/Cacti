@@ -22,15 +22,17 @@
  +-------------------------------------------------------------------------+
 */
 
-/* get_timespan		 		- returns start/end time for given date and timespan
- * 							  do NOT use absolute numbers of seconds but let php
- * 							  do all the time calculations to cover:
- * 							  leap years, daylight savings and weekdays ...
-   @param $span				- array &$timespan (begin_now, end_now)
-   @param $curr_time	 		- base date (time since epoch)
-   @param $timespan_given		- timespan as given by global_arrays.php($graph_timespans)
-   @param $first_weekdayid	- first weekday (numeric representation) */
+/** get_timespan		 			- returns start/end time for given date and timespan
+ * 								  do NOT use absolute numbers of seconds but let php
+ * 								  do all the time calculations to cover:
+ * 								  leap years, daylight savings and weekdays ...
+   @param array $span			- array &$timespan (begin_now, end_now)
+   @param int $curr_time	 	- base date (time since epoch)
+   @param int $timespan_given	- timespan
+   @param int $first_weekdayid	- first weekday (numeric representation)
+ */
 function get_timespan(&$span, $curr_time, $timespan_given, $first_weekdayid) {
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
 	# unless changed later, $span["end_now"] is always $curr_time
 	$span["begin_now"] 	= $curr_time; # initialization only!
 	$span["end_now"] 	= $curr_time;
@@ -150,18 +152,18 @@ function get_timespan(&$span, $curr_time, $timespan_given, $first_weekdayid) {
 	$span["current_value_date2"] = date("Y-m-d H:i",$span["end_now"]);
 }
 
-/* month_shift		- check for shifting one or more months
- * @param $shift_size	- requested shift amount
- * returns			- true, if month shifting required, else false
+/** month_shift					- check for shifting one or more months
+ * @param string $shift_size	- requested shift amount
+ * @param bool returns			- true, if month shifting required, else false
  */
 function month_shift($shift_size) {
 	# is monthly shifting required?
 	return ( strpos(strtolower($shift_size), "month") > 0);
 }
 
-/* check_month_boundaries 	- check given boundaries for begin/end of month matching
- * @param $span				- array $timespan with given boundaries
- * returns					- true, if begin AND end match month begin/end boundaries
+/** check_month_boundaries 	- check given boundaries for begin/end of month matching
+ * @param array $span		- timespan with given boundaries
+ * @param bool returns		- true, if begin AND end match month begin/end boundaries
  */
 function check_month_boundaries(&$span) {
 	# check left boundary -----------------------------------------------
@@ -180,11 +182,11 @@ function check_month_boundaries(&$span) {
 	return ( $begin_match && $end_match );
 }
 
-/* shift_right_boundary	- shift right boundary with end-of-month adjustment
- * @param $span			- timespan array
- * @param $direction		- shift left/right (-/+)
- * @param $shift_size		- amount of shift
- * returns				- time-since-epoch for shifted right boundary
+/** shift_right_boundary		- shift right boundary with end-of-month adjustment
+ * @param array $span			- timespan array
+ * @param string $direction		- shift left/right (-/+)
+ * @param int $shift_size		- amount of shift
+ * @param int returns			- time-since-epoch for shifted right boundary
  */
 function shift_right_boundary(&$span, $direction, $shift_size) {
 	# first, get begin of the month, $span["end_now"] belongs to
@@ -197,12 +199,15 @@ function shift_right_boundary(&$span, $direction, $shift_size) {
 	return strtotime("+1 month", $begin_of_shifted_month) - 1;
 }
 
-/* shift_time		- shift given timespan left/right
- * @param &$span		- given timespan (start/end time as time-since-epoch and human readable)
- * @param $direction	- "-" for shifting left, "+" for shifting right
- * @param $timeshift	- amount of shifting
+/** shift_time				- shift given timespan left/right
+ * @param array &$span		- given timespan (start/end time as time-since-epoch and human readable)
+ * @param string $direction	- "-" for shifting left, "+" for shifting right
+ * @param int $shift_size	- amount of shifting
+ * @param array $_SESSION	- set to CUSTOM
+ * @param array $_POST		- set to CUSTOM
  */
 function shift_time(&$span, $direction, $shift_size) {
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
 	# move left/right according to $direction
 	# amount to be moved is derived from $shift_size
 	# base dates are taken from array $span
@@ -229,10 +234,11 @@ function shift_time(&$span, $direction, $shift_size) {
 	$_POST["predefined_timespan"] = GT_CUSTOM;
 }
 
-/* date_time_format		create a format string for date/time
- * returns				date time format
+/** date_time_format		create a format string for date/time
+ * @param string returns	date time format
  */
 function date_time_format() {
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
 	global $config;
 
 	$graph_date = "";

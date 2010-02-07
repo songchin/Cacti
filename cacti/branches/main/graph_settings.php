@@ -77,7 +77,7 @@ function form_save() {
    -------------------------- */
 
 function settings() {
-	global $colors, $tabs_graphs, $settings_graphs, $current_user, $graph_views, $current_user;
+	global $colors, $tabs_graphs, $settings_graphs, $current_user, $current_user;
 
 	/* you cannot have per-user graph settings if cacti's user management is not turned on */
 	if (read_config_option("auth_method") == 0) {
@@ -104,23 +104,24 @@ function settings() {
 	}
 
 	/* draw the categories tabs on the top of the page */
-	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
-	print "<td><div class='tabs'>";
-
-	if (sizeof($settings_graphs) > 0) {
-	foreach (array_keys($settings_graphs) as $tab_short_name) {
-		print "<div><a id='tab_" . clean_up_name($tabs_graphs[$tab_short_name]) . "' " . (($tab_short_name == "General") ? "class='tab tabSelected'" : "class='tab tabDefault'") . " onClick='selectTab(\"" . clean_up_name($tabs_graphs[$tab_short_name]) . "\")' href='#'>$tabs_graphs[$tab_short_name]</a></div>";
-	}
-	}
-	print "</div></td></tr></table>\n";
 	print "<form method='post' action='graph_settings.php'>\n";
 
+	# the tabs
+	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr><td><div class='tabs'>\n";
+	if (sizeof($settings_graphs) > 0) {
+		foreach (array_keys($settings_graphs) as $tab_short_name) {
+			print "<div><a id='tab_" . clean_up_name($tabs_graphs[$tab_short_name]) . "' " . (($tab_short_name == "General") ? "class='tab tabSelected'" : "class='tab tabDefault'") . " onClick='selectTab(\"" . clean_up_name($tabs_graphs[$tab_short_name]) . "\")' href='#'>$tabs_graphs[$tab_short_name]</a></div>\n";
+		}
+	}
+	print "</div></td></tr></table>\n";
+
+	# the tab contents
 	while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
-		print "<tr><td><div class='tab_settings' id='settings_" . clean_up_name($tabs_graphs[$tab_short_name]) . "'><table cellpadding='0' cellspacing='0' width='100%'>";
-		html_start_box("<strong>" . __("Graph Settings") . " (" . $tabs_graphs[$tab_short_name] . ")</strong>", "100", $colors["header"], 0, "center", "");
+		print "<table cellpadding='0' cellspacing='0' width='100%'><tr><td><div class='tab_settings' id='settings_" . clean_up_name($tabs_graphs[$tab_short_name]) . "'>\n";
+		html_start_box("<strong>" . __("Graph Settings") . " (" . $tabs_graphs[$tab_short_name] . ")</strong>", "100", $colors["header"], 0, "center", "", false, "Tab_Settings_" . clean_up_name($tabs_graphs[$tab_short_name]));
 		$header_items = array(__("Field"), __("Value"));
 		print "<tr><td>";
-		html_header($header_items, 2, true, 'settings','left wp100');
+		html_header($header_items, 2, true, "Header_Settings_" . clean_up_name($tabs_graphs[$tab_short_name]),'left wp100');
 
 		$form_array = array();
 
@@ -146,20 +147,15 @@ function settings() {
 
 		draw_edit_form(
 			array(
-				"config" => array(
-					"no_form_tag" => true
-					),
+				"config" => array("no_form_tag" => true),
 				"fields" => $form_array
 				)
 		);
 
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
-
-		print "</table></div></td></tr>";
+		print "</div></td></tr></table>\n";
 	}
-
-	html_graph_end_box();
 
 	if (isset($_SERVER["HTTP_REFERER"])) {
 		$timespan_sel_pos = strpos($_SERVER["HTTP_REFERER"],"&predefined_timespan");

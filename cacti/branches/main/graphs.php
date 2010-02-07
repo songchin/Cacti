@@ -32,11 +32,12 @@ include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 include_once(CACTI_BASE_PATH . "/lib/html_form_template.php");
 include_once(CACTI_BASE_PATH . "/lib/rrd.php");
 include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 include_once(CACTI_BASE_PATH . "/lib/graph/graphs_form.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
-$graph_actions = api_plugin_hook_function('graphs_action_array', $graph_actions);
+$graph_actions = api_plugin_hook_function('graphs_action_array', graph_actions_list());
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }

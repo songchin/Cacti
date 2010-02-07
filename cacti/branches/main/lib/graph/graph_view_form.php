@@ -974,7 +974,8 @@ function get_graph_tree_graphs() {
 }
 
 function graph_view_timespan_selector($mode = "tree") {
-	global $graph_timespans, $graph_timeshifts, $colors, $config;
+	global $colors, $config;
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
 	?>
 	<script type='text/javascript'>
