@@ -120,6 +120,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<link type="text/css" href="<?php echo CACTI_URL_PATH; ?>include/main.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo CACTI_URL_PATH; ?>include/dd.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo CACTI_URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
+	<link type="text/css" media="screen" href="<?php echo CACTI_URL_PATH; ?>include/css/cacti_dd_menu.css" rel="stylesheet">
 	<link href="<?php echo CACTI_URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.js"></script>
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/layout.js"></script>
@@ -169,16 +170,17 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 			<img src="<?php echo CACTI_URL_PATH; ?>images/help.gif" title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
 			</a>
 		</div>
-		<div style='float:right'><?php
-			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo __date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;<?php print __("Logged in as");?> <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo CACTI_URL_PATH; ?>logout.php"><?php print __("Logout");?></a>)<?php } ?>
+		<div style='float:right'>
+		<?php	if (read_config_option("auth_method") != 0) {
+				?><a href="#" id="menu_timezones" rel="<?php echo CACTI_URL_PATH; ?>"><span id="date_time_format"><strong><?php echo __date("D, " . date_time_format() . " T");?></a></span>
+				</strong>&nbsp;&nbsp;&nbsp;<?php print __("Logged in as");?> <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo CACTI_URL_PATH; ?>logout.php"><?php print __("Logout");?></a>)
+		<?php } ?>
 		</div>
 		<?php if(read_config_option('i18n_support') != 0) {?>
-		<div id="codelist" style="float:right; list-style:none; display:inline;">
-			<span id="loading" style="display:none;"><img src="<?php echo CACTI_URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>">LOADING</span>
-			<ul class="down-list" style="list-style:none; display:inline;">
-				<li><a href="#" class="languages" id="languages"><img src="<?php echo CACTI_URL_PATH; ?>images/flag_icons/<?php print CACTI_COUNTRY;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print CACTI_LANGUAGE;?></a></li>
-			</ul>
+		<div style='float:right;'>
+			<a href="#" id="menu_languages" rel="<?php echo CACTI_URL_PATH; ?>"><img src="<?php echo CACTI_URL_PATH; ?>images/flag_icons/<?php print CACTI_COUNTRY;?>.gif" align="top">&nbsp;<?php print CACTI_LANGUAGE;?></a>
 		</div>
+		<div id="loading" style="display:none; float:right"><img src="<?php echo CACTI_URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>">LOADING</div>
 		<?php }?>
 	</div>
 </div>

@@ -1,0 +1,101 @@
+/* drop down menu styles */
+.cacti_dd_menu{
+	position: absolute;
+	z-index: 999;
+	min-width: 150;
+	max-width: 150;
+	background: #363636;
+	border: 1px solid #7F7F99;
+	padding: 2px;
+	text-aligns:justify;
+	text-decoration: none;
+	opacity:0.92;
+	filter:alpha(opacity=92);
+	overflow: hidden;
+}
+
+.cacti_dd_menu .title{
+	display: none;
+	color: #c1c1c1;
+	border-bottom: 1px solid #7F7F99;
+	padding: 2px 2px;
+	margin-bottom: 2px;
+	overflow: hidden;
+}
+
+.cacti_dd_menu .title h6{
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: small;
+	font-weight: 600;
+	margin: 0; padding: 0px;
+}
+
+.cacti_dd_menu .back{
+	display: none;
+	overflow: hidden;
+	color: #000000;
+	background: #cf4;
+	margin: 2px 0px;
+	border-bottom: 1px solid #7F7F99;
+}
+
+.cacti_dd_menu .content h6 {
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: small;
+	font-weight: 500;	
+	margin: 0; padding: 0px;
+}
+
+.cacti_dd_menu .content {
+	overflow: hidden;
+}
+
+.cacti_dd_menu .content h6 {
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: small;
+	font-weight: 500;	
+	margin: 0; padding: 0px;
+}
+
+.cacti_dd_menu .content h6 a{
+  	display: block;
+  	margin: 0; padding: 3px 2px; 
+	color:#c3c3c3;
+	width: auto;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.cacti_dd_menu .content h6 a:visited {
+	color:#c3c3c3;
+}
+
+.cacti_dd_menu .content h6 a:hover {
+	color:#ffffff;
+	font-size:small;
+	font-weight: 600;
+	background-color:#3333FF;
+	text-decoration: none;
+	-moz-border-radius: 2px;
+}
+
+.cacti_dd_menu .subtitle{
+	display: none;
+	color: #c1c1c1;
+	border-top: 1px solid #7F7F99;
+	padding: 2px 2px;
+	margin-top: 2px;
+	overflow: hidden;
+}
+
+.cacti_dd_menu .subtitle h6{
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: small;
+	font-weight: 500;
+	margin: 0; padding: 0px;
+}
+
+.cacti_dd_menu .html{
+	display: none;
+	overflow: hidden;
+}

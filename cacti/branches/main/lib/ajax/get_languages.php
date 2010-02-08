@@ -84,13 +84,8 @@ $search = "language=" . $cacti_locale;
 $location = str_replace(array( "?" . $search . "&", "?" . $search, "&" . $search), array( "?", "", ""), $location);
 $location .= (strpos($location, '?')) ? '&' : '?';
 
-?>
-<ul class="down-list" style="list-style:none; display:inline;">
-<?php
 if(sizeof($supported_languages["cacti"])>0) {
 	foreach($supported_languages["cacti"] as $lang) {
-		?><li><a href="<?php print $location . "language=" . $locations[$lang]["locale"]; ?>"><img src="<?php echo CACTI_URL_PATH; ?>images/flag_icons/<?php print $locations[$lang]["flag"];?>.gif" align="top" alt="loading">&nbsp;<?php print $locations[$lang]["language"];?></a>&nbsp;&nbsp;</li><?php
+		?><h6><a href="<?php print $location . "language=" . $locations[$lang]["locale"]; ?>"><img src="<?php echo CACTI_URL_PATH; ?>images/flag_icons/<?php print $locations[$lang]["flag"];?>.gif" align="bottom">&nbsp;<?php print $locations[$lang]["language"];?></a></h6><?php
 	}
 }
-?>
-</ul>

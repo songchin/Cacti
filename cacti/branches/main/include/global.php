@@ -156,6 +156,7 @@ include_once(CACTI_BASE_PATH . "/lib/functions.php");
 include_once(CACTI_BASE_PATH . "/lib/plugins.php");
 include_once(CACTI_BASE_PATH . "/include/global_constants.php");
 include_once(CACTI_BASE_PATH . "/include/global_language.php");
+include_once(CACTI_BASE_PATH . "/include/global_timezones.php");
 include_once(CACTI_BASE_PATH . "/lib/log/update.php");
 include_once(CACTI_BASE_PATH . "/include/global_arrays.php");
 include_once(CACTI_BASE_PATH . "/include/global_settings.php");

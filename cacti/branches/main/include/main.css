@@ -282,6 +282,8 @@ img_filter {
 	background-color: #e1e1e1;
 }
 
+.hidden { position:absolute; top:0; left:-9999px; width:1px; height:1px; overflow:hidden; }
+
 #header {
 	background-color: #363636;
 	position: fixed;
@@ -378,15 +380,6 @@ img_filter {
 
 #about img {
 	padding: 15px 15px 15px 35px;
-}
-
-.down-list li {
-	list-style:none; display:inline;
-}
-
-.down-list li {
-	list-style:none;
-	display:inline;
 }
 
 /* login/logout class information */

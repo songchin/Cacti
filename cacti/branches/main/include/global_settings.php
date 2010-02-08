@@ -252,19 +252,33 @@ $settings = array(
 			"array" => $i18n_modes
 			),
 		"i18n_default_language" => array(
-			"friendly_name" => __("Default language"),
+			"friendly_name" => __("Default Language"),
 			"description" => __("Default language for this system."),
 			"method" => "drop_array",
 			"default" => "us",
 			"array" => get_installed_locales()
 			),
 		"i18n_auto_detection" => array(
-			"friendly_name" => __("Auto detection"),
+			"friendly_name" => __("Auto Language Detection"),
 			"description" => __("Allow to automatically determine the \"default\" language of the user and provide it at login time if that language is supported by Cacti. If disabled, the default language will be in force until the user elects another language. "),
 			"method" => "drop_array",
 			"default" => "0",
 			"array" => array( "0" => __("Disabled"), "1" => __("Enabled"))
-			)
+			),
+		"i18n_timezone_support" => array(
+			"friendly_name" => __("Time Zone Support"),
+			"description" => __("Choose \"enabled\" to setup another time zone. If the time zone can not be modified system time zone will be used automatically."),
+			"method" => "drop_array",
+			"default" => "0",
+			"array" => array( "0" => __("Disabled"), "1" => __("Enabled"))
+			),
+		"i18n_default_timezone" => array(
+			"friendly_name" => __("Default Time Zone"),
+			"description" => __("Default time zone for this system."),
+			"method" => "drop_array",
+			"default" => "0",
+			"array" => get_list_of_timezones()
+			),
 		),
 	"snmp" => array(
 		"snmp_header" => array(
