@@ -79,7 +79,7 @@ function init_time_zone($time_zone){
  */
 function set_time_zone($time_zone) {
 	/* lock this function if time zone support is disabled */
-	if(read_config_option("i18n_timezone_support")==0) {
+	if(read_config_option("i18n_timezone_support")) {
 		/* if defined only system or custom time zone will be accepted. Avoid that plugins will setup another time zone. */
 		if(defined('CACTI_CUSTOM_TIME_ZONE') & $time_zone != CACTI_SYSTEM_TIME_ZONE && $time_zone != CACTI_CUSTOM_TIME_ZONE) {
 			return false;
