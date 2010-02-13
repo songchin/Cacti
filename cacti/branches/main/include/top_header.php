@@ -40,11 +40,10 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<link type="text/css" href="<?php echo CACTI_URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo CACTI_URL_PATH; ?>include/dd.css" rel="stylesheet">
 	<link type="text/css" media="screen" href="<?php echo CACTI_URL_PATH; ?>include/css/colorpicker.css" rel="stylesheet">
-	<link type="text/css" media="screen" href="<?php echo CACTI_URL_PATH; ?>include/css/cacti_dd_menu.css" rel="stylesheet">	
+	<link type="text/css" media="screen" href="<?php echo CACTI_URL_PATH; ?>include/css/cacti_dd_menu.css" rel="stylesheet">
 	<link href="<?php echo CACTI_URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.js"></script>
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/layout.js"></script>
-	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.fg.menu.js"></script>
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.autocomplete.js"></script>
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.bgiframe.js"></script>
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.ajaxQueue.js"></script>
