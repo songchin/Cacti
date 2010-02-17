@@ -9,7 +9,7 @@
 	padding: 2px;
 	text-aligns:justify;
 	text-decoration: none;
-	opacity:0.92;
+	opacity:0.98;
 	filter:alpha(opacity=92);
 	overflow: hidden;
 }
@@ -19,7 +19,6 @@
 	color: #c1c1c1;
 	border-bottom: 1px solid #7F7F99;
 	padding: 2px 2px;
-	margin-bottom: 2px;
 	overflow: hidden;
 }
 
@@ -33,18 +32,14 @@
 .cacti_dd_menu .back{
 	display: none;
 	overflow: hidden;
-	color: #000000;
-	background: #cf4;
-	margin: 2px 0px;
-	border-bottom: 1px solid #7F7F99;
+	color: #ffffff;
+	font-size: small;
+	font-weight: bold;
+	padding: 2px 2px;
+	margin: 0px;
+	background: transparent url('../../images/tabSelected.png') repeat-x scroll left top;
 }
 
-.cacti_dd_menu .content h6 {
-	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: small;
-	font-weight: 500;	
-	margin: 0; padding: 0px;
-}
 
 .cacti_dd_menu .content {
 	overflow: hidden;
@@ -74,9 +69,9 @@
 	color:#ffffff;
 	font-size:small;
 	font-weight: 600;
-	background-color:#3333FF;
 	text-decoration: none;
 	-moz-border-radius: 2px;
+	background: transparent url('../../images/tabDefault.png') repeat-x scroll left top;
 }
 
 .cacti_dd_menu .subtitle{
