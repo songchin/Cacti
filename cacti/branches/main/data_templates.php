@@ -30,7 +30,7 @@ include_once(CACTI_BASE_PATH . "/lib/template.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
-$ds_actions = array(
+$ds_template_actions = array(
 	ACTION_NONE => __("None"),
 	"1" => __("Delete"),
 	"2" => __("Duplicate")
@@ -259,7 +259,7 @@ function form_save() {
    ------------------------ */
 
 function form_actions() {
-	global $colors, $ds_actions;
+	global $colors, $ds_template_actions;
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -345,7 +345,7 @@ function form_actions() {
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-	html_start_box("<strong>" . $ds_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $ds_template_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='data_templates.php' method='post'>\n";
 
@@ -646,7 +646,7 @@ function template_edit() {
 }
 
 function template() {
-	global $colors, $ds_actions, $item_rows;
+	global $colors, $ds_template_actions, $item_rows;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("page"));
@@ -815,6 +815,6 @@ function template() {
 	print "</table>\n";	# end table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
-	draw_actions_dropdown($ds_actions);
+	draw_actions_dropdown($ds_template_actions);
 	print "</form>\n";	# end form of html_header_sort_checkbox
 }

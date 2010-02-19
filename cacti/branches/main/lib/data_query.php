@@ -57,6 +57,8 @@ function run_data_query($device_id, $snmp_query_id) {
 	/* update the poller cache */
 	update_poller_cache_from_query($device_id, $snmp_query_id);
 
+	api_plugin_hook_function('run_data_query', array("device_id" => $device_id, "snmp_query_id" => $snmp_query_id));
+
 	return (isset($result) ? $result : true);
 }
 

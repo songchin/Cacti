@@ -251,6 +251,7 @@ function api_device_save($id, $site_id, $poller_id, $device_template_id, $descri
 			if (sizeof($graph_templates) > 0) {
 			foreach ($graph_templates as $graph_template) {
 				db_execute("replace into device_graph (device_id,graph_template_id) values ($device_id," . $graph_template["graph_template_id"] . ")");
+				api_plugin_hook_function('add_graph_template_to_device', array("device_id" => $device_id, "graph_template_id" => $graph_template["graph_template_id"]));
 			}
 			}
 		}

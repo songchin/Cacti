@@ -237,7 +237,8 @@ function data_source_form_save() {
    ------------------------ */
 
 function data_source_form_actions() {
-	global $colors, $ds_actions;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -1013,7 +1014,8 @@ function data_source_validate() {
 }
 
 function data_source() {
-	global $colors, $ds_actions, $item_rows;
+	global $colors, $item_rows;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	/* validate request variables */
 	data_source_validate();

@@ -38,7 +38,7 @@
    @returns - $form_array with all available variables substituted with their
      proper values */
 function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $arg3 = array(), $arg4 = array()) {
-	$check_fields = array("value", "array", "friendly_name", "description", "sql", "sql_print", "form_id", "items");
+	$check_fields = array("value", "array", "friendly_name", "description", "sql", "sql_print", "form_id", "items", "tree_id");
 
 	/* loop through each available field */
 	while (list($field_name, $field_array) = each($form_array)) {

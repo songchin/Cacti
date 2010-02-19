@@ -134,6 +134,7 @@ if (sizeof($parms)) {
 		exit(1);
 	}else{
 		db_execute("replace into device_graph (device_id,graph_template_id) values (" . $device_id . "," . $graph_template_id . ")");
+		api_plugin_hook_function('add_graph_template_to_device', array("device_id" => $device_id, "graph_template_id" => $graph_template_id));
 	}
 
 	if (is_error_message()) {
