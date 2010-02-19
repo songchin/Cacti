@@ -34,7 +34,8 @@
 		html: '<h6>empty</h6>',
 		offsetX: 0,
 		offsetY: 15,
-		simultaneous: false
+		simultaneous: false,
+		rel: ''
 	};
 	
 	var timerref 		= null;
@@ -95,11 +96,13 @@
 		menu_html.find("h6:has(div)").each(function() {
 			var subMenu = $(this);
 			var subMenuID = options.name + '_' + i;
+			var subMenuTitle = subMenu.find('a:first').html();
 			subMenu.attr('id', subMenuID);	
 			subMenu.click( function() {
 				 _toggle_subMenu( subMenuID);
 			} );
 			subMenu.children("div").hide();
+			subMenu.find('a:first').html(subMenuTitle + '&nbsp;<img src="' + options.rel + '/images/tw_close.gif" class="icon">');
 			i++;
 		});
 
@@ -110,12 +113,14 @@
 		i=1;
 		menu_content.find("h6:has(div)").each(function() {
 			var subMenu = $(this);
-			var subMenuID = options.name + '_' + i;			
+			var subMenuID = options.name + '_' + i;
+			var subMenuTitle = subMenu.find('a:first').html();		
 			subMenu.attr('id', subMenuID);	
 			subMenu.click( function() {
 				 _toggle_subMenu( subMenuID);
 			} );
 			subMenu.children("div").hide();
+			subMenu.find('a:first').html(subMenuTitle + '&nbsp;<img src="' + options.rel + '/images/tw_close.gif" class="icon">');
 			i++;
 		});
 		
@@ -128,9 +133,9 @@
 		
 		//reduce height to a minimum for best fit
 		menuHeight = (menu.height() > options.maxHeight) ? options.maxHeight : menu.height();
-		
+
 		//IE5/6 does not support css option "min-width", so a workaround is required
-		if(menu.width() < options.width) {
+		if(menu.width() != options.width) {
 			menu.width(options.width);
 		}
 		
@@ -146,13 +151,15 @@
 
 		if(subMenuID == null) {
 		    var content = menu_html;
-		    menu_back.hide();
+		    menu_back.empty().hide();
+		    menu_content.height(contentHeight);
 		}else {
 		    var content = menu_html.find('#' + subMenuID).find("div").eq(0);
 		    menu_back.show();
 		}
 
 		menu_back.empty().append(menu_html.find('#' + subMenuID).find('a:first').html());
+		menu_back.find('img').remove();
 		menu_back.unbind('click');
 
 		parentID = menu_html.find('#' + subMenuID).parents('h6').attr('id');
@@ -170,10 +177,12 @@
 			subMenu.children("div").hide();
 		});
 		
-		//re-calculate menu and content height
-		nonContentHeight = menu_head.height() + menu_back.height() + menu_subhead.height();	
-		menu_content.height(menu.height() - nonContentHeight - 10);
-		
+		//re-calculate content height if back-button is hidden
+		if(subMenuID != null) {
+		    menu_content.height(menu.height() - menu_head.height() - menu_back.height() - menu_subhead.height() - 16);
+		}
+
+		//return false to suppress unwanted click events
 		return false;
 	}
 	
@@ -232,7 +241,12 @@ $(document).ready(function(){
 					method: "get",url: url_path + "lib/ajax/get_languages.php",
 					beforeSend: function(){$("#loading").fadeIn(0);},
 					complete: function(){$("#loading").fadeOut(1000); },
-					success: function(html){$('#menu_languages').DropDownMenu({timeout: 500, name: 'dd_languages', html: html});}
+					success: function(html){$('#menu_languages').DropDownMenu({timeout: 500, 
+												    name: 'dd_languages', 
+												    html: html, 
+												    title: 'Languages',
+												    rel: url_path
+												    });}
 				 });
 		}
 	);
@@ -246,8 +260,11 @@ $(document).ready(function(){
 					beforeSend: function(){$("#loading").fadeIn(0);},
 					complete: function(){$("#loading").fadeOut(1000);},
 					success: function(html){$('#menu_timezones').DropDownMenu({timeout: 500, 
-																				title: 'Choose your region',
-																				name: 'dd_timezones', html: html});}
+												    name: 'dd_timezones',
+													html: html,
+													title: 'Time zones',
+													rel: url_path
+													});}
 			 });
 		}
 	);
