@@ -194,7 +194,12 @@ if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && 
 	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 	header("Cache-Control: no-store, no-cache, must-revalidate");
 	header("Cache-Control: post-check=0, pre-check=0", false);
-	header("Pragma: no-cache");
+
+	/* IE has a problem with caching and https */
+	if (!substr_count($_SERVER['HTTP_USER_AGENT'], "MSIE")) {
+		header("Pragma: no-cache");
+	}
+
 	/* prevent IE from silently rejects cookies sent from third party sites. */
 	header('P3P: CP="CAO PSA OUR"');
 
