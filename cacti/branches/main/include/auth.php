@@ -76,9 +76,8 @@ if (read_config_option("auth_method") != 0) {
 			<head>
 				<title>Cacti</title>
 				<link href="<?php echo CACTI_URL_PATH; ?>include/main.css" rel="stylesheet">
-			</style>
 			</head>
-
+			<body>
 			<br><br>
 
 			<table width="450" align='center'>
@@ -90,7 +89,7 @@ if (read_config_option("auth_method") != 0) {
 					<td class='textArea' colspan='2'><?php echo __("You are not permitted to access this section of Cacti. If you feel that you need access to this particular section, please contact the Cacti administrator.");?></td>
 				</tr>
 				<tr>
-					<td class='textArea' colspan='2' align='center'>( <a href='' onclick='javascript: history.back();'><?php echo __("Return");?></a> | <a href='<?php echo CACTI_URL_PATH; ?>index.php'><?php echo __("Login");?></a> )</td>
+					<td class='textArea' colspan='2' align='center'>( <a href='' onclick='javascript: history.back();'><?php echo __("Return");?></a> | <a href='<?php echo CACTI_URL_PATH; ?>logout.php'><?php echo __("Login Again");?></a> )</td>
 				</tr>
 			</table>
 
