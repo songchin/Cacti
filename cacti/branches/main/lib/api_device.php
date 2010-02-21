@@ -25,6 +25,8 @@
 /** api_device_remove - removes a device
    @param $device_id - the id of the device to remove */
 function api_device_remove($device_id) {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
+
 	db_execute("delete from device             where id=$device_id");
 	db_execute("delete from device_graph       where device_id=$device_id");
 	db_execute("delete from device_snmp_query  where device_id=$device_id");
@@ -42,6 +44,8 @@ function api_device_remove($device_id) {
 /** api_device_remove_multi - removes multiple devices in one call
    @param $device_ids - an array of device id's to remove */
 function api_device_remove_multi($device_ids) {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
+
 	$devices_to_delete = "";
 	$i = 0;
 

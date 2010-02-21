@@ -158,6 +158,7 @@ function graph_view_filter_table($mode = "mode") {
 function get_graph_list_content() {
 	global $graphs_per_page;
 	global $colors;
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
 
 	/* Make sure nothing is cached */
 	header("Cache-Control: must-revalidate");
@@ -553,6 +554,8 @@ function get_graph_list_content() {
 
 function get_graph_preview_content () {
 	global $colors;
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
+
 	/* Make sure nothing is cached */
 	header("Cache-Control: must-revalidate");
 	header("Cache-Control: post-check=0, pre-check=0", false);

@@ -1084,6 +1084,7 @@ function graph_edit() {
 function graph() {
 	global $colors, $item_rows;
 	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("device_id"));

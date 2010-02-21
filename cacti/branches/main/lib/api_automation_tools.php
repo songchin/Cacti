@@ -991,7 +991,7 @@ function displayRealms($perm, $quietMode = FALSE) {
  * @param bool $quietMode
  */
 function displayPerms($perm, $quietMode = FALSE) {
-	global $perm_item_types;
+	require(CACTI_BASE_PATH . "/include/auth/auth_arrays.php");
 
 	if (!$quietMode) {
 		echo __("Permissions: (userid, username, item type, default policy, item id, item policy, item name)") . "\n";
@@ -1039,23 +1039,23 @@ function displayPerms($perm, $quietMode = FALSE) {
 		foreach ($perms as $item) {
 			switch ($item["type"]) {
 				case PERM_GRAPHS:
-					$item["default_policy"] = (($item["policy_graphs"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
-					$item["item_policy"] = (($item["policy_graphs"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
+					$item["default_policy"] = (($item["policy_graphs"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("Accessible") : __("No Access"));
+					$item["item_policy"] = (($item["policy_graphs"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("No Access") : __("Accessible"));
 					$item["name"] = db_fetch_cell("SELECT title_cache FROM graph_templates_graph WHERE local_graph_id=" . $item["item_id"]);
 					break;
 				case PERM_TREES:
-					$item["default_policy"] = (($item["policy_trees"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
-					$item["item_policy"] = (($item["policy_trees"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
+					$item["default_policy"] = (($item["policy_trees"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("Accessible") : __("No Access"));
+					$item["item_policy"] = (($item["policy_trees"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("No Access") : __("Accessible"));
 					$item["name"] = db_fetch_cell("SELECT name FROM graph_tree WHERE id=" . $item["item_id"]);
 					break;
 				case PERM_DEVICES:
-					$item["default_policy"] = (($item["policy_devices"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
-					$item["item_policy"] = (($item["policy_devices"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
+					$item["default_policy"] = (($item["policy_devices"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("Accessible") : __("No Access"));
+					$item["item_policy"] = (($item["policy_devices"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("No Access") : __("Accessible"));
 					$item["name"] = db_fetch_cell("SELECT hostname FROM device WHERE id=" . $item["item_id"]);
 					break;
 				case PERM_GRAPH_TEMPLATES:
-					$item["default_policy"] = (($item["policy_graph_templates"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
-					$item["item_policy"] = (($item["policy_graph_templates"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
+					$item["default_policy"] = (($item["policy_graph_templates"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("Accessible") : __("No Access"));
+					$item["item_policy"] = (($item["policy_graph_templates"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("No Access") : __("Accessible"));
 					$item["name"] = db_fetch_cell("SELECT name FROM graph_templates WHERE id=" . $item["item_id"]);
 					break;
 			}
@@ -1254,7 +1254,7 @@ function displayRRAs($quietMode = FALSE) {
  * @param bool $quietMode
  */
 function displayUsers($quietMode = FALSE) {
-	global $graph_policy_array;
+	require(CACTI_BASE_PATH . "/include/auth/auth_arrays.php");
 
 	if (!$quietMode) {
 		echo __("Known Users: (id, username, full_name, graph policy, tree policy, device policy, graph templates policy)") . "\n";
@@ -1814,7 +1814,7 @@ function verifyGraphInputFields($cgInputFields, $input_fields) {
  * @param bool $ri_check
  */
 function verifyPermissions(&$perm, $delim, $ri_check=false) {
-	global $perm_item_types;
+	require(CACTI_BASE_PATH . "/include/auth/auth_arrays.php");
 
 	foreach($perm as $key => $value) {
 

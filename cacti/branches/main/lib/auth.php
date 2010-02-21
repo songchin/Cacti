@@ -212,34 +212,36 @@ function user_authorized($realm_id, $user_id = 0) {
    @param $policy_graph_templates - (int) the current graph template policy
    @returns - an SQL "where" statement */
 function get_graph_permissions_sql($policy_graphs, $policy_devices, $policy_graph_templates) {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
+
 	$sql = "";
 	$sql_or = "";
 	$sql_and = "";
 	$sql_policy_or = "";
 	$sql_policy_and = "";
 
-	if ($policy_graphs == POLICY_ALLOW) {
+	if ($policy_graphs == AUTH_CONTROL_DATA_POLICY_ALLOW) {
 		$sql_policy_and .= "$sql_and(user_auth_perms.type != " . PERM_GRAPHS . " OR user_auth_perms.type is null)";
 		$sql_and = " AND ";
 		$sql_null = "is null";
-	}elseif ($policy_graphs == POLICY_DENY) {
+	}elseif ($policy_graphs == AUTH_CONTROL_DATA_POLICY_DENY) {
 		$sql_policy_or .= "$sql_or(user_auth_perms.type = " . PERM_GRAPHS . " OR user_auth_perms.type is not null)";
 		$sql_or = " OR ";
 		$sql_null = "is not null";
 	}
 
-	if ($policy_devices == POLICY_ALLOW) {
+	if ($policy_devices == AUTH_CONTROL_DATA_POLICY_ALLOW) {
 		$sql_policy_and .= "$sql_and((user_auth_perms.type != " . PERM_DEVICES . ") OR (user_auth_perms.type is null))";
 		$sql_and = " AND ";
-	}elseif ($policy_devices == POLICY_DENY) {
+	}elseif ($policy_devices == AUTH_CONTROL_DATA_POLICY_DENY) {
 		$sql_policy_or .= "$sql_or((user_auth_perms.type = " . PERM_DEVICES . ") OR (user_auth_perms.type is not null))";
 		$sql_or = " OR ";
 	}
 
-	if ($policy_graph_templates == POLICY_ALLOW) {
+	if ($policy_graph_templates == AUTH_CONTROL_DATA_POLICY_ALLOW) {
 		$sql_policy_and .= "$sql_and((user_auth_perms.type != " . PERM_GRAPH_TEMPLATES . ") OR (user_auth_perms.type is null))";
 		$sql_and = " AND ";
-	}elseif ($policy_graph_templates == POLICY_DENY) {
+	}elseif ($policy_graph_templates == AUTH_CONTROL_DATA_POLICY_DENY) {
 		$sql_policy_or .= "$sql_or((user_auth_perms.type = " . PERM_GRAPH_TEMPLATES . ") OR (user_auth_perms.type is not null))";
 		$sql_or = " OR ";
 	}
@@ -266,6 +268,8 @@ function get_graph_permissions_sql($policy_graphs, $policy_devices, $policy_grap
    @param $local_graph_id - (int) the ID of the graph to check permissions for
    @returns - (bool) whether the current user is allowed the view the specified graph or not */
 function is_graph_allowed($local_graph_id) {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
+
 	$current_user = db_fetch_row("select policy_graphs,policy_devices,policy_graph_templates from user_auth where id=" . $_SESSION["sess_user_id"]);
 
 	/* get policy information for the sql where clause */
@@ -293,6 +297,8 @@ function is_graph_allowed($local_graph_id) {
    @param $tree_id - (int) the ID of the graph tree to check permissions for
    @returns - (bool) whether the current user is allowed the view the specified graph tree or not */
 function is_tree_allowed($tree_id) {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
+
 	$current_user = db_fetch_row("select policy_trees from user_auth where id=" . $_SESSION["sess_user_id"]);
 
 	$trees = db_fetch_assoc("select
@@ -303,16 +309,16 @@ function is_tree_allowed($tree_id) {
 		and item_id=$tree_id");
 
 	/* policy == allow AND matches = DENY */
-	if ((sizeof($trees) > 0) && ($current_user["policy_trees"] == POLICY_ALLOW)) {
+	if ((sizeof($trees) > 0) && ($current_user["policy_trees"] == AUTH_CONTROL_DATA_POLICY_ALLOW)) {
 		return false;
 	/* policy == deny AND matches = ALLOW */
-	}elseif ((sizeof($trees) > 0) && ($current_user["policy_trees"] == POLICY_DENY)) {
+	}elseif ((sizeof($trees) > 0) && ($current_user["policy_trees"] == AUTH_CONTROL_DATA_POLICY_DENY)) {
 		return true;
 	/* policy == allow AND no matches = ALLOW */
-	}elseif ((sizeof($trees) == 0) && ($current_user["policy_trees"] == POLICY_ALLOW)) {
+	}elseif ((sizeof($trees) == 0) && ($current_user["policy_trees"] == AUTH_CONTROL_DATA_POLICY_ALLOW)) {
 		return true;
 	/* policy == deny AND no matches = DENY */
-	}elseif ((sizeof($trees) == 0) && ($current_user["policy_trees"] == POLICY_DENY)) {
+	}elseif ((sizeof($trees) == 0) && ($current_user["policy_trees"] == AUTH_CONTROL_DATA_POLICY_DENY)) {
 		return false;
 	}
 }

@@ -50,14 +50,6 @@ define("RRD_VERSION_1_2",	"rrd-1.2.x");
 define("RRD_VERSION_1_3",	"rrd-1.3.x");
 define("RRD_VERSION_1_4",	"rrd-1.4.x");
 
-define("PERM_GRAPHS", 1);
-define("PERM_TREES", 2);
-define("PERM_DEVICES", 3);
-define("PERM_GRAPH_TEMPLATES", 4);
-
-define("POLICY_ALLOW", 1);
-define("POLICY_DENY", 2);
-
 define('OPER_MODE_NATIVE', 0);
 define('OPER_MODE_RESKIN', 1);
 define('OPER_MODE_IFRAME_NONAV', 2);

@@ -29,6 +29,26 @@ define("AUTH_CONTROL_OBJECT_TYPE_GROUP", 2);
 define("AUTH_CONTROL_DATA_POLICY_ALLOW", 1);
 define("AUTH_CONTROL_DATA_POLICY_DENY", 2);
 
+define("PERM_GRAPHS", 1);
+define("PERM_TREES", 2);
+define("PERM_DEVICES", 3);
+define("PERM_GRAPH_TEMPLATES", 4);
 
+define("AUTH_METHOD_NONE", 0);
+define("AUTH_METHOD_BUILTIN", 1);
+define("AUTH_METHOD_WEB", 2);
+define("AUTH_METHOD_LDAP", 3);
+
+define("AUTH_REALM_BUILTIN", 1);
+define("AUTH_REALM_WEB", 2);
+define("AUTH_REALM_LDAP", 3);
+
+define("LDAP_ENCRYPT_NONE", 0);
+define("LDAP_ENCRYPT_SSL", 1);
+define("LDAP_ENCRYPT_TLS", 2);
+
+define("LDAP_SEARCHMODE_NONE", 0);
+define("LDAP_SEARCHMODE_ANON", 1);
+define("LDAP_SEARCHMODE_SPECIFIC", 2);
 
 ?>

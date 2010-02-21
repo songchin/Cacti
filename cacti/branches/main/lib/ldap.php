@@ -66,6 +66,7 @@ Error codes:
 
 */
 function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_device = "",$ldap_port = "",$ldap_port_ssl = "",$ldap_version = "",$ldap_encryption = "",$ldap_referrals = "",$ldap_group_require = "",$ldap_group_dn = "",$ldap_group_attrib = "",$ldap_group_member_type = "") {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
 
 	$output = array();
 
@@ -128,7 +129,7 @@ function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_device = "
 	}
 
 	/* Determine connection method and create LDAP Object */
-	if ($ldap_encryption == "1") {
+	if ($ldap_encryption == LDAP_ENCRYPT_SSL) {
 		/* This only works with OpenLDAP, I'm pretty sure this will not work with Solaris, Tony */
 		$ldap_conn = @ldap_connect("ldaps://" . $ldap_device . ":" . $ldap_port_ssl);
 	}else{
@@ -156,7 +157,7 @@ function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_device = "
 			}
 		}
 		/* start TLS if requested */
-		if ($ldap_encryption == "2") {
+		if ($ldap_encryption == LDAP_ENCRYPT_TLS) {
 			if (!@ldap_start_tls($ldap_conn)) {
 				$output["error_num"] = "5";
 				$output["error_text"] = "Protocol error, unable to start TLS communications";
@@ -286,6 +287,7 @@ Error codes:
 
 */
 function cacti_ldap_search_dn($username,$ldap_dn = "",$ldap_device = "",$ldap_port = "",$ldap_port_ssl = "",$ldap_version = "",$ldap_encryption = "",$ldap_referrals = "", $ldap_mode = "",$ldap_search_base = "", $ldap_search_filter = "",$ldap_specific_dn = "",$ldap_specific_password = "") {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
 
 	$output = array();
 
@@ -346,7 +348,7 @@ function cacti_ldap_search_dn($username,$ldap_dn = "",$ldap_device = "",$ldap_po
 		$ldap_mode = read_config_option("ldap_mode");
 	}
 
-	if ($ldap_encryption == "1") {
+	if ($ldap_encryption == LDAP_ENCRYPT_SSL) {
 		$ldap_device = "ldaps://" . $ldap_device;
 		$ldap_port = $ldap_port_ssl;
 	}else{
@@ -413,7 +415,7 @@ function cacti_ldap_search_dn($username,$ldap_dn = "",$ldap_device = "",$ldap_po
 			}
 		}
 		/* start TLS if requested */
-		if ($ldap_encryption == "2") {
+		if ($ldap_encryption == LDAP_ENCRYPT_TLS) {
 			if (!@ldap_start_tls($ldap_conn)) {
 				/* TLS startup error */
 				$output["dn"] = "";

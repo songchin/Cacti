@@ -26,6 +26,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	global $colors, $current_user, $config;
 
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
 	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 
 	$search_key = "";

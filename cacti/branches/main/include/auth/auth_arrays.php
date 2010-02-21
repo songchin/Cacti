@@ -22,6 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
+require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
+
 /* auth data required fields for user */
 $auth_control_data_user_fields = array(
 	"password" => "",
@@ -57,6 +59,52 @@ $auth_control_data_group_fields = array(
 );
 
 
+$graph_policy_array = array(
+	AUTH_CONTROL_DATA_POLICY_ALLOW 	=> __("Allow"),
+	AUTH_CONTROL_DATA_POLICY_DENY 	=> __("Deny"),
+	);
+
+$perm_item_types = array(
+	PERM_GRAPHS 			=> __('graph'),
+	PERM_TREES 				=> __('tree'),
+	PERM_DEVICES			=> __('device'),
+	PERM_GRAPH_TEMPLATES 	=> __('graph_template'),
+	);
+
+
+$auth_methods = array(
+	AUTH_METHOD_NONE 		=> __("None"),
+	AUTH_METHOD_BUILTIN 	=> __("Builtin Authentication"),
+	AUTH_METHOD_WEB 		=> __("Web Basic Authentication"),
+	);
+if (function_exists("ldap_connect")) {
+	$auth_methods[AUTH_METHOD_LDAP] = __("LDAP Authentication");
+}
+
+$auth_realms = array(
+	AUTH_REALM_BUILTIN		=> __("Local"),
+	AUTH_REALM_WEB			=> __("Web Basic"),
+	);
+if (function_exists("ldap_connect")) {
+	$auth_realms[AUTH_REALM_LDAP] = __("LDAP");
+}
+
+$ldap_versions = array(
+	2 => __("Version 2"),
+	3 => __("Version 3"),
+	);
+
+$ldap_encryption = array(
+	LDAP_ENCRYPT_NONE 		=> __("None"),
+	LDAP_ENCRYPT_SSL 		=> __("SSL"),
+	LDAP_ENCRYPT_TLS 		=> __("TLS"),
+	);
+
+$ldap_modes = array(
+	LDAP_SEARCHMODE_NONE		=> __("No Searching"),
+	LDAP_SEARCHMODE_ANON		=> __("Anonymous Searching"),
+	LDAP_SEARCHMODE_SPECIFIC	=> __("Specific Searching"),
+	);
 
 
 ?>

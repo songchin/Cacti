@@ -28,6 +28,8 @@
  * @return unknown_type
  */
 function api_graph_remove($local_graph_id) {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
+
 	if (empty($local_graph_id)) {
 		return;
 	}

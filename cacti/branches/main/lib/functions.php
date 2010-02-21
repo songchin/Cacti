@@ -1780,6 +1780,7 @@ function get_web_browser() {
 	@param $force_refresh - (bool) Force the refresh of the array from the database
    @returns - (array) an array containing a list of graph trees */
 function get_graph_tree_array($return_sql = false, $force_refresh = false) {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
 
 	/* set the tree update time if not already set */
 	if (!isset($_SESSION["tree_update_time"])) {
@@ -1828,6 +1829,8 @@ function get_graph_tree_array($return_sql = false, $force_refresh = false) {
 /* get_device_array - returns a list of devices taking permissions into account if necessary
    @returns - (array) an array containing a list of devices */
 function get_device_array() {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
+
 	if (read_config_option("auth_method") != 0) {
 		$current_user = db_fetch_row("select policy_devices from user_auth where id=" . $_SESSION["sess_user_id"]);
 

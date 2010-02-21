@@ -118,38 +118,6 @@ $cron_intervals = array(
 $registered_cacti_names = array(
 	"path_cacti");
 
-$auth_methods = array(
-	0 => __("None"),
-	1 => __("Builtin Authentication"),
-	2 => __("Web Basic Authentication"),
-	);
-if (function_exists("ldap_connect")) {
-	$auth_methods[3] = __("LDAP Authentication");
-}
-
-$auth_realms = array(0 =>
-	__("Local"),
-	__("LDAP"),
-	__("Web Basic"),
-	);
-
-$ldap_versions = array(
-	2 => __("Version 2"),
-	3 => __("Version 3"),
-	);
-
-$ldap_encryption = array(
-	0 => __("None"),
-	1 => __("SSL"),
-	2 => __("TLS"),
-	);
-
-$ldap_modes = array(
-	0 => __("No Searching"),
-	1 => __("Anonymous Searching"),
-	2 => __("Specific Searching"),
-	);
-
 $snmp_implementations = array(
 	"ucd-snmp" => __("UCD-SNMP 4.x"),
 	"net-snmp" => __("NET-SNMP 5.x"),
@@ -266,18 +234,6 @@ $page_refresh_interval = array(
 	300 => __("%d Minutes", 5),
 	600 => __("%d Minutes", 10),
 	9999999 => __("Never"),
-	);
-
-$graph_policy_array = array(
-	POLICY_ALLOW 	=> __("Allow"),
-	POLICY_DENY 	=> __("Deny"),
-	);
-
-$perm_item_types = array(
-	PERM_GRAPHS 			=> __('graph'),
-	PERM_TREES 				=> __('tree'),
-	PERM_DEVICES			=> __('device'),
-	PERM_GRAPH_TEMPLATES 	=> __('graph_template'),
 	);
 
 $user_auth_realm_categories = array(

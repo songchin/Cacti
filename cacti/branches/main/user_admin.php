@@ -70,7 +70,8 @@ switch (get_request_var_request("action")) {
    -------------------------- */
 
 function form_actions() {
-	global $colors, $user_actions, $auth_realms;
+	global $colors, $user_actions;
+	require(CACTI_BASE_PATH . "/include/auth/auth_arrays.php");
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -324,6 +325,7 @@ function form_actions() {
 
 function form_save() {
 	global $settings_graphs;
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
 
 	/* graph permissions */
 	if ((isset($_POST["save_component_graph_perms"])) && (!is_error_message())) {
@@ -331,7 +333,7 @@ function form_save() {
 		input_validate_input_number(get_request_var_post("id"));
 		input_validate_input_number(get_request_var_post("perm_graphs"));
 		input_validate_input_number(get_request_var_post("perm_trees"));
-		input_validate_input_number(get_request_var_post("PERM_DEVICES"));
+		input_validate_input_number(get_request_var_post("perm_devices"));
 		input_validate_input_number(get_request_var_post("perm_graph_templates"));
 		input_validate_input_number(get_request_var_post("policy_graphs"));
 		input_validate_input_number(get_request_var_post("policy_trees"));
@@ -348,7 +350,7 @@ function form_save() {
 			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_trees") . "," . PERM_TREES . ")");
 			$add_button_clicked = true;
 		}elseif (isset($_POST["add_device_y"])) {
-			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("PERM_DEVICES") . "," . PERM_DEVICES . ")");
+			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_devices") . "," . PERM_DEVICES . ")");
 			$add_button_clicked = true;
 		}elseif (isset($_POST["add_graph_template_y"])) {
 			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_graph_templates") . "," . PERM_GRAPH_TEMPLATES . ")");
@@ -489,6 +491,8 @@ function form_save() {
    -------------------------- */
 
 function perm_remove() {
+	require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
+
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	input_validate_input_number(get_request_var("user_id"));
@@ -509,7 +513,8 @@ function perm_remove() {
 }
 
 function graph_perms_edit() {
-	global $colors, $graph_policy_array;
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/auth/auth_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -578,7 +583,7 @@ function graph_perms_edit() {
 				if (sizeof($graphs) > 0) {
 					foreach ($graphs as $item) {
 						form_alternate_row_color("graph" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_graphs"] == POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_graphs"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
 								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -634,7 +639,7 @@ function graph_perms_edit() {
 				if (sizeof($devices)) {
 					foreach ($devices as $item) {
 						form_alternate_row_color("device" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_devices"] == POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_devices"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
 								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=device&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -690,7 +695,7 @@ function graph_perms_edit() {
 				if (sizeof($graph_templates)) {
 					foreach ($graph_templates as $item) {
 						form_alternate_row_color("templates" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_graph_templates"] == POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_graph_templates"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
 								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -745,7 +750,7 @@ function graph_perms_edit() {
 				if (sizeof($trees)) {
 					foreach ($trees as $item) {
 						form_alternate_row_color("tree" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_trees"] == POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_trees"] == AUTH_CONTROL_DATA_POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
 							<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -1008,7 +1013,8 @@ function user_edit() {
 }
 
 function user() {
-	global $colors, $auth_realms, $user_actions;
+	global $colors, $user_actions;
+	require(CACTI_BASE_PATH . "/include/auth/auth_arrays.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("page"));
@@ -1140,7 +1146,7 @@ function user() {
 			form_selectable_cell((strlen(get_request_var_request("filter")) ? preg_replace("/(" . preg_quote(get_request_var_request("filter")) . ")/i", "<span class=\"filter\">\\1</span>",  $user["full_name"]) : $user["full_name"]), $user["id"]);
 			form_selectable_cell($enabled, $user["id"]);
 			form_selectable_cell($auth_realms[$user["realm"]], $user["id"]);
-			if ($user["policy_graphs"] == POLICY_ALLOW) {
+			if ($user["policy_graphs"] == AUTH_CONTROL_DATA_POLICY_ALLOW) {
 				form_selectable_cell( __("ALLOW"), $user["id"]);
 			}else{
 				form_selectable_cell( __("DENY"), $user["id"]);

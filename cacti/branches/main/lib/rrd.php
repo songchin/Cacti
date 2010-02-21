@@ -27,6 +27,7 @@ define("MAX_FETCH_CACHE_SIZE", 5);
 
 function escape_command($command) {
 	return preg_replace("/(\\\$|`)/", "", $command);
+	#TODO return preg_replace((\\\$(?=\w+|\*|\@|\#|\?|\-|\\\$|\!|\_|[0-9]|\(.*\))|`(?=.*(?=`)))","$2", $command);  #suggested by ldevantier to allow for a single $
 }
 
 function rrd_init($output_to_term = TRUE) {

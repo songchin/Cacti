@@ -27,6 +27,7 @@ require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 require(CACTI_BASE_PATH . "/include/poller/poller_arrays.php");
+require(CACTI_BASE_PATH . "/include/auth/auth_arrays.php");
 
 /* tab information */
 $tabs = array(

@@ -663,7 +663,8 @@ function display_languages() {
 }
 
 function utilities_view_user_log() {
-	global $colors, $auth_realms, $item_rows;
+	global $colors, $item_rows;
+	require(CACTI_BASE_PATH . "/include/auth/auth_arrays.php");
 
 	define("MAX_DISPLAY_PAGES", 21);
 
