@@ -1146,11 +1146,7 @@ function user() {
 			form_selectable_cell((strlen(get_request_var_request("filter")) ? preg_replace("/(" . preg_quote(get_request_var_request("filter")) . ")/i", "<span class=\"filter\">\\1</span>",  $user["full_name"]) : $user["full_name"]), $user["id"]);
 			form_selectable_cell($enabled, $user["id"]);
 			form_selectable_cell($auth_realms[$user["realm"]], $user["id"]);
-			if ($user["policy_graphs"] == AUTH_CONTROL_DATA_POLICY_ALLOW) {
-				form_selectable_cell( __("ALLOW"), $user["id"]);
-			}else{
-				form_selectable_cell( __("DENY"), $user["id"]);
-			}
+			form_selectable_cell($graph_policy_array[$user["policy_graphs"]], $user["id"]);
 			form_selectable_cell($last_login, $user["id"]);
 			form_checkbox_cell($user["username"], $user["id"]);
 			form_end_row();
