@@ -449,8 +449,12 @@ function export() {
 		"/boot",
 		"/lib",
 		"/usr",
+		"/usr/bin",
 		"/bin",
 		"/sbin",
+		"/usr/sbin",
+		"/usr/lib",
+		"/var/lib",
 		"/root",
 		"/etc",
 		"windows",
@@ -458,7 +462,11 @@ function export() {
 		"program files");
 
 	foreach($system_paths as $system_path) {
-		if (substr_count(strtolower($cacti_export_path), strtolower($system_path)) > 0) {
+		if (substr($system_path, 0, 1) == "/") {
+			if ($system_path == substr($cacti_export_path, 0, strlen($system_path))) {
+				export_fatal("Export path '" . $cacti_export_path . "' is within a system path '" . $system_path . "'.  Can not continue.");
+			}
+		}elseif (substr_count(strtolower($cacti_export_path), strtolower($system_path)) > 0) {
 			export_fatal("Export path '" . $cacti_export_path . "' is within a system path '" . $system_path . "'.  Can not continue.");
 		}
 	}
@@ -495,8 +503,10 @@ function classical_export($cacti_root_path, $cacti_export_path) {
 	}
 
 	/* create the base directory */
-	if (!mkdir("$cacti_export_path/graphs", 0755)) {
-		export_fatal("Create directory '$cacti_export_path/graphs' failed.  Can not continue");
+	if (!is_dir("$cacti_export_path/graphs")) {
+		if (!mkdir("$cacti_export_path/graphs", 0755)) {
+			export_fatal("Create directory '$cacti_export_path/graphs' failed.  Can not continue");
+		}
 	}
 
 	/* determine the number of columns to write */
@@ -525,6 +535,7 @@ function classical_export($cacti_root_path, $cacti_export_path) {
 		$sql_join
 		$sql_where
 		" . (empty($sql_where) ? "WHERE" : "AND") . " graph_templates_graph.local_graph_id > 0
+		AND graph_templates_graph.export='on'
 		AND graph_templates_graph.local_graph_id=graph_local.id";
 
 
@@ -781,6 +792,7 @@ function export_tree_html($path, $filename, $tree_id, $parent_tree_item_id) {
 							WHERE graph_local.id=graph_templates_graph.local_graph_id
 							AND graph_templates_graph.graph_template_id=graph_templates.id
 							AND graph_local.device_id=" . $leaf["device_id"] . "
+							AND graph_templates_graph.export='on'
 							GROUP BY graph_templates.id
 							ORDER BY graph_templates.name");
 
@@ -993,7 +1005,8 @@ function build_html_file($leaf, $type = "", $array_data = array(), $snmp_index =
 			LEFT JOIN graph_local ON (graph_templates_graph.local_graph_id=graph_local.id)
 			LEFT JOIN device ON (device.id=graph_local.device_id)
 			$sql_join
-			$sql_where
+			$sql_where" . (strlen($sql_where) ? " AND ":"WHERE ") . 
+			"graph_templates_graph.export='on'
 			ORDER BY graph_templates_graph.title_cache";
 
 		break;
@@ -1230,6 +1243,7 @@ function export_tree_graphs_and_graph_html($path, $tree_id) {
 		$sql_join
 		$sql_where
 		AND graph_tree_items.local_graph_id = graph_templates_graph.local_graph_id
+		AND graph_templates_graph.export='on'
 		ORDER BY graph_templates_graph.title_cache";
 
 	$non_device_graphs = db_fetch_assoc($non_device_sql);
@@ -1525,6 +1539,7 @@ function create_dhtml_tree_export($tree_id) {
 									WHERE graph_local.id=graph_templates_graph.local_graph_id
 									AND graph_templates_graph.graph_template_id=graph_templates.id
 									AND graph_local.device_id=" . $leaf["device_id"] . "
+									AND graph_templates_graph.export='on'
 									GROUP BY graph_templates.id
 									ORDER BY graph_templates.name");
 
