@@ -2360,7 +2360,6 @@ function cacti_escapeshellarg($string) {
 	if (CACTI_SERVER_OS == "unix") {
 		return escapeshellarg($string);
 	}else{
-		define("CACTI_ESCAPE_CHARACTER", "\"");
 		if (substr_count($string, CACTI_ESCAPE_CHARACTER)) {
 			$string = str_replace(CACTI_ESCAPE_CHARACTER, "\\" . CACTI_ESCAPE_CHARACTER, $string);
 		}

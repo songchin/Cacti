@@ -25,6 +25,8 @@
 define("CHECKED", "on");
 define("ACTION_NONE", "-1");
 
+define("CACTI_ESCAPE_CHARACTER", "\"");
+
 define("POLLER_VERBOSITY_NONE", 1);
 define("POLLER_VERBOSITY_LOW", 2);
 define("POLLER_VERBOSITY_MEDIUM", 3);
