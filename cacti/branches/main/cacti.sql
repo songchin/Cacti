@@ -2202,9 +2202,9 @@ CREATE TABLE device_snmp_cache (
   KEY snmp_index (snmp_index),
   KEY field_name (field_name),
   KEY field_value (field_value),
-  KEY snmp_query_id (snmp_query_id)
-  KEY `device_id_snmp_query_id` (`device_id`,`snmp_query_id'),
-  KEY `device_id_snmp_query_id_snmp_index` (`device_id`,`snmp_query_id`,`snmp_index`)
+  KEY snmp_query_id (snmp_query_id),
+  KEY device_id_snmp_query_id (device_id,snmp_query_id),
+  KEY device_id_snmp_query_id_snmp_index (device_id,snmp_query_id,snmp_index)
 ) TYPE=MyISAM;
 
 --
