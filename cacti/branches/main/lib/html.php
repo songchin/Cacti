@@ -83,7 +83,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 		-->
 		</script>
 	<?php } ?>
-		<table cellpadding=0 cellspacing=0 class="startBoxHeader <?php print "wp$width"?> startBox0" >
+		<table cellpadding=0 cellspacing=0 align="<?php print $align;?>" class="startBoxHeader <?php print "wp$width"?> startBox0" >
 			<?php if ($title != "") {?><tr class="rowHeader">
 				<td colspan="100">
 					<table cellpadding=0 cellspacing=1 class="startBox0">
@@ -126,7 +126,7 @@ function html_start_box_dq($query_name, $query_id, $device_id, $colspan, $width,
 	}
 
 	?>
-		<table cellpadding=0 cellspacing=0 class='startBoxHeader startBox0'>
+		<table cellpadding=0 cellspacing=0 align='<?php print $align;?>' class='startBoxHeader startBox0'>
 			<tr class='rowHeader'>
 				<td style='padding:0px 5px 0px 5px;' colspan='<?php print $colspan+1;?>'>
 					<table cellpadding=0 cellspacing=1 class="startBox0" >
