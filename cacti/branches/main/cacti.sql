@@ -403,7 +403,8 @@ CREATE TABLE data_input_data (
   t_value char(2) default NULL,
   value text,
   PRIMARY KEY (data_input_field_id,data_template_data_id),
-  KEY t_value (t_value)
+  KEY t_value (t_value),
+  KEY `data_template_data_id` (`data_template_data_id`)
 ) TYPE=MyISAM;
 
 --
@@ -674,7 +675,8 @@ CREATE TABLE data_local (
   snmp_query_id mediumint(8) NOT NULL default '0',
   snmp_index varchar(255) NOT NULL default '',
   PRIMARY KEY  (id),
-  KEY device_id (device_id)
+  KEY device_id (device_id),
+  KEY `device_id_snmp_query_id_snmp_index` (`device_id`,`snmp_query_id`,`snmp_index`)
 ) TYPE=MyISAM;
 
 --
@@ -765,7 +767,8 @@ CREATE TABLE data_template_data (
   t_rra_id char(2) default NULL,
   PRIMARY KEY  (id),
   KEY local_data_id (local_data_id),
-  KEY data_template_id (data_template_id)
+  KEY data_template_id (data_template_id),
+  KEY data_source_path (data_source_path)
 ) TYPE=MyISAM;
 
 --
@@ -1046,7 +1049,8 @@ CREATE TABLE data_template_rrd (
   PRIMARY KEY  (id),
   KEY local_data_id (local_data_id),
   KEY data_template_id (data_template_id),
-  KEY local_data_template_rrd_id (local_data_template_rrd_id)
+  KEY local_data_template_rrd_id (local_data_template_rrd_id),
+  KEY `local_data_id_data_source_name` (`local_data_id`,`data_source_name`)
 ) TYPE=MyISAM;
 
 --
@@ -1770,7 +1774,9 @@ CREATE TABLE graph_templates_item (
   PRIMARY KEY  (id),
   KEY graph_template_id (graph_template_id),
   KEY local_graph_id (local_graph_id),
-  KEY task_item_id (task_item_id)
+  KEY task_item_id (task_item_id),
+  KEY `graph_template_id_local_graph_id` (`graph_template_id`,`local_graph_id`),
+  KEY `local_graph_template_item_id` (`local_graph_template_item_id`)
 ) TYPE=MyISAM COMMENT='Stores the actual graph item data.';
 
 --
@@ -2197,6 +2203,8 @@ CREATE TABLE device_snmp_cache (
   KEY field_name (field_name),
   KEY field_value (field_value),
   KEY snmp_query_id (snmp_query_id)
+  KEY `device_id_snmp_query_id` (`device_id`,`snmp_query_id'),
+  KEY `device_id_snmp_query_id_snmp_index` (`device_id`,`snmp_query_id`,`snmp_index`)
 ) TYPE=MyISAM;
 
 --
@@ -2473,7 +2481,10 @@ CREATE TABLE poller_item (
   KEY local_data_id (local_data_id),
   KEY device_id (device_id),
   KEY rrd_next_step (rrd_next_step),
-  KEY action (action)
+  KEY action (action),
+  KEY `local_data_id_rrd_path` (`local_data_id`,`rrd_path`),
+  KEY `device_id_rrd_next_step` (`device_id`,`rrd_next_step`),
+  KEY `device_id_snmp_port` (`device_id`,`snmp_port`)
 ) TYPE=MyISAM;
 
 --
