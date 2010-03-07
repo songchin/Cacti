@@ -2351,3 +2351,20 @@ function cacti_wiki_url() {
     }
     return CACTI_WIKI_URL . $ref_ns . $ref_sp;
 }
+
+
+function cacti_escapeshellarg($string) {
+	/* we must use an apostrophe to escape community names under Unix in case the user uses
+	characters that the shell might interpret. the ucd-snmp binaries on Windows flip out when
+	you do this, but are perfectly happy with a quotation mark. */
+	if (CACTI_SERVER_OS == "unix") {
+		return escapeshellarg($string);
+	}else{
+		define("CACTI_ESCAPE_CHARACTER", "\"");
+		if (substr_count($string, CACTI_ESCAPE_CHARACTER)) {
+			$string = str_replace(CACTI_ESCAPE_CHARACTER, "\\" . CACTI_ESCAPE_CHARACTER, $string);
+		}
+
+		return CACTI_ESCAPE_CHARACTER . $string . CACTI_ESCAPE_CHARACTER;
+	}
+}

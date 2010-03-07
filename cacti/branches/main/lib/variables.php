@@ -171,9 +171,9 @@ function substitute_device_data($string, $l_escape_string, $r_escape_string, $de
 		$_SESSION["sess_device_cache_array"][$device_id] = $device;
 	}
 
-	# substitute all given device fields
+	# substitute all given device fields and escape specific shell characters
 	foreach ($_SESSION["sess_device_cache_array"][$device_id] as $key => $value) {
-		$string = str_replace($l_escape_string . "device_" . $key . $r_escape_string, $value, $string);
+		$string = str_replace($l_escape_string . "device_" . $key . $r_escape_string, cacti_escapeshellarg($value), $string);
 	}
 
 	$temp = api_plugin_hook_function('substitute_device_data', array('string' => $string, 'l_escape_string' => $l_escape_string, 'r_escape_string' => $r_escape_string, 'device_id' => $device_id));
@@ -199,7 +199,7 @@ function substitute_snmp_query_data($string, $device_id, $snmp_query_id, $snmp_i
 					$data["field_value"] = substr($data["field_value"], 0, $max_chars);
 				}
 
-				$string = stri_replace("|query_" . $data["field_name"] . "|", $data["field_value"], $string);
+				$string = stri_replace("|query_" . $data["field_name"] . "|", cacti_escapeshellarg($data["field_value"]), $string);
 			}
 		}
 	}

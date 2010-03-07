@@ -9,6 +9,7 @@ Cacti CHANGELOG
 -bug#0001159: Template names are confusing/archaic (Graph, Data Templates, Data Queries are renamed).
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
 -bug#0001182: Subdirectories are not secure and allow browsing
+-bug#0001196: SNMP string with nonstandard characters breaks some Data Queries
 -bug#0001209: Content-type incorrect for the SVG graphs (Graph Management still does not display SVG, but rest does)
 -bug#0001279: php warning when installing specific plugins (if no "keys" were defined for a plugin table)
 -bug#0001306: Empty COMMENT + <HR> gives you a blank legend line (was: Add Blank Line to Graph via Pull down menu)
@@ -35,6 +36,7 @@ Cacti CHANGELOG
 -bug#0001511: Speed up the processing of poller through bulk deletes
 -bug#0001522: Special(?) charakters break parsing of template data.
 -bug#0001524: Export graphs and Classical Presentation 
+-bug#0001526: exec_into_array() and query_script_host() do not escape shell arguments safely 
 -bug#0001528: ICMP Ping availabilty broken in UI for Windows Servers using IIS
 -bug#0001532: Various crashes in early stages of installation with no database populated.
 -bug#0001534: IP:PORT Granularity issue in cli/add_device.php
@@ -42,6 +44,7 @@ Cacti CHANGELOG
 -bug#0001543: all graphs are exported 
 -bug#0001549: Database crashes with use of array_to_sql_or
 -bug#0001557: Quotes in Text Format graph template field breaks graph
+-bug#0001564: Escape Community string for Linux command line 
 -bug#0001568: Cacti currently gives a lot of warnings of deprecated functions on PHP 5.3
 -bug#0001580: Extra newline in api_automation_tools.php breaks custom scripts
 -bug#0001583: Crash on Large Deployments -> ini_set used to overwrite global php-config locally
