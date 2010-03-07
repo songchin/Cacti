@@ -514,16 +514,7 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "UPDATE snmp_query_graph_sv SET `text`=REPLACE(`text`,'|host_','|device_') WHERE `text` like '%%|host_%%'");
 
 	/* Create new tables */
-	db_install_execute("0.8.8","
-		CREATE TABLE user_log (
-			username varchar(50) NOT NULL default '0',
-			user_id mediumint(8) NOT NULL default '0',
-			time datetime NOT NULL default '0000-00-00 00:00:00',
-			result tinyint(1) NOT NULL default '0',
-			ip varchar(40) NOT NULL default '',
-			PRIMARY KEY  (username,user_id,time),
-			KEY username (username)
-			) TYPE=MyISAM");
+	db_install_execute("0.8.8","ALTER TABLE `user_log` ADD INDEX ( `user_id` )");
 	db_install_execute("0.8.8","
 		CREATE TABLE `log` (
 			`id` bigint(20) unsigned NOT NULL default '0',

@@ -3027,7 +3027,8 @@ CREATE TABLE user_log (
   result tinyint(1) NOT NULL default '0',
   ip varchar(40) NOT NULL default '',
   PRIMARY KEY  (username,user_id,time),
-  KEY username (username)
+  KEY username (username),
+  KEY user_id (`user_id`) 
 ) TYPE=MyISAM;
 
 --

@@ -151,6 +151,7 @@ this to work. Cacti also uses different default values depending on what OS it i
 running on. */
 
 /* RRDTool Binary Path */
+$input = array();
 $input["path_rrdtool"] = $settings["path"]["path_rrdtool"];
 
 if (CACTI_SERVER_OS == "unix") {
