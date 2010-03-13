@@ -874,7 +874,10 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		/* graph grouping display logic */
 		$this_row_style = ""; $use_custom_row_color = false; $hard_return = "";
 
-		if ($item["graph_type_id"] != GRAPH_ITEM_TYPE_GPRINT) {
+		if ($item["graph_type_id"] != GRAPH_ITEM_TYPE_GPRINT_AVERAGE &&
+			$item["graph_type_id"] != GRAPH_ITEM_TYPE_GPRINT_LAST &&
+			$item["graph_type_id"] != GRAPH_ITEM_TYPE_GPRINT_MAX &&
+			$item["graph_type_id"] != GRAPH_ITEM_TYPE_GPRINT_MIN) {
 			$this_row_style = "font-weight: bold;"; $use_custom_row_color = true;
 
 			if ($group_counter % 2 == 0) {
@@ -911,7 +914,10 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		switch ($item["graph_type_id"]) {
 			case GRAPH_ITEM_TYPE_AREA:
 			case GRAPH_ITEM_TYPE_AREASTACK:
-			case GRAPH_ITEM_TYPE_GPRINT:
+			case GRAPH_ITEM_TYPE_GPRINT_AVERAGE:
+			case GRAPH_ITEM_TYPE_GPRINT_LAST:
+			case GRAPH_ITEM_TYPE_GPRINT_MAX:
+			case GRAPH_ITEM_TYPE_GPRINT_MIN:
 			case GRAPH_ITEM_TYPE_LINE1:
 			case GRAPH_ITEM_TYPE_LINE2:
 			case GRAPH_ITEM_TYPE_LINE3:
@@ -959,6 +965,53 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 	print "</table></td></tr>";
 }
+
+
+
+function draw_data_template_items_list($item_list, $filename, $url_data, $disable_controls) {
+	global $colors, $config;
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+
+	$header_items = array(
+	__("Item"),
+	__("Data Source Name"),
+	__("Data Source Item Type"),
+	__("Minimum"),
+	__("Maximum"),
+	__("Heartbeat"));
+
+	print "<tr><td>";
+	html_header($header_items, 3, true, 'data_source_item','left wp100');
+
+	$i = 0;
+
+	if (sizeof($item_list) > 0) {
+		$i = 0;
+		foreach ($item_list as $item) {
+			form_alternate_row_color('line' . $item["id"], true);
+			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("data_templates_items.php?action=item_edit&id=" . $item["id"]) . "'>Item# $i</a>", $item["id"]);
+			form_selectable_cell((isset($item["data_source_name"]) ? $item["data_source_name"] : ''), $item["id"]);
+			form_selectable_cell((isset($data_source_types[$item["data_source_type_id"]]) ? $data_source_types[$item["data_source_type_id"]] : __("None")), $item["id"]);
+			form_selectable_cell((isset($item["rrd_minimum"]) ? $item["rrd_minimum"] : 0), $item["id"]);
+			form_selectable_cell((isset($item["rrd_maximum"]) ? $item["rrd_maximum"] : 0), $item["id"]);
+			form_selectable_cell((isset($item["rrd_heartbeat"]) ? $item["rrd_heartbeat"] : 0), $item["id"]);
+			?>
+			<td align="right"><a
+				href="<?php print htmlspecialchars("data_templates_items.php?action=item_remove&id=" . $item["id"] . "&data_template_id=" . $item["id"]);?>"><img
+				class="buttonSmall" src="images/delete_icon.gif"
+				alt="<?php print __("Delete");?>" align='middle'></a>
+			</td>
+			<?php
+			$i++;
+			form_end_row();
+		}
+	}else{
+		print "<tr><td><em>" . __("No Data Source Items") . "</em></td></tr>";
+	}
+	print "</table></td></tr>";		/* end of html_header */
+	html_end_box();
+}
+
 
 function draw_header_tab($name, $title, $location, $image = "") {
 	global $config;

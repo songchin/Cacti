@@ -41,11 +41,11 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch (get_request_var_request("action")) {
 	case 'save':
-		form_save();
+		data_source_template_save();
 
 		break;
 	case 'actions':
-		form_actions();
+		data_source_template_form_actions();
 
 		break;
 	case 'rrd_add':
@@ -61,17 +61,17 @@ switch (get_request_var_request("action")) {
 
 		header("Location: data_templates.php");
 		break;
-	case 'template_edit':
+	case 'data_source_template_edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		template_edit();
+		data_source_template_edit();
 
 		include_once (CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		template();
+		data_source_template();
 
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
@@ -81,7 +81,7 @@ switch (get_request_var_request("action")) {
     The Save Function
    -------------------------- */
 
-function form_save() {
+function data_source_template_save() {
 	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	if (isset($_POST["save_component_template"])) {
@@ -250,7 +250,7 @@ function form_save() {
 			}
 		}
 
-		header("Location: data_templates.php?action=template_edit&id=" . (empty($data_template_id) ? $_POST["data_template_id"] : $data_template_id) . (empty($_POST["current_rrd"]) ? "" : "&view_rrd=" . ($_POST["current_rrd"] ? $_POST["current_rrd"] : $data_template_rrd_id)));
+		header("Location: data_templates.php?action=data_source_template_edit&id=" . (empty($data_template_id) ? $_POST["data_template_id"] : $data_template_id) . (empty($_POST["current_rrd"]) ? "" : "&view_rrd=" . ($_POST["current_rrd"] ? $_POST["current_rrd"] : $data_template_rrd_id)));
 	}
 }
 
@@ -258,7 +258,7 @@ function form_save() {
     The "actions" function
    ------------------------ */
 
-function form_actions() {
+function data_source_template_form_actions() {
 	global $colors, $ds_template_actions;
 
 	/* if we are to save this form, instead of display it */
@@ -397,26 +397,6 @@ function form_actions() {
     template - Data Source Templates
    ---------------------------- */
 
-function template_rrd_remove() {
-	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("data_template_id"));
-	/* ==================================================== */
-
-	$children = db_fetch_assoc("select id from data_template_rrd where local_data_template_rrd_id=" . $_GET["id"] . " or id=" . $_GET["id"]);
-
-	if (sizeof($children) > 0) {
-	foreach ($children as $item) {
-		db_execute("delete from data_template_rrd where id=" . $item["id"]);
-		db_execute("delete from snmp_query_graph_rrd where data_template_rrd_id=" . $item["id"]);
-		db_execute("update graph_templates_item set task_item_id=0 where task_item_id=" . $item["id"]);
-	}
-	}
-
-	header("Location: data_templates.php?action=template_edit&id=" . $_GET["data_template_id"]);
-	exit;
-}
-
 function template_rrd_add() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -439,11 +419,39 @@ function template_rrd_add() {
 	}
 	}
 
-	header("Location: data_templates.php?action=template_edit&id=" . $_GET["id"] . "&view_rrd=$data_template_rrd_id");
+	header("Location: data_templates.php?action=data_source_template_edit&id=" . $_GET["id"] . "&view_rrd=$data_template_rrd_id");
 	exit;
 }
 
-function template_edit() {
+
+
+function data_source_template_item() {
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+
+	/* ================= input validation ================= */
+	input_validate_input_number(get_request_var("id"));
+	/* ==================================================== */
+
+	if (!empty($_GET["id"])) {
+		$template = db_fetch_row("SELECT * FROM data_template WHERE id=" . $_GET["id"]);
+		$template_item_list = db_fetch_assoc("SELECT * FROM data_template_rrd WHERE data_template_id=" . $_GET["id"] . " AND local_data_id=0 ORDER BY data_source_name");
+		$header_label = __("[edit: ") . $template["name"] . "]";
+	}else{
+		$template_item_list = array();
+		$header_label = __("[new]");
+	}
+
+	html_start_box("<strong>" . __("Data Source Items") . "</strong> $header_label", "100", $colors["header"], "0", "center", "data_templates_items.php?action=item_edit&data_template_id=" . $_GET["id"], true);
+	draw_data_template_items_list($template_item_list, "data_templates_items.php", "data_template_id=" . $_GET["id"], false);
+	html_end_box(false);
+
+}
+
+
+
+
+function data_source_template_edit() {
 	global $colors;
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
@@ -453,157 +461,52 @@ function template_edit() {
 	input_validate_input_number(get_request_var("view_rrd"));
 	/* ==================================================== */
 
-	if (!empty($_GET["id"])) {
-		$template_data = db_fetch_row("select * from data_template_data where data_template_id=" . $_GET["id"] . " and local_data_id=0");
-		$template = db_fetch_row("select * from data_template where id=" . $_GET["id"]);
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_data_source_template_edit'>\n";
 
+	/* graph item list goes here */
+	if (!empty($_GET["id"])) {
+		data_source_template_item();
+	}
+
+	if (!empty($_GET["id"])) {
+		$template = db_fetch_row("SELECT * FROM data_template WHERE id=" . $_GET["id"]);
+		$template_data = db_fetch_row("SELECT * FROM data_template_data WHERE data_template_id=" . $_GET["id"] . " AND local_data_id=0");
 		$header_label = __("[edit: ") . $template["name"] . "]";
 	}else{
 		$header_label = __("[new]");
 	}
 
-	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_template_edit'>\n";
+
+	# the template header
 	html_start_box("<strong>" . __("Data Source Template") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_data_template');
 
 	draw_edit_form(array(
-		"config" => array(),
-		"fields" => inject_form_variables(data_template_form_list(), (isset($template) ? $template : array()), (isset($template_data) ? $template_data : array()), $_GET)
+		"config" => array("no_form_tag" => true),
+		"fields" => inject_form_variables(data_template_form_list(), (isset($template) ? $template : array()), (isset($template_data) ? $template_data : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box(false);
+	form_hidden_box("data_template_id", $template_data["data_template_id"], "0");
+	form_hidden_box("data_template_data_id", $template_data["id"], "0");
+	form_hidden_box("current_rrd", (isset($_GET["current_rrd"]) ? $_GET["current_rrd"] : "0"), "0");
+	form_hidden_box("save_component_template", 1, "");
+
 
 	html_start_box("<strong>" . __("Data Source") . "</strong>", "100", $colors["header"], 0, "center", "", true);
-	$header_items = array(__("Field"), __("Value"));
-	print "<tr><td>";
-	html_header($header_items, 2, true, 'header_data_source');
-
-	/* make sure 'data source path' doesn't show up for a template... we should NEVER template this field */
-	$struct_data_source = data_source_form_list();
-	unset($struct_data_source["data_source_path"]);
-
-	$form_array = array();
-
-	while (list($field_name, $field_array) = each($struct_data_source)) {
-		$form_array += array($field_name => $struct_data_source[$field_name]);
-
-		if ($field_array["flags"] == "ALWAYSTEMPLATE") {
-			$form_array[$field_name]["description"] = "<em>" . __("This field is always templated.") . "</em>";
-		}else{
-#			$form_array[$field_name]["description"] = "";
-			$form_array[$field_name]["sub_checkbox"] = array(
-				"name" => "t_" . $field_name,
-				"friendly_name" => "<em>" . __("Use Per-Data Source Value (Ignore this Value)") . "</em>",
-				"value" => (isset($template_data{"t_" . $field_name}) ? $template_data{"t_" . $field_name} : ""),
-				"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
-			);
-		}
-
-		$form_array[$field_name]["value"] = (isset($template_data[$field_name]) ? $template_data[$field_name] : "");
-		$form_array[$field_name]["form_id"] = (isset($template_data) ? $template_data["data_template_id"] : "0");
-	}
-
-	draw_edit_form(
-		array(
-			"config" => array(
-				),
-			"fields" => inject_form_variables($form_array, (isset($template_data) ? $template_data : array()))
-			)
-		);
-
-	print "</table></td></tr>";		/* end of html_header */
+	draw_template_edit_form('header_data_source', data_source_form_list(), $template_data, false);
 	html_end_box();
 
-	/* fetch ALL rrd's for this data source */
-	if (!empty($_GET["id"])) {
-		$template_data_rrds = db_fetch_assoc("select id,data_source_name from data_template_rrd where data_template_id=" . $_GET["id"] . " and local_data_id=0 order by data_source_name");
-	}
-
-	/* select the first "rrd" of this data source by default */
-	if (empty($_GET["view_rrd"])) {
-		$_GET["view_rrd"] = (isset($template_data_rrds[0]["id"]) ? $template_data_rrds[0]["id"] : "0");
-	}
-
-	/* get more information about the rrd we chose */
-	if (!empty($_GET["view_rrd"])) {
-		$template_rrd = db_fetch_row("select * from data_template_rrd where id=" . $_GET["view_rrd"]);
-	}
-
-	$i = 0;
-	if (isset($template_data_rrds)) {
-		if (sizeof($template_data_rrds) > 1) {
-			/* draw the categories tabs on the top of the page */
-			print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
-			print "<td><div class='tabs'>";
-
-			foreach ($template_data_rrds as $template_data_rrd) {
-				$i++;
-				print "<div class='tabDefault'><a " . (($template_data_rrd["id"] == get_request_var("view_rrd")) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-right:0; padding-left: 4px; ; padding: 5px 8px 6px 8px;' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . get_request_var("id") . "&view_rrd=" . $template_data_rrd["id"]) . "'>$i: " . $template_data_rrd["data_source_name"] . "</a><a " . (($template_data_rrd["id"] == get_request_var("view_rrd")) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-left:0; padding: 6px 8px 5px 8px' href='" . htmlspecialchars("data_templates.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&data_template_id=" . get_request_var("id")) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a></div>";
-			}
-
-			print "</div></td></tr></table>\n";
-		/* draw the data source tabs on the top of the page */
-		}elseif (sizeof($template_data_rrds) == 1) {
-			$_GET["view_rrd"] = $template_data_rrds[0]["id"];
-		}
-	}
-
-	html_start_box("<strong>" . __("Data Source Items") . "</strong>", "100", $colors["header"], "3", "center", "data_templates.php?action=rrd_add&id=" . $_GET["id"], true);
-
-	$header_items = array(__("Field"), __("Value"));
-	html_header($header_items, 3, true, 'data_source_item');
-
-	/* data input fields list */
-	$struct_data_source_item = data_source_item_form_list();
-	if ((empty($template_data["data_input_id"])) ||
-		((db_fetch_cell("select type_id from data_input where id=" . $template_data["data_input_id"]) != "1") &&
-		(db_fetch_cell("select type_id from data_input where id=" . $template_data["data_input_id"]) != "5"))) {
-		unset($struct_data_source_item["data_input_field_id"]);
-	}else{
-		$struct_data_source_item["data_input_field_id"]["sql"] = "select id,CONCAT(data_name,' - ',name) as name from data_input_fields where data_input_id=" . $template_data["data_input_id"] . " and input_output='out' and update_rra='on' order by data_name,name";
-	}
-
-	$form_array = array();
-
-	while (list($field_name, $field_array) = each($struct_data_source_item)) {
-		$form_array += array($field_name => $struct_data_source_item[$field_name]);
-
-#		$form_array[$field_name]["description"] = "";
-		$form_array[$field_name]["value"] = (isset($template_rrd) ? $template_rrd[$field_name] : "");
-		$form_array[$field_name]["sub_checkbox"] = array(
-			"name" => "t_" . $field_name,
-			"friendly_name" => "<em>" . __("Use Per-Data Source Value (Ignore this Value)") . "</em>",
-			"value" => (isset($template_rrd) ? $template_rrd{"t_" . $field_name} : ""),
-			"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
-		);
-	}
-
-	draw_edit_form(
-		array(
-			"config" => array(
-				"no_form_tag" => true
-				),
-			"fields" => $form_array + array(
-				"data_template_rrd_id" => array(
-					"method" => "hidden",
-					"value" => (isset($template_rrd) ? $template_rrd["id"] : "0")
-				)
-			)
-			)
-		);
-
-	print "</table></td></tr>";		/* end of html_header */
-	html_end_box(false);
 
 	$i = 0;
 	if (!empty($_GET["id"])) {
 		/* get each INPUT field for this data input source */
-		$fields = db_fetch_assoc("select * from data_input_fields where data_input_id=" . $template_data["data_input_id"] . " and input_output='in' order by sequence");
+		$fields = db_fetch_assoc("SELECT * FROM data_input_fields WHERE data_input_id=" . $template_data["data_input_id"] . " AND input_output='in' ORDER BY sequence");
 
-		html_start_box("<strong>" . __("Custom Data") . "</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $template_data["data_input_id"]) . "]", "100", $colors["header"], 0, "center", "", true);
+		html_start_box("<strong>" . __("Custom Data") . "</strong> [data input: " . db_fetch_cell("SELECT name FROM data_input WHERE id=" . $template_data["data_input_id"]) . "]", "100", $colors["header"], 0, "center", "", true);
 		$header_items = array(__("Field"), __("Value"));
 		print "<tr><td>";
 		html_header($header_items, 2, true, 'data_source_custom_data');
@@ -611,7 +514,7 @@ function template_edit() {
 		/* loop through each field found */
 		if (sizeof($fields) > 0) {
 		foreach ($fields as $field) {
-			$data_input_data = db_fetch_row("select t_value,value from data_input_data where data_template_data_id=" . $template_data["id"] . " and data_input_field_id=" . $field["id"]);
+			$data_input_data = db_fetch_row("SELECT t_value,value FROM data_input_data WHERE data_template_data_id=" . $template_data["id"] . " AND data_input_field_id=" . $field["id"]);
 
 			if (sizeof($data_input_data) > 0) {
 				$old_value = $data_input_data["value"];
@@ -645,7 +548,7 @@ function template_edit() {
 	include_once(CACTI_BASE_PATH . "/access/js/field_description_hover.js");
 }
 
-function template() {
+function data_source_template() {
 	global $colors, $ds_template_actions, $item_rows;
 
 	/* ================= input validation ================= */
@@ -702,7 +605,7 @@ function template() {
 	load_current_session_value("sort_column", "sess_data_template_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_data_template_sort_direction", "ASC");
 
-	html_start_box("<strong>Data Source Templates</strong>", "100", $colors["header"], "3", "center", "data_templates.php?action=template_edit", true);
+	html_start_box("<strong>Data Source Templates</strong>", "100", $colors["header"], "3", "center", "data_templates.php?action=data_source_template_edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -796,8 +699,8 @@ function template() {
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {
 			form_alternate_row_color('line' . $template["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=data_source_template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=data_source_template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
 			form_selectable_cell((empty($template["data_input_method"]) ? "<em>" . __("None") . "</em>": $template["data_input_method"]), $template["id"]);
 			form_selectable_cell((($template["active"] == CHECKED) ? __("Active") : __("Disabled")), $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);

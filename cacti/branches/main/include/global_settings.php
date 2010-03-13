@@ -832,11 +832,19 @@ $settings = array(
 			"friendly_name" => __("Graph Legend Item#1"),
 			"method" => "spacer",
 			),
+		"cl1_gt_id" => array(
+			"friendly_name" => __("GPRINT Type"),
+			"method" => "drop_array",
+			"array" => $graph_item_gprint_types,
+			"default" => GRAPH_ITEM_TYPE_GPRINT_LAST,
+			"none_value" => "None",
+			"description" => __("Type of value you want to see in the legend."),
+			),
 		"cl1_cf_id" => array(
 			"friendly_name" => __("Consolidation Function"),
 			"method" => "drop_array",
 			"array" => $consolidation_functions,
-			"default" => RRA_CF_TYPE_LAST,
+			"default" => RRA_CF_TYPE_AVERAGE,
 			"description" => __("How data for this item is represented statistically on the graph."),
 			),
 		"cl1_vdef_id" => array(
@@ -864,6 +872,14 @@ $settings = array(
 		"custom_legend_header2" => array(
 			"friendly_name" => __("Graph Legend Item#2"),
 			"method" => "spacer",
+			),
+		"cl2_gt_id" => array(
+			"friendly_name" => __("GPRINT Type"),
+			"method" => "drop_array",
+			"array" => $graph_item_gprint_types,
+			"default" => GRAPH_ITEM_TYPE_GPRINT_AVERAGE,
+			"none_value" => "None",
+			"description" => __("Type of value you want to see in the legend."),
 			),
 		"cl2_cf_id" => array(
 			"friendly_name" => __("Consolidation Function"),
@@ -898,11 +914,19 @@ $settings = array(
 			"friendly_name" => __("Graph Legend Item#3"),
 			"method" => "spacer",
 			),
+		"cl3_gt_id" => array(
+			"friendly_name" => __("GPRINT Type"),
+			"method" => "drop_array",
+			"array" => $graph_item_gprint_types,
+			"default" => GRAPH_ITEM_TYPE_GPRINT_MAX,
+			"none_value" => "None",
+			"description" => __("Type of value you want to see in the legend."),
+			),
 		"cl3_cf_id" => array(
 			"friendly_name" => __("Consolidation Function"),
 			"method" => "drop_array",
 			"array" => $consolidation_functions,
-			"default" => RRA_CF_TYPE_MAX,
+			"default" => RRA_CF_TYPE_AVERAGE,
 			"description" => __("How data for this item is represented statistically on the graph."),
 			),
 		"cl3_vdef_id" => array(
@@ -931,6 +955,14 @@ $settings = array(
 			"friendly_name" => __("Graph Legend Item#4"),
 			"method" => "spacer",
 			),
+		"cl4_gt_id" => array(
+			"friendly_name" => __("GPRINT Type"),
+			"method" => "drop_array",
+			"array" => $graph_item_gprint_types,
+			"default" => "None",
+			"none_value" => "None",
+			"description" => __("Type of value you want to see in the legend."),
+			),
 		"cl4_cf_id" => array(
 			"friendly_name" => __("Consolidation Function"),
 			"method" => "drop_array",
@@ -942,7 +974,7 @@ $settings = array(
 			"friendly_name" => __("VDEF Function. Not available for rrdtool-1.0.x."),
 			"method" => "drop_sql",
 			"sql" => "select id,name from vdef order by name",
-			"default" => "0",
+			"default" => 2,
 			"none_value" => "None",
 			"description" => __("A VDEF (math) function to apply to this item on the legend."),
 			"class" => "not_RRD_1_0_x",
@@ -951,7 +983,7 @@ $settings = array(
 			"friendly_name" => __("Text Format"),
 			"method" => "textbox",
 			"max_length" => "255",
-			"default" => "",
+			"default" => "Minimum",
 			"description" => __("Text that will be displayed on the legend for this graph item."),
 			),
 		"cl4_hard_return" => array(

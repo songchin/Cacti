@@ -277,6 +277,7 @@ $user_auth_realm_filenames = array(
 	"data_query_gt_sv.ajax.php" => 13,
 	"data_sources.php" => 3,
 	"data_templates.php" => 11,
+	"data_templates_items.php" => 11,
 	"devices.php" => 3,
 	"device_templates.php" => 12,
 	"email_templates.php" => 8,
