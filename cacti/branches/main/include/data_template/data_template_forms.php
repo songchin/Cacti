@@ -40,20 +40,4 @@ $fields_data_template_template_edit = array(
 		"textarea_cols" => "60",
 		"class" => "textAreaNotes"
 		),
-	"data_template_id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg2:data_template_id|"
-		),
-	"data_template_data_id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg2:id|"
-		),
-	"current_rrd" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg3:view_rrd|"
-		),
-	"save_component_template" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
 	);

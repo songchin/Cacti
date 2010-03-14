@@ -61,7 +61,7 @@ switch (get_request_var_request("action")) {
 
 		header("Location: data_templates.php");
 		break;
-	case 'data_source_template_edit':
+	case 'template_edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		data_source_template_edit();
@@ -80,7 +80,9 @@ switch (get_request_var_request("action")) {
 /* --------------------------
     The Save Function
    -------------------------- */
-
+/**
+ * data_source_template_save	- save to data_template and data_template_data
+ */
 function data_source_template_save() {
 	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
@@ -110,60 +112,6 @@ function data_source_template_save() {
 		$save2["rrd_step"] = form_input_validate($_POST["rrd_step"], "rrd_step", "^[0-9]+$", (isset($_POST["t_rrd_step"]) ? true : false), 3);
 		$save2["t_rra_id"] = form_input_validate((isset($_POST["t_rra_id"]) ? $_POST["t_rra_id"] : ""), "t_rra_id", "", true, 3);
 
-		/* save: data_template_rrd */
-		$save3["id"] = $_POST["data_template_rrd_id"];
-		$save3["hash"] = get_hash_data_template($_POST["data_template_rrd_id"], "data_template_item");
-		$save3["local_data_template_rrd_id"] = 0;
-		$save3["local_data_id"] = 0;
-
-		$save3["t_rrd_maximum"] = form_input_validate((isset($_POST["t_rrd_maximum"]) ? $_POST["t_rrd_maximum"] : ""), "t_rrd_maximum", "", true, 3);
-		$save3["rrd_maximum"] = form_input_validate($_POST["rrd_maximum"], "rrd_maximum", "^(-?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)([eE][+\-]?[0-9]+)?)|U$", (isset($_POST["t_rrd_maximum"]) ? true : false), 3);
-		$save3["t_rrd_minimum"] = form_input_validate((isset($_POST["t_rrd_minimum"]) ? $_POST["t_rrd_minimum"] : ""), "t_rrd_minimum", "", true, 3);
-		$save3["rrd_minimum"] = form_input_validate($_POST["rrd_minimum"], "rrd_minimum", "^(-?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)([eE][+\-]?[0-9]+)?)|U$", (isset($_POST["t_rrd_minimum"]) ? true : false), 3);
-		$save3["t_rrd_compute_rpn"] = form_input_validate((isset($_POST["t_rrd_compute_rpn"]) ? $_POST["t_rrd_compute_rpn"] : ""), "t_rrd_compute_rpn", "", true, 3);
-		/* rrd_compute_rpn requires input only for COMPUTE data source type */
-		$save3["rrd_compute_rpn"] = form_input_validate($_POST["rrd_compute_rpn"], "rrd_compute_rpn", "", ((isset($_POST["t_rrd_compute_rpn"]) || ($_POST["data_source_type_id"] != DATA_SOURCE_TYPE_COMPUTE)) ? true : false), 3);
-		$save3["t_rrd_heartbeat"] = form_input_validate((isset($_POST["t_rrd_heartbeat"]) ? $_POST["t_rrd_heartbeat"] : ""), "t_rrd_heartbeat", "", true, 3);
-		$save3["rrd_heartbeat"] = form_input_validate($_POST["rrd_heartbeat"], "rrd_heartbeat", "^[0-9]+$", (isset($_POST["t_rrd_heartbeat"]) ? true : false), 3);
-		$save3["t_data_source_type_id"] = form_input_validate((isset($_POST["t_data_source_type_id"]) ? $_POST["t_data_source_type_id"] : ""), "t_data_source_type_id", "", true, 3);
-		$save3["data_source_type_id"] = form_input_validate($_POST["data_source_type_id"], "data_source_type_id", "", true, 3);
-		$save3["t_data_source_name"] = form_input_validate((isset($_POST["t_data_source_name"]) ? $_POST["t_data_source_name"] : ""), "t_data_source_name", "", true, 3);
-		$save3["data_source_name"] = form_input_validate($_POST["data_source_name"], "data_source_name", "^[a-zA-Z0-9_]{1,19}$", (isset($_POST["t_data_source_name"]) ? true : false), 3);
-		$save3["t_data_input_field_id"] = form_input_validate((isset($_POST["t_data_input_field_id"]) ? $_POST["t_data_input_field_id"] : ""), "t_data_input_field_id", "", true, 3);
-		$save3["data_input_field_id"] = form_input_validate((isset($_POST["data_input_field_id"]) ? $_POST["data_input_field_id"] : "0"), "data_input_field_id", "", true, 3);
-
-		/* ok, first pull out all 'input' values so we know how much to save */
-		$input_fields = db_fetch_assoc("select
-			id,
-			input_output,
-			regexp_match,
-			allow_nulls,
-			type_code,
-			data_name
-			from data_input_fields
-			where data_input_id=" . $_POST["data_input_id"] . "
-			and input_output='in'");
-
-		/* pass#1 for validation */
-		if (sizeof($input_fields) > 0) {
-			foreach ($input_fields as $input_field) {
-				$form_value = "value_" . $input_field["data_name"];
-
-				if ((isset($_POST[$form_value])) && ($input_field["type_code"] == "")) {
-					if ((isset($_POST["t_" . $form_value])) &&
-						(get_request_var_post("t_" . $form_value) == CHECKED)) {
-						$not_required = true;
-					}else if ($input_field["allow_nulls"] == CHECKED) {
-						$not_required = true;
-					}else{
-						$not_required = false;
-					}
-
-					form_input_validate(get_request_var_post($form_value), "value_" . $input_field["data_name"], $input_field["regexp_match"], $not_required, 3);
-				}
-			}
-		}
-
 		if (!is_error_message()) {
 			$data_template_id = sql_save($save1, "data_template");
 
@@ -185,25 +133,46 @@ function data_source_template_save() {
 			}
 		}
 
-		/* update actual device template information for live devices */
+		/* update actual device template information for live devices in table data_template_data */
 		if ((!is_error_message()) && ($save2["id"] > 0)) {
-			db_execute("update data_template_data set data_input_id = '" . $_POST["data_input_id"] . "' where data_template_id = " . $_POST["data_template_id"] . ";");
+			db_execute("UPDATE data_template_data SET data_input_id = '" . $_POST["data_input_id"] . "' WHERE data_template_id = " . $_POST["data_template_id"] . ";");
 		}
 
 		if (!is_error_message()) {
-			$save3["data_template_id"] = $data_template_id;
-			$data_template_rrd_id = sql_save($save3, "data_template_rrd");
+			/* ok, first pull out all 'input' values so we know how much to save */
+			$input_fields = db_fetch_assoc("SELECT " .
+				"id, " .
+				"input_output, " .
+				"regexp_match, " .
+				"allow_nulls, " .
+				"type_code, " .
+				"data_name " .
+				"FROM data_input_fields " .
+				"WHERE data_input_id=" . $_POST["data_input_id"] . " " .
+				"AND input_output='in'");
 
-			if ($data_template_rrd_id) {
-				raise_message(1);
-			}else{
-				raise_message(2);
+			/* pass#1 for validation */
+			if (sizeof($input_fields) > 0) {
+				foreach ($input_fields as $input_field) {
+					$form_value = "value_" . $input_field["data_name"];
+
+					if ((isset($_POST[$form_value])) && ($input_field["type_code"] == "")) {
+						if ((isset($_POST["t_" . $form_value])) &&
+							(get_request_var_post("t_" . $form_value) == CHECKED)) {
+							$not_required = true;
+						}else if ($input_field["allow_nulls"] == CHECKED) {
+							$not_required = true;
+						}else{
+							$not_required = false;
+						}
+
+						form_input_validate(get_request_var_post($form_value), "value_" . $input_field["data_name"], $input_field["regexp_match"], $not_required, 3);
+					}
+				}
 			}
-		}
 
-		if (!is_error_message()) {
 			/* save entries in 'selected rras' field */
-			db_execute("delete from data_template_data_rra where data_template_data_id=$data_template_data_id");
+			db_execute("DELETE FROM data_template_data_rra WHERE data_template_data_id=$data_template_data_id");
 
 			if (isset($_POST["rra_id"])) {
 				for ($i=0; ($i < count($_POST["rra_id"])); $i++) {
@@ -211,17 +180,16 @@ function data_source_template_save() {
 					input_validate_input_number($_POST["rra_id"][$i]);
 					/* ==================================================== */
 
-					db_execute("insert into data_template_data_rra (rra_id,data_template_data_id)
-						values (" . $_POST["rra_id"][$i] . ",$data_template_data_id)");
+					db_execute("INSERT INTO data_template_data_rra (rra_id,data_template_data_id)
+						VALUES (" . $_POST["rra_id"][$i] . ",$data_template_data_id)");
 				}
 			}
 
 			if (!empty($_POST["data_template_id"])) {
 				/* push out all data source settings to child data source using this template */
 				push_out_data_source($data_template_data_id);
-				push_out_data_source_item($data_template_rrd_id);
 
-				db_execute("delete from data_input_data where data_template_data_id=$data_template_data_id");
+				db_execute("DELETE FROM data_input_data WHERE data_template_data_id=$data_template_data_id");
 
 				reset($input_fields);
 				if (sizeof($input_fields) > 0) {
@@ -237,8 +205,8 @@ function data_source_template_save() {
 						}
 
 						if ((!empty($form_value)) || (!empty($_POST{"t_value_" . $input_field["data_name"]}))) {
-							db_execute("insert into data_input_data (data_input_field_id,data_template_data_id,t_value,value)
-								values (" . $input_field["id"] . ",$data_template_data_id,'$template_this_item','" . trim(get_request_var_post($form_value)) . "')");
+							db_execute("INSERT INTO data_input_data (data_input_field_id,data_template_data_id,t_value,value)
+								VALUES (" . $input_field["id"] . ",$data_template_data_id,'$template_this_item','" . trim(get_request_var_post($form_value)) . "')");
 						}
 					}
 				}
@@ -250,14 +218,22 @@ function data_source_template_save() {
 			}
 		}
 
-		header("Location: data_templates.php?action=data_source_template_edit&id=" . (empty($data_template_id) ? $_POST["data_template_id"] : $data_template_id) . (empty($_POST["current_rrd"]) ? "" : "&view_rrd=" . ($_POST["current_rrd"] ? $_POST["current_rrd"] : $data_template_rrd_id)));
 	}
+
+	if ((is_error_message()) || (empty($_POST["data_template_id"]))) {
+		header("Location: data_templates.php?action=template_edit&id=" . (empty($data_template_id) ? $_POST["data_template_id"] : $data_template_id) . (empty($_POST["current_rrd"]) ? "" : "&view_rrd=" . ($_POST["current_rrd"] ? $_POST["current_rrd"] : $data_template_rrd_id)));
+	}else{
+		header("Location: data_templates.php");
+	}
+
 }
 
 /* ------------------------
     The "actions" function
    ------------------------ */
-
+/**
+ * data_source_template_form_actions	- perform actions on a list of selected data templates
+ */
 function data_source_template_form_actions() {
 	global $colors, $ds_template_actions;
 
@@ -293,24 +269,24 @@ function data_source_template_form_actions() {
 			}
 
 			if (isset($template_ids)) {
-				$data_template_datas = db_fetch_assoc("select id from data_template_data where " . array_to_sql_or($template_ids, "data_template_id") . " and local_data_id=0");
+				$data_template_datas = db_fetch_assoc("SELECT id FROM data_template_data WHERE " . array_to_sql_or($template_ids, "data_template_id") . " AND local_data_id=0");
 
 				if (sizeof($data_template_datas) > 0) {
 				foreach ($data_template_datas as $data_template_data) {
-					db_execute("delete from data_template_data_rra where data_template_data_id=" . $data_template_data["id"]);
+					db_execute("DELETE FROM data_template_data_rra WHERE data_template_data_id=" . $data_template_data["id"]);
 				}
 				}
 
-				db_execute("delete from data_template_data where " . array_to_sql_or($template_ids, "data_template_id") . " and local_data_id=0");
-				db_execute("delete from data_template_rrd where " . array_to_sql_or($template_ids, "data_template_id") . " and local_data_id=0");
-				db_execute("delete from snmp_query_graph_rrd where " . array_to_sql_or($template_ids, "data_template_id"));
-				db_execute("delete from snmp_query_graph_rrd_sv where " . array_to_sql_or($template_ids, "data_template_id"));
-				db_execute("delete from data_template where " . array_to_sql_or($template_ids, "id"));
+				db_execute("DELETE FROM data_template_data WHERE " . array_to_sql_or($template_ids, "data_template_id") . " AND local_data_id=0");
+				db_execute("DELETE FROM data_template_rrd WHERE " . array_to_sql_or($template_ids, "data_template_id") . " AND local_data_id=0");
+				db_execute("DELETE FROM snmp_query_graph_rrd WHERE " . array_to_sql_or($template_ids, "data_template_id"));
+				db_execute("DELETE FROM snmp_query_graph_rrd_sv WHERE " . array_to_sql_or($template_ids, "data_template_id"));
+				db_execute("DELETE FROM data_template WHERE " . array_to_sql_or($template_ids, "id"));
 
 				/* "undo" any graph that is currently using this template */
-				db_execute("update data_template_data set local_data_template_data_id=0,data_template_id=0 where " . array_to_sql_or($template_ids, "data_template_id"));
-				db_execute("update data_template_rrd set local_data_template_rrd_id=0,data_template_id=0 where " . array_to_sql_or($template_ids, "data_template_id"));
-				db_execute("update data_local set data_template_id=0 where " . array_to_sql_or($template_ids, "data_template_id"));
+				db_execute("UPDATE data_template_data set local_data_template_data_id=0,data_template_id=0 WHERE " . array_to_sql_or($template_ids, "data_template_id"));
+				db_execute("UPDATE data_template_rrd set local_data_template_rrd_id=0,data_template_id=0 WHERE " . array_to_sql_or($template_ids, "data_template_id"));
+				db_execute("UPDATE data_local set data_template_id=0 WHERE " . array_to_sql_or($template_ids, "data_template_id"));
 			}
 		}elseif (get_request_var_post("drp_action") === "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
@@ -360,7 +336,7 @@ function data_source_template_form_actions() {
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to delete the following data templates? Any data sources attached to these templates will become individual data sources.") . "</p>
-						<p>$ds_list</p>
+						<p><ul>$ds_list</ul></p>
 					</td>
 				</tr>\n
 				";
@@ -368,7 +344,7 @@ function data_source_template_form_actions() {
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following data templates will be duplicated. You can optionally change the title format for the new data templates.") . "</p>
-						<p>$ds_list</p>
+						<p><ul>$ds_list</ul></p>
 						<p><strong>" . __("Title Format:") . "</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
 					</td>
 				</tr>\n
@@ -396,7 +372,9 @@ function data_source_template_form_actions() {
 /* ----------------------------
     template - Data Source Templates
    ---------------------------- */
-
+/**
+ * template_rrd_add	 - obsolete?
+ */
 function template_rrd_add() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -419,12 +397,14 @@ function template_rrd_add() {
 	}
 	}
 
-	header("Location: data_templates.php?action=data_source_template_edit&id=" . $_GET["id"] . "&view_rrd=$data_template_rrd_id");
+	header("Location: data_templates.php?action=template_edit&id=" . $_GET["id"] . "&view_rrd=$data_template_rrd_id");
 	exit;
 }
 
 
-
+/**
+ * data_source_template_item	- list all data template items
+ */
 function data_source_template_item() {
 	global $colors;
 	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
@@ -449,8 +429,9 @@ function data_source_template_item() {
 }
 
 
-
-
+/**
+ * data_source_template_edit	- edit the data template
+ */
 function data_source_template_edit() {
 	global $colors;
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
@@ -543,11 +524,11 @@ function data_source_template_edit() {
 	}
 
 	form_save_button_alt("return");
-
-	include_once(CACTI_BASE_PATH . "/access/js/data_source_item.js");
-	include_once(CACTI_BASE_PATH . "/access/js/field_description_hover.js");
 }
 
+/**
+ * data_source_template	- show all data templates
+ */
 function data_source_template() {
 	global $colors, $ds_template_actions, $item_rows;
 
@@ -605,7 +586,7 @@ function data_source_template() {
 	load_current_session_value("sort_column", "sess_data_template_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_data_template_sort_direction", "ASC");
 
-	html_start_box("<strong>Data Source Templates</strong>", "100", $colors["header"], "3", "center", "data_templates.php?action=data_source_template_edit", true);
+	html_start_box("<strong>Data Source Templates</strong>", "100", $colors["header"], "3", "center", "data_templates.php?action=template_edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -699,8 +680,8 @@ function data_source_template() {
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {
 			form_alternate_row_color('line' . $template["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=data_source_template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=data_source_template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
 			form_selectable_cell((empty($template["data_input_method"]) ? "<em>" . __("None") . "</em>": $template["data_input_method"]), $template["id"]);
 			form_selectable_cell((($template["active"] == CHECKED) ? __("Active") : __("Disabled")), $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);

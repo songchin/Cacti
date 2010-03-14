@@ -57,9 +57,9 @@ $struct_data_source = array(
 		"friendly_name" => __("Associated RRA's"),
 		"description" => __("Which RRA's to use when entering data. (It is recommended that you select all of these values)."),
 		"form_id" => "|arg1:id|",
-		"sql" => "select rra_id as id,data_template_data_id from data_template_data_rra where data_template_data_id=|arg1:id|",
-		"sql_all" => "select rra.id from rra order by id",
-		"sql_print" => "select rra.name from (data_template_data_rra,rra) where data_template_data_rra.rra_id=rra.id and data_template_data_rra.data_template_data_id=|arg1:id|",
+		"sql" => "SELECT rra_id as id,data_template_data_id FROM data_template_data_rra WHERE data_template_data_id=|arg1:id|",
+		"sql_all" => "SELECT rra.id FROM rra ORDER BY id",
+		"sql_print" => "SELECT rra.name FROM (data_template_data_rra,rra) WHERE data_template_data_rra.rra_id=rra.id AND data_template_data_rra.data_template_data_id=|arg1:id|",
 		"flags" => "ALWAYSTEMPLATE"
 		),
 	"rrd_step" => array(
@@ -139,5 +139,6 @@ $struct_data_source_item = array(
 		"method" => "drop_sql",
 		"default" => "0",
 		"description" => __("When data is gathered, the data for this field will be put into this data source."),
+		"flags" => "NOTEMPLATE"
 		),
 	);

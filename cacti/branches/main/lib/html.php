@@ -997,7 +997,7 @@ function draw_data_template_items_list($item_list, $filename, $url_data, $disabl
 			form_selectable_cell((isset($item["rrd_heartbeat"]) ? $item["rrd_heartbeat"] : 0), $item["id"]);
 			?>
 			<td align="right"><a
-				href="<?php print htmlspecialchars("data_templates_items.php?action=item_remove&id=" . $item["id"] . "&data_template_id=" . $item["id"]);?>"><img
+				href="<?php print htmlspecialchars("data_templates_items.php?action=item_remove&id=" . $item["id"] . "&data_template_id=" . $item["data_template_id"]);?>"><img
 				class="buttonSmall" src="images/delete_icon.gif"
 				alt="<?php print __("Delete");?>" align='middle'></a>
 			</td>

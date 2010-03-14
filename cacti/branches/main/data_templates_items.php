@@ -51,127 +51,64 @@ switch (get_request_var_request("action")) {
 /* --------------------------
  The Save Function
  -------------------------- */
-
+/**
+ * data_template_item_save	- save data to table data_template_rrd
+ */
 function data_template_item_save() {
-	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+	#require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
 	if (isset($_POST["save_component_item"])) {
 		/* ================= input validation ================= */
 		input_validate_input_number(get_request_var_post("data_template_id"));
-		input_validate_input_number(get_request_var_post("task_item_id"));
 		/* ==================================================== */
 
-		$save["id"] 				= form_input_validate($_POST["graph_template_item_id"], "graph_template_item_id", "^[0-9]+$", false, 3);
-		$save["hash"] 				= get_hash_graph_template($_POST["graph_template_item_id"], "graph_template_item");
-		$save["data_template_id"] 	= form_input_validate($_POST["data_template_id"], "data_template_id", "^[0-9]+$", false, 3);
-		$save["local_graph_id"] 	= 0;
-		$save["task_item_id"] 		= form_input_validate(((isset($item["task_item_id"]) ? $item["task_item_id"] : (isset($_POST["task_item_id"]) ? $_POST["task_item_id"] : 0))), "task_item_id", "^[0-9]+$", true, 3);
-		$save["color_id"] 			= form_input_validate(((isset($item["color_id"]) ? $item["color_id"] : (isset($_POST["color_id"]) ? $_POST["color_id"] : 0))), "color_id", "^[0-9]+$", true, 3);
-		$save["alpha"] 				= form_input_validate(((isset($item["alpha"]) ? $item["alpha"] : (isset($_POST["alpha"]) ? $_POST["alpha"] : "FF"))), "alpha", "^[a-fA-F0-9]+$", true, 3);
-		$save["graph_type_id"]		= form_input_validate(((isset($item["graph_type_id"]) ? $item["graph_type_id"] : (isset($_POST["graph_type_id"]) ? $_POST["graph_type_id"] : 0))), "graph_type_id", "^[0-9]+$", true, 3);
-		$save["dashes"] 			= form_input_validate((isset($_POST["dashes"]) ? $_POST["dashes"] : ""), "dashes", "^[0-9]+[,0-9]*$", true, 3);
-		$save["dash_offset"] 		= form_input_validate((isset($_POST["dash_offset"]) ? $_POST["dash_offset"] : ""), "dash_offset", "^[0-9]+$", true, 3);
-		$save["cdef_id"] 			= form_input_validate(((isset($item["cdef_id"]) ? $item["cdef_id"] : (isset($_POST["cdef_id"]) ? $_POST["cdef_id"] : 0))), "cdef_id", "^[0-9]+$", true, 3);
-		$save["vdef_id"] 			= form_input_validate(((isset($item["vdef_id"]) ? $item["vdef_id"] : (isset($_POST["vdef_id"]) ? $_POST["vdef_id"] : 0))), "vdef_id", "^[0-9]+$", true, 3);
-		$save["shift"] 				= form_input_validate((isset($_POST["shift"]) ? $_POST["shift"] : ""), "shift", "^((on)|)$", true, 3);
-		$save["consolidation_function_id"] = form_input_validate(((isset($item["consolidation_function_id"]) ? $item["consolidation_function_id"] : (isset($_POST["consolidation_function_id"]) ? $_POST["consolidation_function_id"] : 0))), "consolidation_function_id", "^[0-9]+$", true, 3);
-		$save["textalign"] 			= form_input_validate((isset($_POST["textalign"]) ? $_POST["textalign"] : ""), "textalign", "^[a-z]+$", true, 3);
-		$save["text_format"] 		= form_input_validate(((isset($item["text_format"]) ? $item["text_format"] : (isset($_POST["text_format"]) ? $_POST["text_format"] : ""))), "text_format", "", true, 3);
-		$save["value"] 				= form_input_validate((isset($_POST["value"]) ? $_POST["value"] : ""), "value", "", true, 3);
-		$save["hard_return"] 		= form_input_validate(((isset($item["hard_return"]) ? $item["hard_return"] : (isset($_POST["hard_return"]) ? $_POST["hard_return"] : ""))), "hard_return", "", true, 3);
-		$save["gprint_id"] 			= form_input_validate(((isset($item["gprint_id"]) ? $item["gprint_id"] : (isset($_POST["gprint_id"]) ? $_POST["gprint_id"] : 0))), "gprint_id", "^[0-9]+$", true, 3);
+		/* save: data_template_rrd */
+		$save["id"] = $_POST["data_template_rrd_id"];
+		$save["hash"] = get_hash_data_template($_POST["data_template_rrd_id"], "data_template_item");
+		$save["local_data_template_rrd_id"] = 0;
+		$save["local_data_id"] = 0;
+		$save["data_template_id"] = $_POST["data_template_id"];
+
+		$save["t_rrd_maximum"] = form_input_validate((isset($_POST["t_rrd_maximum"]) ? $_POST["t_rrd_maximum"] : ""), "t_rrd_maximum", "", true, 3);
+		$save["rrd_maximum"] = form_input_validate($_POST["rrd_maximum"], "rrd_maximum", "^(-?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)([eE][+\-]?[0-9]+)?)|U$", (isset($_POST["t_rrd_maximum"]) ? true : false), 3);
+		$save["t_rrd_minimum"] = form_input_validate((isset($_POST["t_rrd_minimum"]) ? $_POST["t_rrd_minimum"] : ""), "t_rrd_minimum", "", true, 3);
+		$save["rrd_minimum"] = form_input_validate($_POST["rrd_minimum"], "rrd_minimum", "^(-?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)([eE][+\-]?[0-9]+)?)|U$", (isset($_POST["t_rrd_minimum"]) ? true : false), 3);
+		$save["t_rrd_compute_rpn"] = form_input_validate((isset($_POST["t_rrd_compute_rpn"]) ? $_POST["t_rrd_compute_rpn"] : ""), "t_rrd_compute_rpn", "", true, 3);
+		/* rrd_compute_rpn requires input only for COMPUTE data source type */
+		$save["rrd_compute_rpn"] = form_input_validate($_POST["rrd_compute_rpn"], "rrd_compute_rpn", "", ((isset($_POST["t_rrd_compute_rpn"]) || ($_POST["data_source_type_id"] != DATA_SOURCE_TYPE_COMPUTE)) ? true : false), 3);
+		$save["t_rrd_heartbeat"] = form_input_validate((isset($_POST["t_rrd_heartbeat"]) ? $_POST["t_rrd_heartbeat"] : ""), "t_rrd_heartbeat", "", true, 3);
+		$save["rrd_heartbeat"] = form_input_validate($_POST["rrd_heartbeat"], "rrd_heartbeat", "^[0-9]+$", (isset($_POST["t_rrd_heartbeat"]) ? true : false), 3);
+		$save["t_data_source_type_id"] = form_input_validate((isset($_POST["t_data_source_type_id"]) ? $_POST["t_data_source_type_id"] : ""), "t_data_source_type_id", "", true, 3);
+		$save["data_source_type_id"] = form_input_validate($_POST["data_source_type_id"], "data_source_type_id", "", true, 3);
+		$save["t_data_source_name"] = form_input_validate((isset($_POST["t_data_source_name"]) ? $_POST["t_data_source_name"] : ""), "t_data_source_name", "", true, 3);
+		$save["data_source_name"] = form_input_validate($_POST["data_source_name"], "data_source_name", "^[a-zA-Z0-9_]{1,19}$", (isset($_POST["t_data_source_name"]) ? true : false), 3);
+		$save["t_data_input_field_id"] = form_input_validate((isset($_POST["t_data_input_field_id"]) ? $_POST["t_data_input_field_id"] : ""), "t_data_input_field_id", "", true, 3);
+		$save["data_input_field_id"] = form_input_validate((isset($_POST["data_input_field_id"]) ? $_POST["data_input_field_id"] : "0"), "data_input_field_id", "", true, 3);
 
 		if (!is_error_message()) {
-			/* Before we save the item, let's get a look at task_item_id <-> input associations */
-			$orig_data_source_graph_inputs = db_fetch_assoc("select
-					graph_template_input.id,
-					graph_template_input.name,
-					data_templates_item.task_item_id
-					from (graph_template_input,graph_template_input_defs,data_templates_item)
-					where graph_template_input.id=graph_template_input_defs.graph_template_input_id
-					and graph_template_input_defs.graph_template_item_id=data_templates_item.id
-					and graph_template_input.data_template_id=" . $save["data_template_id"] . "
-					and graph_template_input.column_name='task_item_id'
-					group by data_templates_item.task_item_id");
 
-			$orig_data_source_to_input = array_rekey($orig_data_source_graph_inputs, "task_item_id", "id");
+			$data_template_rrd_id = sql_save($save, "data_template_rrd");
 
-			$graph_template_item_id = sql_save($save, "data_templates_item");
-
-			if ($graph_template_item_id) {
+			if ($data_template_rrd_id) {
 				raise_message(1);
-
-				if (!empty($save["task_item_id"])) {
-					/* old item clean-up.  Don't delete anything if the item <-> task_item_id association remains the same. */
-					if ($_POST["hidden_task_item_id"] != $_POST["task_item_id"]) {
-						/* It changed.  Delete any old associations */
-						db_execute("delete from graph_template_input_defs where graph_template_item_id=$graph_template_item_id");
-
-						/* Input for current data source exists and has changed.  Update the association */
-						if (isset($orig_data_source_to_input{$save["task_item_id"]})) {
-							db_execute("REPLACE INTO graph_template_input_defs " .
-											"(graph_template_input_id, graph_template_item_id) " .
-											"VALUES (" .
-							$orig_data_source_to_input{$save["task_item_id"]} . "," .
-							$graph_template_item_id .
-											")");
-						}
-					}
-
-					/* an input for the current data source does NOT currently exist, let's create one */
-					if (!isset($orig_data_source_to_input{$save["task_item_id"]})) {
-						$ds_name = db_fetch_cell("select data_source_name from data_template_rrd where id=" . $_POST["task_item_id"]);
-
-						db_execute("REPLACE INTO graph_template_input " .
-										"(hash,data_template_id,name,column_name) " .
-										"VALUES ('" .
-						get_hash_graph_template(0, "graph_template_input") . "'," .
-						$save["data_template_id"] . "," .
-										"'Data Source [" . $ds_name . "]'," .
-										'task_item_id' .
-										")");
-
-						$graph_template_input_id = db_fetch_insert_id();
-
-						$graph_items = db_fetch_assoc("select id from data_templates_item where data_template_id=" . $save["data_template_id"] . " and task_item_id=" . $_POST["task_item_id"]);
-
-						if (sizeof($graph_items) > 0) {
-							foreach ($graph_items as $graph_item) {
-								db_execute("REPLACE INTO graph_template_input_defs " .
-												"(graph_template_input_id,graph_template_item_id) " .
-												"VALUES (" .
-								$graph_template_input_id . "," .
-								$graph_item["id"] .
-												")");
-							}
-						}
-					}
-				}
-
-				push_out_graph_item($graph_template_item_id);
-
-
-				if (isset($_POST["task_item_id"]) && isset($orig_data_source_to_input{$_POST["task_item_id"]})) {
-					/* make sure all current graphs using this graph input are aware of this change */
-					push_out_graph_input($orig_data_source_to_input{$_POST["task_item_id"]}, $graph_template_item_id, array($graph_template_item_id => $graph_template_item_id));
-				}
+				push_out_data_source_item($data_template_rrd_id);
 			}else{
 				raise_message(2);
 			}
 		}
 
+		if (is_error_message()) {
+			header("Location: data_templates_items.php?action=item_edit&item_id=" . (empty($data_template_rrd_id) ? $_POST["data_template_rrd_id"] : $data_template_rrd_id) . "&id=" . $_POST["data_template_id"]);
+		}else{
+			header("Location: data_templates.php?action=template_edit&id=" . $_POST["data_template_id"]);
+		}
 	}
-
-	if (is_error_message()) {
-		header("Location: data_templates_items.php?action=data_template_item_edit&graph_template_item_id=" . (empty($graph_template_item_id) ? $_POST["graph_template_item_id"] : $graph_template_item_id) . "&id=" . $_POST["data_template_id"]);
-	}else{
-		header("Location: data_templates.php?action=template_edit&id=" . $_POST["data_template_id"]);
-	}
-	exit;
 }
 
 
-
+/**
+ * data_template_item_remove	- remove a data template item (table data_template_rrd)
+ */
 function data_template_item_remove() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -182,17 +119,20 @@ function data_template_item_remove() {
 
 	if (sizeof($children) > 0) {
 		foreach ($children as $item) {
-			db_execute("delete from data_template_rrd where id=" . $item["id"]);
-			db_execute("delete from snmp_query_graph_rrd where data_template_rrd_id=" . $item["id"]);
-			db_execute("update data_templates_item set task_item_id=0 where task_item_id=" . $item["id"]);
+			db_execute("DELETE FROM data_template_rrd WHERE id=" . $item["id"]);
+			db_execute("DELETE FROM snmp_query_graph_rrd WHERE data_template_rrd_id=" . $item["id"]);
+			db_execute("UPDATE data_templates_item set task_item_id=0 WHERE task_item_id=" . $item["id"]);
 		}
 	}
 
-	header("Location: data_templates.php?action=data_source_template_edit&id=" . $_GET["data_template_id"]);
+	header("Location: data_templates.php?action=template_edit&id=" . $_GET["data_template_id"]);
 	exit;
 }
 
 
+/**
+ * data_template_item_edit	- edit a data template item (aka data source in rrdtool lingo)
+ */
 function data_template_item_edit() {
 	global $colors;
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
@@ -205,7 +145,7 @@ function data_template_item_edit() {
 	if (!empty($_GET["id"])) {
 		#$template = db_fetch_row("SELECT * FROM data_template WHERE id=" . $_GET["id"]);
 		$template_data = db_fetch_row("SELECT * FROM data_template_data WHERE data_template_id=" . $_GET["id"] . " AND local_data_id=0");
-		$template_item = db_fetch_row("SELECT * FROM data_template_rrd WHERE id=" . get_request_var("id"));
+		$template_item = db_fetch_row("SELECT * FROM data_template_rrd WHERE id=" . $_GET["id"]);
 		$header_label = __("[edit: ") . $template_item["data_source_name"] . "]";
 	}else{
 		$template_data = array();
@@ -246,7 +186,7 @@ function data_template_item_edit() {
 
 	draw_edit_form(
 		array(
-			"config" => array("no_form_tag" => true),
+			"config" => array(),
 			"fields" => $form_array + array(
 				"data_template_rrd_id" => array(
 					"method" => "hidden",
@@ -259,14 +199,13 @@ function data_template_item_edit() {
 	html_end_box();
 
 	form_hidden_box("data_template_item_id", (isset($template_item) ? $template_item["id"] : "0"), "");
-	form_hidden_box("data_template_id", get_request_var("data_template_id"), "0");
+	form_hidden_box("data_template_id", $_GET["data_template_id"], "0");
 	form_hidden_box("save_component_item", "1", "");
 	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
 
-	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
+	form_save_button("data_templates.php?action=template_edit&id=" . $_GET["id"]);
 
-#	include_once(CACTI_BASE_PATH . "/access/js/graph_item_dependencies.js");	# this one modifies attr("disabled")
-#	include_once(CACTI_BASE_PATH . "/access/js/line_width.js");
-#	include_once(CACTI_BASE_PATH . "/access/js/rrdtool_version.js");			# this one sets attr("disabled) and comes last!
+	include_once(CACTI_BASE_PATH . "/access/js/data_source_item.js");
+	include_once(CACTI_BASE_PATH . "/access/js/field_description_hover.js");
 
 }

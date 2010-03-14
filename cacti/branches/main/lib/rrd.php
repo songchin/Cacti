@@ -766,24 +766,40 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$last_graph_cf["data_source_name"]["local_data_template_rrd_id"] = $graph_cf;
 				/* remember this for second foreach loop */
 				$graph_items[$key]["cf_reference"] = $graph_cf;
-			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) {
-				/* ATTENTION!
-				 * the "CF" given on graph_item edit screen for GPRINT is indeed NOT a real "CF",
-				 * but an aggregation function
-				 * see "man rrdgraph_data" for the correct VDEF based notation
-				 * so our task now is to "guess" the very graph_item, this GPRINT is related to
-				 * and to use that graph_item's CF */
-				if (isset($last_graph_cf["data_source_name"]["local_data_template_rrd_id"])) {
-					$graph_cf = $last_graph_cf["data_source_name"]["local_data_template_rrd_id"];
-					/* remember this for second foreach loop */
-					$graph_items[$key]["cf_reference"] = $graph_cf;
-				} else {
-					$graph_cf = generate_graph_best_cf($graph_item["local_data_id"], $graph_item["consolidation_function_id"]);
-					/* remember this for second foreach loop */
-					$graph_items[$key]["cf_reference"] = $graph_cf;
-				}
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_AVERAGE) {
+				$graph_cf = $graph_item["consolidation_function_id"];
+				$graph_items[$key]["cf_reference"] = $graph_cf;
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_LAST) {
+				$graph_cf = $graph_item["consolidation_function_id"];
+				$graph_items[$key]["cf_reference"] = $graph_cf;
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_MAX) {
+				$graph_cf = $graph_item["consolidation_function_id"];
+				$graph_items[$key]["cf_reference"] = $graph_cf;
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_MIN) {
+				$graph_cf = $graph_item["consolidation_function_id"];
+				$graph_items[$key]["cf_reference"] = $graph_cf;
+				#}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) {
+				#/* ATTENTION!
+				# * the "CF" given on graph_item edit screen for GPRINT is indeed NOT a real "CF",
+				# * but an aggregation function
+				# * see "man rrdgraph_data" for the correct VDEF based notation
+				# * so our task now is to "guess" the very graph_item, this GPRINT is related to
+				# * and to use that graph_item's CF */
+				#if (isset($last_graph_cf["data_source_name"]["local_data_template_rrd_id"])) {
+				#	$graph_cf = $last_graph_cf["data_source_name"]["local_data_template_rrd_id"];
+				#	/* remember this for second foreach loop */
+				#	$graph_items[$key]["cf_reference"] = $graph_cf;
+				#} else {
+				#	$graph_cf = generate_graph_best_cf($graph_item["local_data_id"], $graph_item["consolidation_function_id"]);
+				#	/* remember this for second foreach loop */
+				#	$graph_items[$key]["cf_reference"] = $graph_cf;
+				#}
 			}else{
 				/* all other types are based on the best matching CF */
+				#GRAPH_ITEM_TYPE_COMMENT
+				#GRAPH_ITEM_TYPE_HRULE
+				#GRAPH_ITEM_TYPE_VRULE
+				#GRAPH_ITEM_TYPE_TEXTALIGN
 				$graph_cf = generate_graph_best_cf($graph_item["local_data_id"], $graph_item["consolidation_function_id"]);
 				/* remember this for second foreach loop */
 				$graph_items[$key]["cf_reference"] = $graph_cf;
@@ -1220,7 +1236,14 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$text_padding = str_pad("", $pad_number);
 
 			/* two GPRINT's in a row screws up the padding, lets not do that */
-			} else if (($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) && ($last_graph_type == GRAPH_ITEM_TYPE_GPRINT)) {
+			} else if (($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_AVERAGE ||
+						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_LAST ||
+						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_MAX ||
+						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_MIN) && (
+						$last_graph_type == GRAPH_ITEM_TYPE_GPRINT_AVERAGE ||
+						$last_graph_type == GRAPH_ITEM_TYPE_GPRINT_LAST ||
+						$last_graph_type == GRAPH_ITEM_TYPE_GPRINT_MAX ||
+						$last_graph_type == GRAPH_ITEM_TYPE_GPRINT_MIN)) {
 				$text_padding = "";
 			}
 
@@ -1334,17 +1357,65 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				break;
 
 
-			case GRAPH_ITEM_TYPE_GPRINT:
+			case GRAPH_ITEM_TYPE_GPRINT_AVERAGE:
 				if (!isset($graph_data_array["graph_nolegend"])) {
 					/* rrdtool 1.2.x VDEFs must suppress the consolidation function on GPRINTs */
 					if ($rrdtool_version != RRD_VERSION_1_0) {
 						if ($graph_item["vdef_id"] == "0") {
-							$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+							$txt_graph_items .= "GPRINT:" . $data_source_name . ":AVERAGE:\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
 						}else{
-							$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+							$txt_graph_items .= "GPRINT:" . $data_source_name . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
 						}
 					}else {
-						$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+						$txt_graph_items .= "GPRINT:" . $data_source_name . ":AVERAGE:\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+					}
+				}
+				break;
+
+
+			case GRAPH_ITEM_TYPE_GPRINT_LAST:
+				if (!isset($graph_data_array["graph_nolegend"])) {
+					/* rrdtool 1.2.x VDEFs must suppress the consolidation function on GPRINTs */
+					if ($rrdtool_version != RRD_VERSION_1_0) {
+						if ($graph_item["vdef_id"] == "0") {
+							$txt_graph_items .= "GPRINT:" . $data_source_name . ":LAST:\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+						}else{
+							$txt_graph_items .= "GPRINT:" . $data_source_name . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+						}
+					}else {
+						$txt_graph_items .= "GPRINT:" . $data_source_name . ":LAST:\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+					}
+				}
+				break;
+
+
+			case GRAPH_ITEM_TYPE_GPRINT_MAX:
+				if (!isset($graph_data_array["graph_nolegend"])) {
+					/* rrdtool 1.2.x VDEFs must suppress the consolidation function on GPRINTs */
+					if ($rrdtool_version != RRD_VERSION_1_0) {
+						if ($graph_item["vdef_id"] == "0") {
+							$txt_graph_items .= "GPRINT:" . $data_source_name . ":MAX:\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+						}else{
+							$txt_graph_items .= "GPRINT:" . $data_source_name . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+						}
+					}else {
+						$txt_graph_items .= "GPRINT:" . $data_source_name . ":MAX:\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+					}
+				}
+				break;
+
+
+			case GRAPH_ITEM_TYPE_GPRINT_MIN:
+				if (!isset($graph_data_array["graph_nolegend"])) {
+					/* rrdtool 1.2.x VDEFs must suppress the consolidation function on GPRINTs */
+					if ($rrdtool_version != RRD_VERSION_1_0) {
+						if ($graph_item["vdef_id"] == "0") {
+							$txt_graph_items .= "GPRINT:" . $data_source_name . ":MIN:\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+						}else{
+							$txt_graph_items .= "GPRINT:" . $data_source_name . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+						}
+					}else {
+						$txt_graph_items .= "GPRINT:" . $data_source_name . ":MIN:\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
 					}
 				}
 				break;
@@ -1652,22 +1723,34 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 				$last_xport_cf["data_source_name"]["local_data_template_rrd_id"] = $xport_cf;
 				/* remember this for second foreach loop */
 				$xport_items[$key]["cf_reference"] = $xport_cf;
-			}elseif ($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) {
-				/* ATTENTION!
-				 * the "CF" given on graph_item edit screen for GPRINT is indeed NOT a real "CF",
-				 * but an aggregation function
-				 * see "man rrdgraph_data" for the correct VDEF based notation
-				 * so our task now is to "guess" the very graph_item, this GPRINT is related to
-				 * and to use that graph_item's CF */
-				if (isset($last_xport_cf["data_source_name"]["local_data_template_rrd_id"])) {
-					$xport_cf = $last_xport_cf["data_source_name"]["local_data_template_rrd_id"];
-					/* remember this for second foreach loop */
-					$xport_items[$key]["cf_reference"] = $xport_cf;
-				} else {
-					$xport_cf = generate_graph_best_cf($xport_item["local_data_id"], $xport_item["consolidation_function_id"]);
-					/* remember this for second foreach loop */
-					$xport_items[$key]["cf_reference"] = $xport_cf;
-				}
+			}elseif ($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_AVERAGE) {
+				$graph_cf = $xport_item["consolidation_function_id"];
+				$xport_items[$key]["cf_reference"] = $graph_cf;
+			}elseif ($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_LAST) {
+				$graph_cf = $xport_item["consolidation_function_id"];
+				$xport_items[$key]["cf_reference"] = $graph_cf;
+			}elseif ($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_MAX) {
+				$graph_cf = $xport_item["consolidation_function_id"];
+				$xport_items[$key]["cf_reference"] = $graph_cf;
+			}elseif ($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_MIN) {
+				$graph_cf = $xport_item["consolidation_function_id"];
+				$xport_items[$key]["cf_reference"] = $graph_cf;
+			#}elseif ($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) {
+				#/* ATTENTION!
+				# * the "CF" given on graph_item edit screen for GPRINT is indeed NOT a real "CF",
+				# * but an aggregation function
+				# * see "man rrdgraph_data" for the correct VDEF based notation
+				# * so our task now is to "guess" the very graph_item, this GPRINT is related to
+				# * and to use that graph_item's CF */
+				#if (isset($last_xport_cf["data_source_name"]["local_data_template_rrd_id"])) {
+				#	$xport_cf = $xport_item["data_source_name"]["local_data_template_rrd_id"];
+				#	/* remember this for second foreach loop */
+				#	$xport_items[$key]["cf_reference"] = $xport_cf;
+				#} else {
+				#	$xport_cf = generate_graph_best_cf($xport_item["local_data_id"], $xport_item["consolidation_function_id"]);
+				#	/* remember this for second foreach loop */
+				#	$xport_items[$key]["cf_reference"] = $xport_cf;
+				#}
 			}else{
 				/* all other types are based on the best matching CF */
 				$xport_cf = generate_graph_best_cf($xport_item["local_data_id"], $xport_item["consolidation_function_id"]);
