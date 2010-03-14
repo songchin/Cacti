@@ -602,7 +602,7 @@ function create_complete_graph_from_template($graph_template_id, $device_id, $sn
 		foreach ($suggested_values as $suggested_value) {
 			/* once we find a match; don't try to find more */
 			if (!isset($suggested_values_graph[$graph_template_id]{$suggested_value["field_name"]})) {
-				$subs_string = substitute_snmp_query_data($suggested_value["text"], $device_id, $snmp_query_array["snmp_query_id"], $snmp_query_array["snmp_index"], read_config_option("max_data_query_field_length"));
+				$subs_string = substitute_snmp_query_data($suggested_value["text"], $device_id, $snmp_query_array["snmp_query_id"], $snmp_query_array["snmp_index"], read_config_option("max_data_query_field_length"), false);
 				/* if there are no '|' characters, all of the substitutions were successful */
 				if (!strstr($subs_string, "|query")) {
 					db_execute("update graph_templates_graph set " . $suggested_value["field_name"] . "='" . addslashes($subs_string) . "' where local_graph_id=" . $cache_array["local_graph_id"]);
@@ -669,7 +669,7 @@ function create_complete_graph_from_template($graph_template_id, $device_id, $sn
 			foreach ($suggested_values as $suggested_value) {
 				/* once we find a match; don't try to find more */
 				if (!isset($suggested_values_ds{$data_template["id"]}{$suggested_value["field_name"]})) {
-					$subs_string = substitute_snmp_query_data($suggested_value["text"], $device_id, $snmp_query_array["snmp_query_id"], $snmp_query_array["snmp_index"], read_config_option("max_data_query_field_length"));
+					$subs_string = substitute_snmp_query_data($suggested_value["text"], $device_id, $snmp_query_array["snmp_query_id"], $snmp_query_array["snmp_index"], read_config_option("max_data_query_field_length"), false);
 
 					/* if there are no '|' characters, all of the substitutions were successful */
 					if (!strstr($subs_string, "|query")) {

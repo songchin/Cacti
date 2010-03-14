@@ -194,7 +194,7 @@ function api_reapply_suggested_data_source_title($local_data_id) {
 			if(!isset($suggested_values_data[$data_template_data_id]{$suggested_value["field_name"]})) {
  				$subs_string = substitute_snmp_query_data($suggested_value["text"],$data_local["device_id"],
 								$data_local["snmp_query_id"], $data_local["snmp_index"],
-								read_config_option("max_data_query_field_length"));
+								read_config_option("max_data_query_field_length"), false);
 				/* if there are no '|query' characters, all of the substitutions were successful */
 				if ((!substr_count($subs_string, "|query")) && ($suggested_value["field_name"] == "name")) {
 					db_execute("update data_template_data set " . $suggested_value["field_name"] . "='" . $suggested_value["text"] . "' where local_data_id=" . $local_data_id);

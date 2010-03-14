@@ -22,9 +22,9 @@
  +-------------------------------------------------------------------------+
 */
 
-/* update_data_source_title_cache_from_template - updates the title cache for all data sources
+/** update_data_source_title_cache_from_template - updates the title cache for all data sources
 	that match a given data template
-   @param $data_template_id - (int) the ID of the data template to match */
+   @param int $data_template_id - (int) the ID of the data template to match */
 function update_data_source_title_cache_from_template($data_template_id) {
 	$data = db_fetch_assoc("select local_data_id from data_template_data where data_template_id=$data_template_id and local_data_id>0");
 
@@ -35,10 +35,10 @@ function update_data_source_title_cache_from_template($data_template_id) {
 	}
 }
 
-/* update_data_source_title_cache_from_query - updates the title cache for all data sources
+/** update_data_source_title_cache_from_query - updates the title cache for all data sources
 	that match a given data query/index combination
-   @param $snmp_query_id - (int) the ID of the data query to match
-   @param $snmp_index - the index within the data query to match */
+   @param int $snmp_query_id 	- (int) the ID of the data query to match
+   @param int $snmp_index 		- the index within the data query to match */
 function update_data_source_title_cache_from_query($snmp_query_id, $snmp_index) {
 	$data = db_fetch_assoc("select id from data_local where snmp_query_id=$snmp_query_id and snmp_index='$snmp_index'");
 
@@ -49,9 +49,9 @@ function update_data_source_title_cache_from_query($snmp_query_id, $snmp_index) 
 	}
 }
 
-/* update_data_source_title_cache_from_device - updates the title cache for all data sources
+/** update_data_source_title_cache_from_device - updates the title cache for all data sources
 	that match a given device
-   @param $device_id - (int) the ID of the device to match */
+   @param int $device_id - (int) the ID of the device to match */
 function update_data_source_title_cache_from_device($device_id) {
 	$data = db_fetch_assoc("select id from data_local where device_id=$device_id");
 
@@ -62,15 +62,15 @@ function update_data_source_title_cache_from_device($device_id) {
 	}
 }
 
-/* update_data_source_title_cache - updates the title cache for a single data source
-   @param $local_data_id - (int) the ID of the data source to update the title cache for */
+/** update_data_source_title_cache - updates the title cache for a single data source
+   @param int $local_data_id - (int) the ID of the data source to update the title cache for */
 function update_data_source_title_cache($local_data_id) {
 	db_execute("update data_template_data set name_cache='" . addslashes(get_data_source_title($local_data_id)) . "' where local_data_id=$local_data_id");
 }
 
-/* update_graph_title_cache_from_template - updates the title cache for all graphs
+/** update_graph_title_cache_from_template - updates the title cache for all graphs
 	that match a given graph template
-   @param $graph_template_id - (int) the ID of the graph template to match */
+   @param int $graph_template_id - (int) the ID of the graph template to match */
 function update_graph_title_cache_from_template($graph_template_id) {
 	$graphs = db_fetch_assoc("select local_graph_id from graph_templates_graph where graph_template_id=$graph_template_id and local_graph_id>0");
 
@@ -81,10 +81,10 @@ function update_graph_title_cache_from_template($graph_template_id) {
 	}
 }
 
-/* update_graph_title_cache_from_query - updates the title cache for all graphs
+/** update_graph_title_cache_from_query - updates the title cache for all graphs
 	that match a given data query/index combination
-   @param $snmp_query_id - (int) the ID of the data query to match
-   @param $snmp_index - the index within the data query to match */
+   @param int $snmp_query_id - (int) the ID of the data query to match
+   @param int $snmp_index - the index within the data query to match */
 function update_graph_title_cache_from_query($snmp_query_id, $snmp_index) {
 	$graphs = db_fetch_assoc("select id from graph_local where snmp_query_id=$snmp_query_id and snmp_index='$snmp_index'");
 
@@ -95,9 +95,9 @@ function update_graph_title_cache_from_query($snmp_query_id, $snmp_index) {
 	}
 }
 
-/* update_graph_title_cache_from_device - updates the title cache for all graphs
+/** update_graph_title_cache_from_device - updates the title cache for all graphs
 	that match a given device
-   @param $device_id - (int) the ID of the device to match */
+   @param int $device_id - (int) the ID of the device to match */
 function update_graph_title_cache_from_device($device_id) {
 	$graphs = db_fetch_assoc("select id from graph_local where device_id=$device_id");
 
@@ -108,32 +108,32 @@ function update_graph_title_cache_from_device($device_id) {
 	}
 }
 
-/* update_graph_title_cache - updates the title cache for a single graph
-   @param $local_graph_id - (int) the ID of the graph to update the title cache for */
+/** update_graph_title_cache - updates the title cache for a single graph
+   @param int $local_graph_id - (int) the ID of the graph to update the title cache for */
 function update_graph_title_cache($local_graph_id) {
 	db_execute("update graph_templates_graph set title_cache='" . addslashes(get_graph_title($local_graph_id)) . "' where local_graph_id=$local_graph_id");
 }
 
-/* null_out_substitutions - takes a string and cleans out any device variables that do not have values
-   @param $string - the string to clean out unsubstituted variables for
-   @returns - the cleaned up string */
+/** null_out_substitutions 	- takes a string and cleans out any device variables that do not have values
+   @param string $string 	- the string to clean out unsubstituted variables for
+   @return string 			- the cleaned up string */
 function null_out_substitutions($string) {
 	global $regexps;
 
 	return preg_replace("/\|device_" . VALID_HOST_FIELDS . "\|( - )?/i", "", $string);
 }
 
-/* expand_title - takes a string and substitutes all data query variables contained in it or cleans
+/** expand_title - takes a string and substitutes all data query variables contained in it or cleans
 	them out if no data query is in use
-   @param $device_id - (int) the device ID to match
-   @param $snmp_query_id - (int) the data query ID to match
-   @param $snmp_index - the data query index to match
-   @param $title - the original string that contains the data query variables
-   @returns - the original string with all of the variable substitutions made */
+   @param int $device_id 		- (int) the device ID to match
+   @param int $snmp_query_id 	- (int) the data query ID to match
+   @param int $snmp_index 		- the data query index to match
+   @param string $title 		- the original string that contains the data query variables
+   @return string 				- the original string with all of the variable substitutions made */
 function expand_title($device_id, $snmp_query_id, $snmp_index, $title) {
 	if ((strstr($title, "|")) && (!empty($device_id))) {
 		if (($snmp_query_id != "0") && ($snmp_index != "")) {
-			return substitute_snmp_query_data(null_out_substitutions(substitute_device_data($title, "|", "|", $device_id)), $device_id, $snmp_query_id, $snmp_index, read_config_option("max_data_query_field_length"));
+			return substitute_snmp_query_data(null_out_substitutions(substitute_device_data($title, "|", "|", $device_id)), $device_id, $snmp_query_id, $snmp_index, read_config_option("max_data_query_field_length"), false);
 		}else{
 			return null_out_substitutions(substitute_device_data($title, "|", "|", $device_id));
 		}
@@ -142,9 +142,9 @@ function expand_title($device_id, $snmp_query_id, $snmp_index, $title) {
 	}
 }
 
-/* substitute_script_query_path - takes a string and substitutes all path variables contained in it
-   @param $path - the string to make path variable substitutions on
-   @returns - the original string with all of the variable substitutions made */
+/** substitute_script_query_path - takes a string and substitutes all path variables contained in it
+   @param string $path 	- the string to make path variable substitutions on
+   @return string 		- the original string with all of the variable substitutions made */
 function substitute_script_query_path($path) {
 	global $config;
 
@@ -154,12 +154,12 @@ function substitute_script_query_path($path) {
 	return $path;
 }
 
-/* substitute_device_data - takes a string and substitutes all device variables contained in it
-   @param $string - the string to make device variable substitutions on
-   @param $l_escape_string - the character used to escape each variable on the left side
-   @param $r_escape_string - the character used to escape each variable on the right side
-   @param $device_id - (int) the device ID to match
-   @returns - the original string with all of the variable substitutions made */
+/** substitute_device_data - takes a string and substitutes all device variables contained in it
+   @param string $string 			- the string to make device variable substitutions on
+   @param string $l_escape_string 	- the character used to escape each variable on the left side
+   @param string $r_escape_string 	- the character used to escape each variable on the right side
+   @param int $device_id 			- (int) the device ID to match
+   @return string 					- the original string with all of the variable substitutions made */
 function substitute_device_data($string, $l_escape_string, $r_escape_string, $device_id) {
 	if (!isset($_SESSION["sess_device_cache_array"][$device_id])) {
 		$device = db_fetch_row("select * from device where id=$device_id");
@@ -173,7 +173,7 @@ function substitute_device_data($string, $l_escape_string, $r_escape_string, $de
 
 	# substitute all given device fields and escape specific shell characters
 	foreach ($_SESSION["sess_device_cache_array"][$device_id] as $key => $value) {
-		$string = str_replace($l_escape_string . "device_" . $key . $r_escape_string, cacti_escapeshellarg($value), $string);
+		$string = str_replace($l_escape_string . "device_" . $key . $r_escape_string, cacti_escapeshellarg($value, $quote), $string);
 	}
 
 	$temp = api_plugin_hook_function('substitute_device_data', array('string' => $string, 'l_escape_string' => $l_escape_string, 'r_escape_string' => $r_escape_string, 'device_id' => $device_id));
@@ -182,14 +182,14 @@ function substitute_device_data($string, $l_escape_string, $r_escape_string, $de
 	return $string;
 }
 
-/* substitute_snmp_query_data - takes a string and substitutes all data query variables contained in it
-   @param $string - the original string that contains the data query variables
-   @param $device_id - (int) the device ID to match
-   @param $snmp_query_id - (int) the data query ID to match
-   @param $snmp_index - the data query index to match
-   @param $max_chars - the maximum number of characters to substitute
-   @returns - the original string with all of the variable substitutions made */
-function substitute_snmp_query_data($string, $device_id, $snmp_query_id, $snmp_index, $max_chars = 0) {
+/** substitute_snmp_query_data 	- takes a string and substitutes all data query variables contained in it
+   @param string $string 		- the original string that contains the data query variables
+   @param int $device_id 		- (int) the device ID to match
+   @param int $snmp_query_id 	- (int) the data query ID to match
+   @param int $snmp_index 		- the data query index to match
+   @param int $max_chars 		- the maximum number of characters to substitute
+   @return string 				- the original string with all of the variable substitutions made */
+function substitute_snmp_query_data($string, $device_id, $snmp_query_id, $snmp_index, $max_chars = 0, $quote=true) {
 	$snmp_cache_data = db_fetch_assoc("select field_name,field_value from device_snmp_cache where device_id=$device_id and snmp_query_id=$snmp_query_id and snmp_index='$snmp_index'");
 
 	if (sizeof($snmp_cache_data) > 0) {
@@ -199,7 +199,7 @@ function substitute_snmp_query_data($string, $device_id, $snmp_query_id, $snmp_i
 					$data["field_value"] = substr($data["field_value"], 0, $max_chars);
 				}
 
-				$string = stri_replace("|query_" . $data["field_name"] . "|", cacti_escapeshellarg($data["field_value"]), $string);
+				$string = stri_replace("|query_" . $data["field_name"] . "|", cacti_escapeshellarg($data["field_value"], $quote), $string);
 			}
 		}
 	}
