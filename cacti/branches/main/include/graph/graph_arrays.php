@@ -25,15 +25,15 @@
 require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
 
 $graph_actions = array(
-	GRAPH_ACTION_DELETE => __("Delete"),
-	GRAPH_ACTION_CHANGE_TEMPLATE => __("Change Graph Template"),
-	GRAPH_ACTION_DUPLICATE => __("Duplicate"),
-	GRAPH_ACTION_CONVERT_TO_TEMPLATE => __("Convert to Graph Template"),
-	GRAPH_ACTION_CHANGE_HOST => __("Change Host"),
-	GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES => __("Reapply Suggested Names"),
-	GRAPH_ACTION_RESIZE => __("Resize Graphs"),
-	GRAPH_ACTION_ENABLE_EXPORT => __("Enable Graph Export"),
-	GRAPH_ACTION_DISABLE_EXPORT => __("Disable Graph Export"),
+	GRAPH_ACTION_DELETE 					=> __("Delete"),
+	GRAPH_ACTION_CHANGE_TEMPLATE 			=> __("Change Graph Template"),
+	GRAPH_ACTION_DUPLICATE 					=> __("Duplicate"),
+	GRAPH_ACTION_CONVERT_TO_TEMPLATE 		=> __("Convert to Graph Template"),
+	GRAPH_ACTION_CHANGE_HOST 				=> __("Change Host"),
+	GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES 	=> __("Reapply Suggested Names"),
+	GRAPH_ACTION_RESIZE 					=> __("Resize Graphs"),
+	GRAPH_ACTION_ENABLE_EXPORT 				=> __("Enable Graph Export"),
+	GRAPH_ACTION_DISABLE_EXPORT 			=> __("Disable Graph Export"),
 	);
 
 $rrd_font_render_modes = array(
@@ -66,7 +66,14 @@ $rrd_legend_direction = array(
 	RRD_LEGEND_DIR_BOTTOMUP	=> __("Bottom -> Up"),
 );
 
-$graph_item_types = array(
+$graph_item_gprint_types = array(
+	GRAPH_ITEM_TYPE_GPRINT_AVERAGE	=> "GPRINT:AVERAGE",
+	GRAPH_ITEM_TYPE_GPRINT_LAST		=> "GPRINT:LAST",
+	GRAPH_ITEM_TYPE_GPRINT_MAX		=> "GPRINT:MAX",
+	GRAPH_ITEM_TYPE_GPRINT_MIN		=> "GPRINT:MIN",
+	);
+
+$graph_item_types1 = array(
 	GRAPH_ITEM_TYPE_COMMENT			=> "COMMENT",
 	GRAPH_ITEM_TYPE_HRULE			=> "HRULE",
 	GRAPH_ITEM_TYPE_VRULE			=> "VRULE",
@@ -75,13 +82,16 @@ $graph_item_types = array(
 	GRAPH_ITEM_TYPE_LINE3			=> "LINE3",
 	GRAPH_ITEM_TYPE_AREA			=> "AREA",
 	GRAPH_ITEM_TYPE_AREASTACK		=> "AREA:STACK",
-	GRAPH_ITEM_TYPE_GPRINT			=> "GPRINT",
+	);
+$graph_item_types2 = array(
 	GRAPH_ITEM_TYPE_LINESTACK		=> "LINE:STACK",
 	GRAPH_ITEM_TYPE_TICK			=> "TICK",
 	GRAPH_ITEM_TYPE_TEXTALIGN		=> "TEXTALIGN",
 	GRAPH_ITEM_TYPE_LEGEND			=> __("Legend"),
 	GRAPH_ITEM_TYPE_CUSTOM_LEGEND	=> __("Custom Legend"),
 	);
+
+$graph_item_types = $graph_item_types1 + $graph_item_gprint_types + $graph_item_types2;
 
 $image_types = array(
 	IMAGE_TYPE_PNG 	=> "PNG",

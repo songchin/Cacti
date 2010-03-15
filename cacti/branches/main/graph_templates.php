@@ -365,7 +365,7 @@ function form_actions() {
 	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
-function item() {
+function graph_template_item() {
 	global $colors;
 	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
@@ -454,11 +454,11 @@ function template_edit() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='template_edit'>\n";
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='graph_template_edit'>\n";
 
 	/* graph item list goes here */
 	if (!empty($_GET["id"])) {
-		item();
+		graph_template_item();
 	}
 
 	if (!empty($_GET["id"])) {
@@ -471,7 +471,7 @@ function template_edit() {
 
 
 	# the template header
-	html_start_box("<strong>" . __("Template") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
+	html_start_box("<strong>" . __("Graph Template") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'header_template');

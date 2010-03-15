@@ -71,7 +71,10 @@ function graph_interdependencies(graph_type) {
 		case <?php print GRAPH_ITEM_TYPE_LINESTACK;?>:
 			$('.not_RRD_TYPE_LINESTACK').each(function() { $(this).attr('disabled', 'disabled'); });
 			break;
-		case <?php print GRAPH_ITEM_TYPE_GPRINT;?>:
+		case <?php print GRAPH_ITEM_TYPE_GPRINT_AVERAGE;?>:
+		case <?php print GRAPH_ITEM_TYPE_GPRINT_LAST;?>:
+		case <?php print GRAPH_ITEM_TYPE_GPRINT_MAX;?>:
+		case <?php print GRAPH_ITEM_TYPE_GPRINT_MIN;?>:
 			$('.not_RRD_TYPE_GPRINT').each(function() { $(this).attr('disabled', 'disabled'); });
 			break;
 		case <?php print GRAPH_ITEM_TYPE_TICK;?>:

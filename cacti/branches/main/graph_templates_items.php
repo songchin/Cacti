@@ -86,22 +86,22 @@ function form_save() {
 			$items = array(
 				0 => array(
 					"color_id" => "0",
-					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
-					"consolidation_function_id" => RRA_CF_TYPE_LAST,
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT_LAST,
+					"consolidation_function_id" => RRA_CF_TYPE_AVERAGE,
 					"text_format" => __("Current:"),
 					"hard_return" => ""
 					),
 				1 => array(
 					"color_id" => "0",
-					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT_AVERAGE,
 					"consolidation_function_id" => RRA_CF_TYPE_AVERAGE,
 					"text_format" => __("Average:"),
 					"hard_return" => ""
 					),
 				2 => array(
 					"color_id" => "0",
-					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
-					"consolidation_function_id" => RRA_CF_TYPE_MAX,
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT_MAX,
+					"consolidation_function_id" => RRA_CF_TYPE_AVERAGE,
 					"text_format" => __("Maximum:"),
 					"hard_return" => CHECKED
 					));
@@ -112,7 +112,7 @@ function form_save() {
 			$items = array(
 				0 => array(
 					"color_id" => "0",
-					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"graph_type_id" => read_config_option("cl1_gt_id"),
 					"consolidation_function_id" => read_config_option("cl1_cf_id"),
 					"vdef_id" => read_config_option("cl1_vdef_id"),
 					"text_format" => read_config_option("cl1_text_format"),
@@ -120,7 +120,7 @@ function form_save() {
 					),
 				1 => array(
 					"color_id" => "0",
-					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"graph_type_id" => read_config_option("cl2_gt_id"),
 					"consolidation_function_id" => read_config_option("cl2_cf_id"),
 					"vdef_id" => read_config_option("cl2_vdef_id"),
 					"text_format" => read_config_option("cl2_text_format"),
@@ -128,7 +128,7 @@ function form_save() {
 					),
 				2 => array(
 					"color_id" => "0",
-					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"graph_type_id" => read_config_option("cl3_gt_id"),
 					"consolidation_function_id" => read_config_option("cl3_cf_id"),
 					"vdef_id" => read_config_option("cl3_vdef_id"),
 					"text_format" => read_config_option("cl3_text_format"),
@@ -136,7 +136,7 @@ function form_save() {
 					),
 				3 => array(
 					"color_id" => "0",
-					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"graph_type_id" => read_config_option("cl4_gt_id"),
 					"consolidation_function_id" => read_config_option("cl4_cf_id"),
 					"vdef_id" => read_config_option("cl4_vdef_id"),
 					"text_format" => read_config_option("cl4_text_format"),
@@ -300,7 +300,10 @@ function item_movedown() {
 	$graph_type_id = db_fetch_cell("select graph_type_id from graph_templates_item where id=" . get_request_var("id"));
 	if ((!empty($next_id)) && (isset($arr{$_GET["id"]}))) {
 		move_graph_group(get_request_var("id"), $arr, $next_id, "next");
-	}elseif ($graph_type_id == GRAPH_ITEM_TYPE_GPRINT ||
+	}elseif ($graph_type_id == GRAPH_ITEM_TYPE_GPRINT_AVERAGE ||
+			$graph_type_id == GRAPH_ITEM_TYPE_GPRINT_LAST ||
+			$graph_type_id == GRAPH_ITEM_TYPE_GPRINT_MAX ||
+			$graph_type_id == GRAPH_ITEM_TYPE_GPRINT_MIN ||
 			$graph_type_id == GRAPH_ITEM_TYPE_HRULE ||
 			$graph_type_id == GRAPH_ITEM_TYPE_VRULE ||
 			$graph_type_id == GRAPH_ITEM_TYPE_COMMENT) {
@@ -328,7 +331,10 @@ function item_moveup() {
 	$graph_type_id = db_fetch_cell("select graph_type_id from graph_templates_item where id=" . get_request_var("id"));
 	if ((!empty($next_id)) && (isset($arr{$_GET["id"]}))) {
 		move_graph_group(get_request_var("id"), $arr, $next_id, "previous");
-	}elseif ($graph_type_id == GRAPH_ITEM_TYPE_GPRINT ||
+	}elseif ($graph_type_id == GRAPH_ITEM_TYPE_GPRINT_AVERAGE ||
+			$graph_type_id == GRAPH_ITEM_TYPE_GPRINT_LAST ||
+			$graph_type_id == GRAPH_ITEM_TYPE_GPRINT_MAX ||
+			$graph_type_id == GRAPH_ITEM_TYPE_GPRINT_MIN ||
 			$graph_type_id == GRAPH_ITEM_TYPE_HRULE ||
 			$graph_type_id == GRAPH_ITEM_TYPE_VRULE ||
 			$graph_type_id == GRAPH_ITEM_TYPE_COMMENT) {

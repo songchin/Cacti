@@ -214,7 +214,10 @@ function input_edit() {
 				$any_selected_item = $item["graph_templates_item_id"];
 			}
 
-			if ($item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) {
+			if ($item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_AVERAGE ||
+				$item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_LAST ||
+				$item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_MAX ||
+				$item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_MIN) {
 				$start_bold = "";
 				$end_bold = "";
 			}else{

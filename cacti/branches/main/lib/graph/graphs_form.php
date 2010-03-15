@@ -51,7 +51,7 @@ function graph_form_save() {
 		/* ==================================================== */
 
 		$save1["id"] = form_input_validate($_POST["local_graph_id"], "local_graph_id", "^[0-9]+$", false, 3);
-		$save1["device_id"] = form_input_validate($_POST["device_id"], "device_id", "^[0-9]+$", false, 3);
+		$save1["device_id"] = form_input_validate($_POST["device_id"], "device_id", "^[-0-9]+$", false, 3);
 		$save1["graph_template_id"] = form_input_validate($_POST["graph_template_id"], "graph_template_id", "^[0-9]+$", false, 3);
 
 		$save2["id"] = form_input_validate($_POST["graph_template_graph_id"], "graph_template_graph_id", "^[0-9]+$", false, 3);
@@ -857,6 +857,8 @@ function graph_edit() {
 			$use_graph_template = false;
 		}
 	}else{
+		$graphs = array();
+		$graphs_template = array();
 		$header_label = __("[new]");
 		$use_graph_template = false;
 	}
@@ -929,8 +931,8 @@ function graph_edit() {
 			"callback_function" => "./lib/ajax/get_graph_templates.php",
 			"friendly_name" => __("Selected Graph Template"),
 			"description" => __("Choose a graph template to apply to this graph.  Please note that graph data may be lost if you change the graph template after one is already applied."),
-			"id" => (isset($graphs) ? $graphs["graph_template_id"] : "0"),
-			"name" => db_fetch_cell("SELECT name FROM graph_templates WHERE id=" . (isset($graphs) ? $graphs["graph_template_id"] : "0"))
+			"id" => (isset($graphs["graph_template_id"]) ? $graphs["graph_template_id"] : "0"),
+			"name" => db_fetch_cell("SELECT name FROM graph_templates WHERE id=" . (isset($graphs["graph_template_id"]) ? $graphs["graph_template_id"] : "0"))
 			),
 		"device_id" => array(
 			"method" => "autocomplete",
@@ -942,19 +944,19 @@ function graph_edit() {
 			),
 		"graph_template_graph_id" => array(
 			"method" => "hidden",
-			"value" => (isset($graphs) ? $graphs["id"] : "0")
+			"value" => (isset($graphs["id"]) ? $graphs["id"] : "0")
 			),
 		"local_graph_id" => array(
 			"method" => "hidden",
-			"value" => (isset($graphs) ? $graphs["local_graph_id"] : "0")
+			"value" => (isset($graphs["local_graph_id"]) ? $graphs["local_graph_id"] : "0")
 			),
 		"local_graph_template_graph_id" => array(
 			"method" => "hidden",
-			"value" => (isset($graphs) ? $graphs["local_graph_template_graph_id"] : "0")
+			"value" => (isset($graphs["local_graph_template_graph_id"]) ? $graphs["local_graph_template_graph_id"] : "0")
 			),
 		"_graph_template_id" => array(
 			"method" => "hidden",
-			"value" => (isset($graphs) ? $graphs["graph_template_id"] : "0")
+			"value" => (isset($graphs["graph_template_id"]) ? $graphs["graph_template_id"] : "0")
 			),
 		"_device_id" => array(
 			"method" => "hidden",
@@ -985,8 +987,8 @@ function graph_edit() {
 	}
 
 	/* graph item list goes here */
-	if ((!empty($_GET["id"])) && (empty($graphs["graph_template_id"]))) {
-		item();
+	if ((!empty($_GET["id"])) && (!array_key_exists($graphs, "graph_template_id"))) {
+		graph_template_item();
 	}
 
 	if (!empty($_GET["id"])) {
