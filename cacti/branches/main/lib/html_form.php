@@ -1204,13 +1204,13 @@ function draw_template_edit_form ($table_id, $edit_struct, $edit_data, $use_temp
 	$form_array = array();
 
 	while (list($field_name, $field_array) = each($edit_struct)) {
-		if ($field_array["flags"] == "NOTEMPLATE" && !$use_template) {
+		if (isset($field_array["flags"]) && $field_array["flags"] == "NOTEMPLATE" && !$use_template) {
 			CONTINUE;
 		}
 		$form_array += array($field_name => $edit_struct[$field_name]);
 
 		$form_array[$field_name]["value"] = (isset($edit_data[$field_name]) ? $edit_data[$field_name] : "");
-		$form_array[$field_name]["form_id"] = (isset($edit_data) ? $edit_data["id"] : "0");
+		$form_array[$field_name]["form_id"] = (isset($edit_data["id"]) ? $edit_data["id"] : "0");
 
 		if (!(($use_template === false) || ($edit_data{"t_" . $field_name} == CHECKED))) {
 			$form_array[$field_name]["method"] = "template_" . $form_array[$field_name]["method"];

@@ -142,3 +142,18 @@ $struct_data_source_item = array(
 		"flags" => "NOTEMPLATE"
 		),
 	);
+
+$fields_data_source = array(
+		"data_template_id" => array(
+			"method" => "autocomplete",
+			"callback_function" => "./lib/ajax/get_data_templates.php",
+			"friendly_name" => __("Selected Data Source Template"),
+			"description" => __("The name given to this data template."),
+			),
+		"device_id" => array(
+			"method" => "autocomplete",
+			"callback_function" => "./lib/ajax/get_device_detailed.php",
+			"friendly_name" => __("Host"),
+			"description" => __("Choose the device that this graph belongs to."),
+			),
+		);

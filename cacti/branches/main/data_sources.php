@@ -50,7 +50,7 @@ switch (get_request_var_request("action")) {
 		data_source_rrd_add();
 
 		break;
-	case 'rrd_remove':
+	case 'item_remove':
 		data_source_rrd_remove();
 
 		break;

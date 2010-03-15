@@ -33,3 +33,9 @@ function &data_source_item_form_list() {
 
 	return $struct_data_source_item;
 }
+
+function &fields_data_source_form_list() {
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_forms.php");
+
+	return $fields_data_source;
+}

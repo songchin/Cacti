@@ -55,7 +55,7 @@ switch (get_request_var_request("action")) {
  * data_template_item_save	- save data to table data_template_rrd
  */
 function data_template_item_save() {
-	#require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 
 	if (isset($_POST["save_component_item"])) {
 		/* ================= input validation ================= */
@@ -155,7 +155,7 @@ function data_template_item_edit() {
 
 
 	# the template header
-	html_start_box("<strong>" . __("Data Template Items") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
+	html_start_box("<strong>" . __("Data Template Item") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_data_template_item_edit');
@@ -176,34 +176,31 @@ function data_template_item_edit() {
 		$form_array += array($field_name => $struct_data_source_item[$field_name]);
 
 		$form_array[$field_name]["description"] = "";
-		$form_array[$field_name]["value"] = (isset($template_item) ? $template_item[$field_name] : "");
+		$form_array[$field_name]["value"] = (isset($template_item[$field_name]) ? $template_item[$field_name] : "");
 		$form_array[$field_name]["sub_checkbox"] = array(
 			"name" => "t_" . $field_name,
 			"friendly_name" => "Use Per-Data Source Value (Ignore this Value)",
-			"value" => (isset($template_item) ? $template_item{"t_" . $field_name} : "")
+			"value" => (isset($template_item[$field_name]) ? $template_item{"t_" . $field_name} : "")
 			);
 	}
 
 	draw_edit_form(
 		array(
 			"config" => array(),
-			"fields" => $form_array + array(
-				"data_template_rrd_id" => array(
-					"method" => "hidden",
-					"value" => (isset($template_item) ? $template_item["id"] : "0")
-				)
-			)
+			"fields" => $form_array
 			)
 		);
 
 	html_end_box();
 
-	form_hidden_box("data_template_item_id", (isset($template_item) ? $template_item["id"] : "0"), "");
-	form_hidden_box("data_template_id", $_GET["data_template_id"], "0");
+	form_hidden_box("data_template_rrd_id", (isset($template_item["id"]) ? $template_item["id"] : "0"), "");
+	form_hidden_box("data_template_item_id", (isset($template_item["id"]) ? $template_item["id"] : "0"), "");
+	form_hidden_box("data_template_id", (isset($_GET["data_template_id"]) ? $_GET["data_template_id"] : "0"), "");
 	form_hidden_box("save_component_item", "1", "");
 	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
 
-	form_save_button("data_templates.php?action=template_edit&id=" . $_GET["id"]);
+	#form_save_button("data_templates.php?action=template_edit&id=" . $_GET["id"]);
+	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
 
 	include_once(CACTI_BASE_PATH . "/access/js/data_source_item.js");
 	include_once(CACTI_BASE_PATH . "/access/js/field_description_hover.js");
