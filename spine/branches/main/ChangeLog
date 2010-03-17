@@ -1,6 +1,7 @@
 ﻿The Cacti Group | spine
 
 SVN
+-bug:0001653: Transient ICMP Socket create failures causing spine to die
 -feature:0001550: Record the polling time for each host to optimize polling times
 -feature: Implement new file based datetime format in the spine log function
 
