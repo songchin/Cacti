@@ -64,6 +64,7 @@ Cacti CHANGELOG
 -bug: When creating new graphs without a data source, print error to user instead of throwing php error
 -bug: Browser query string does not contain arguments
 -bug: inject_form_variables does not operate if more than 1 variable needs replacing
+-bug: GRPINT now supporting AVERAGE, LAST, MAX and MIN correctly (MAX of MAX, MAX of AVERAGEs now possible)
 -documentation: Remove sgml documentation.  See http://docs.cacti.net for Documentation
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
