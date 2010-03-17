@@ -471,7 +471,7 @@ function upgrade_to_0_8_8() {
 	}
 
 	/* make the poller's ip address varchar() */
-	db_install_execute("0.8.8", "ALTER TABLE poller CHANGE COLUMN ip_address varchar(30) not null default ''");
+	db_install_execute("0.8.8", "ALTER TABLE poller CHANGE COLUMN ip_address ip_address varchar(30) not null default ''");
 
 	/* insert the default poller into the database */
 	db_install_execute("0.8.8", "INSERT INTO `poller` VALUES (1,'','Main Poller','localhost','127.0.0.1','0000-00-00 00:00:00');");
@@ -485,22 +485,30 @@ function upgrade_to_0_8_8() {
 	/* rename host -> device for tables and columns
 	 * we have some updates to those tables in this file already
 	 * so please take care not to change sequence */
-	db_install_execute("0.8.8", "ALTER TABLE data_local DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
-	db_install_execute("0.8.8", "ALTER TABLE graph_local DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
-	db_install_execute("0.8.8", "ALTER TABLE graph_tree_items DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` ), CHANGE `host_grouping_type` `device_grouping_type` TINYINT(3) UNSIGNED NOT NULL DEFAULT 1");
+	db_install_execute("0.8.8", "ALTER TABLE data_local DROP INDEX `host_id`");
+	db_install_execute("0.8.8", "ALTER TABLE data_local CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE graph_local DROP INDEX `host_id`");
+	db_install_execute("0.8.8", "ALTER TABLE graph_local CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE graph_tree_items DROP INDEX `host_id`");
+	db_install_execute("0.8.8", "ALTER TABLE graph_tree_items CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` ), CHANGE `host_grouping_type` `device_grouping_type` TINYINT(3) UNSIGNED NOT NULL DEFAULT 1");
 	db_install_execute("0.8.8", "RENAME TABLE `host`  TO `device`");
 	db_install_execute("0.8.8", "RENAME TABLE `host_graph`  TO `device_graph`");
 	db_install_execute("0.8.8", "ALTER TABLE device_graph CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL");
 	db_install_execute("0.8.8", "RENAME TABLE `host_snmp_cache`  TO `device_snmp_cache`");
-	db_install_execute("0.8.8", "ALTER TABLE device_snmp_cache DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE device_snmp_cache DROP INDEX `host_id`");
+	db_install_execute("0.8.8", "ALTER TABLE device_snmp_cache CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
 	db_install_execute("0.8.8", "RENAME TABLE `host_snmp_query`  TO `device_snmp_query`");
-	db_install_execute("0.8.8", "ALTER TABLE device_snmp_query DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE device_snmp_query DROP INDEX `host_id`");
+	db_install_execute("0.8.8", "ALTER TABLE device_snmp_query CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
 	db_install_execute("0.8.8", "RENAME TABLE `host_template`  TO `device_template`");
 	db_install_execute("0.8.8", "RENAME TABLE `host_template_graph`  TO `device_template_graph`");
-	db_install_execute("0.8.8", "ALTER TABLE device_template_graph DROP INDEX `host_template_id`, CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_template_id` ( `device_template_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE device_template_graph DROP INDEX `host_template_id`");
+	db_install_execute("0.8.8", "ALTER TABLE device_template_graph CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_template_id` ( `device_template_id` )");
 	db_install_execute("0.8.8", "RENAME TABLE `host_template_snmp_query`  TO `device_template_snmp_query`");
-	db_install_execute("0.8.8", "ALTER TABLE device_template_snmp_query DROP INDEX `host_template_id`, CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_template_id` ( `device_template_id` )");
-	db_install_execute("0.8.8", "ALTER TABLE poller_item DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE device_template_snmp_query DROP INDEX `host_template_id`");
+	db_install_execute("0.8.8", "ALTER TABLE device_template_snmp_query CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_template_id` ( `device_template_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE poller_item DROP INDEX `host_id`");
+	db_install_execute("0.8.8", "ALTER TABLE poller_item CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
 	db_install_execute("0.8.8", "ALTER TABLE poller_reindex CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE user_auth CHANGE `policy_hosts` `policy_devices` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1");
 
@@ -694,5 +702,110 @@ function upgrade_to_0_8_8() {
 		db_install_execute("0.8.8", "INSERT INTO `cdef_items` VALUES(DEFAULT, '8bcd193850b37953ffe940fdf2a26aa6', $cdef_id, 19, 1, '29')");
 	}
 
+	/* adjust GPRINTs
+	 * here's the deal
+	 * All GPRINTs following an CF=AVERAGE/MAX/MIN/LAST non-GPRINT have to be changed to CF=AVERAGE/MAX/MIN/LAST
+	 * (this is called the "parent" CF)
+	 * the graph_type_id has to be changed as well according to:
+	 * old CF | old GPRINT | new CF | new GPRINT
+	 *   AVG  |   GPRINT   | parent | GRPINT_AVG
+	 *   MAX  |   GPRINT   | parent | GRPINT_MAX
+	 *   MIN  |   GPRINT   | parent | GRPINT_MIN
+	 *   LAST |   GPRINT   | parent | GRPINT_LAST
+	 */
+	# first, handle templated graphs
+	$graph_templates = db_fetch_assoc("SELECT id FROM graph_templates ORDER BY id ASC");
+	if (sizeof($graph_templates)) {
+		foreach ($graph_templates as $template) {
+			# doit
+			$graph_template_items = db_fetch_assoc("SELECT * " .
+								"FROM graph_templates_item " .
+								"WHERE local_graph_id = 0 " .
+								"AND graph_template_id = " . $template["id"] .  " " .
+								"ORDER BY graph_template_id ASC, sequence ASC");
+#cacti_log("items: ".serialize($graph_template_items), true, "TEST");
+			update_graph_items($graph_template_items);
+		}
+	}
+	# now handle non-templated graphs
+	$graphs = db_fetch_assoc("SELECT id FROM graph_local WHERE graph_template_id = 0 ORDER BY id ASC");
+	if (sizeof($graphs)) {
+		foreach ($graphs as $graph) {
+			# doit
+			$graph_items = db_fetch_assoc("SELECT * " .
+								"FROM graph_templates_item " .
+								"WHERE local_graph_id = " . $graph["id"] . " " .
+								"AND graph_template_id = 0 " .
+								"ORDER BY local_graph_id ASC, sequence ASC");
+#cacti_log("items: ".serialize($graph_items), true, "TEST");
+			update_graph_items($graph_items);
+		}
+	}
+
 }
 
+function update_graph_items($items) {
+	require_once("../include/graph/graph_constants.php");
+	require_once("../include/presets/preset_rra_constants.php");
+	require_once("../lib/template.php");
+
+	if (sizeof($items)) {
+		foreach ($items as $key => $graph_item) {
+			/* mimic the old behavior: LINE[123], AREA and STACK items use the CF specified in the graph item */
+			if (($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1) ||
+				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2) ||
+				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) ||
+				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA)  ||
+				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREASTACK)) {
+				#cacti_log("parent item id: ".$graph_item["id"]."/type ".$graph_item["graph_type_id"]."/cf ".$graph_item["consolidation_function_id"], true, "TEST");
+				$graph_cf = $graph_item["consolidation_function_id"];
+				/* remember the last CF for this data source for use with GPRINT
+				 * if e.g. an AREA/AVERAGE and a LINE/MAX is used
+				 * we will have AVERAGE first and then MAX, depending on GPRINT sequence */
+				$last_graph_cf{$graph_item["task_item_id"]} = $graph_cf;
+				/* remember this for second foreach loop */
+				$items[$key]["cf_reference"] = $graph_cf;
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_AVERAGE) { # the old GRAPH_ITEM_TYPE_GPRINT!
+				#cacti_log("GPRINT item id: ".$graph_item["id"]."/type ".$items[$key]["graph_type_id"]."/cf ".$items[$key]["consolidation_function_id"], true, "TEST");
+				/* ATTENTION!
+				* the "CF" given on graph_item edit screen for GPRINT is indeed NOT a real "CF",
+				* but an aggregation function
+				* see "man rrdgraph_data" for the correct VDEF based notation
+				* so our task now is to "guess" the very graph_item, this GPRINT is related to
+				* and to use that graph_item's CF */
+				if (isset($last_graph_cf{$graph_item["task_item_id"]})) {
+					$graph_cf = $last_graph_cf{$graph_item["task_item_id"]};
+					/* remember this for second foreach loop */
+					$items[$key]["cf_reference"] = $graph_cf;
+				} else {
+					$graph_cf = generate_graph_best_cf($graph_item["local_data_id"], $graph_item["consolidation_function_id"]);
+					/* remember this for second foreach loop */
+					$items[$key]["cf_reference"] = $graph_cf;
+				}
+
+				switch($graph_item["consolidation_function_id"]) {
+					case RRA_CF_TYPE_AVERAGE:
+						$items[$key]["graph_type_id"] = GRAPH_ITEM_TYPE_GPRINT_AVERAGE;
+						break;
+					case RRA_CF_TYPE_MIN:
+						$items[$key]["graph_type_id"] = GRAPH_ITEM_TYPE_GPRINT_MIN;
+						break;
+					case RRA_CF_TYPE_MAX:
+						$items[$key]["graph_type_id"] = GRAPH_ITEM_TYPE_GPRINT_MAX;
+						break;
+					case RRA_CF_TYPE_LAST:
+						$items[$key]["graph_type_id"] = GRAPH_ITEM_TYPE_GPRINT_LAST;
+						break;
+				}
+
+				#cacti_log("update item id: ".$graph_item["id"]."/type ".$items[$key]["graph_type_id"]."/cf ".$items[$key]["cf_reference"], true, "TEST");
+				db_install_execute("0.8.8", "UPDATE graph_templates_item SET `consolidation_function_id`=".$items[$key]["cf_reference"].", `graph_type_id`=".$items[$key]["graph_type_id"]." WHERE `id`=".$graph_item["id"]);
+				if ($graph_item["graph_template_id"] != 0) {
+					db_execute("UPDATE graph_templates_item SET `consolidation_function_id`=".$items[$key]["cf_reference"].", `graph_type_id`=".$items[$key]["graph_type_id"]." WHERE `local_graph_template_item_id`=".$graph_item["id"]);
+					#push_out_graph_item($graph_item["id"]); # this has a lot of overhead
+				}
+			}
+		}
+
+	}
+}
