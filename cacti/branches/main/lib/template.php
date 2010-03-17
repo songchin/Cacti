@@ -22,10 +22,10 @@
  +-------------------------------------------------------------------------+
 */
 
-/* push_out_data_source_custom_data - pushes out the "custom data" associated with a data
+/** push_out_data_source_custom_data - pushes out the "custom data" associated with a data
 	template to all of its children. this includes all fields inhereted from the device
 	and the data template
-   @param $data_template_id - the id of the data template to push out values for */
+   @param int $data_template_id - the id of the data template to push out values for */
 function push_out_data_source_custom_data($data_template_id) {
 	/* get data_input_id */
 	$data_template = db_fetch_row("SELECT
@@ -109,9 +109,9 @@ function push_out_data_source_custom_data($data_template_id) {
 	}
 }
 
-/* push_out_data_source_item - pushes out templated data template item fields to all matching
+/** push_out_data_source_item - pushes out templated data template item fields to all matching
 	children
-   @param $data_template_rrd_id - the id of the data template item to push out values for */
+   @param int $data_template_rrd_id - the id of the data template item to push out values for */
 function push_out_data_source_item($data_template_rrd_id) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
@@ -132,8 +132,8 @@ function push_out_data_source_item($data_template_rrd_id) {
 	}
 }
 
-/* push_out_data_source - pushes out templated data template fields to all matching children
-   @param $data_template_data_id - the id of the data template to push out values for */
+/** push_out_data_source - pushes out templated data template fields to all matching children
+   @param int $data_template_data_id - the id of the data template to push out values for */
 function push_out_data_source($data_template_data_id) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
@@ -159,11 +159,10 @@ function push_out_data_source($data_template_data_id) {
 	}
 }
 
-/* change_data_template - changes the data template for a particular data source to
+/** change_data_template - changes the data template for a particular data source to
 	$data_template_id
-   @param $local_data_id - the id of the data source to change the data template for
-   @param $data_template_id - id the of the data template to change to. specify '0' for no
-	data template */
+   @param int $local_data_id 	- the id of the data source to change the data template for
+   @param int $data_template_id - id the of the data template to change to. specify '0' for no data template */
 function change_data_template($local_data_id, $data_template_id) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
@@ -267,8 +266,8 @@ function change_data_template($local_data_id, $data_template_id) {
 	}
 }
 
-/* push_out_graph - pushes out templated graph template fields to all matching children
-   @param $graph_template_graph_id - the id of the graph template to push out values for */
+/** push_out_graph - pushes out templated graph template fields to all matching children
+   @param int $graph_template_graph_id - the id of the graph template to push out values for */
 function push_out_graph($graph_template_graph_id) {
 	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
@@ -294,13 +293,13 @@ function push_out_graph($graph_template_graph_id) {
 	}
 }
 
-/* push_out_graph_input - pushes out the value of a graph input to a single child item. this function
+/** push_out_graph_input - pushes out the value of a graph input to a single child item. this function
 	differs from other push_out_* functions in that it does not push out the value of this element to
 	all attached children. instead, it obtains the current value of the graph input based on other
 	graph items and pushes out the "active" value
-   @param $graph_template_input_id - the id of the graph input to push out values for
-   @param $graph_template_item_id - the id the graph template item to push out
-   @param $session_members - when looking for the "active" value of the graph input, ignore these graph
+   @param int $graph_template_input_id 	- the id of the graph input to push out values for
+   @param int $graph_template_item_id 	- the id the graph template item to push out
+   @param array $session_members 		- when looking for the "active" value of the graph input, ignore these graph
 	template items. typically you want to ignore all items that were just selected and have yet to be
 	saved to the database. this is because these items most likely contain incorrect data */
 function push_out_graph_input($graph_template_input_id, $graph_template_item_id, $session_members) {
@@ -345,10 +344,10 @@ function push_out_graph_input($graph_template_input_id, $graph_template_item_id,
 	}
 }
 
-/* push_out_graph_item - pushes out templated graph template item fields to all matching
+/** push_out_graph_item - pushes out templated graph template item fields to all matching
 	children. if the graph template item is part of a graph input, the field will not be
 	pushed out
-   @param $graph_template_item_id - the id of the graph template item to push out values for */
+   @param int $graph_template_item_id - the id of the graph template item to push out values for */
 function push_out_graph_item($graph_template_item_id) {
 	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
@@ -394,12 +393,11 @@ function push_out_graph_item($graph_template_item_id) {
 	}
 }
 
-/* change_graph_template - changes the graph template for a particular graph to
+/** change_graph_template - changes the graph template for a particular graph to
 	$graph_template_id
-   @param $local_graph_id - the id of the graph to change the graph template for
-   @param $graph_template_id - id the of the graph template to change to. specify '0' for no
-	graph template
-   @param $intrusive - (true) if the target graph template has more or less graph items than
+   @param int $local_graph_id 		- the id of the graph to change the graph template for
+   @param int $graph_template_id 	- id the of the graph template to change to. specify '0' for no graph template
+   @param bool $intrusive 			- if the target graph template has more or less graph items than
 	the current graph, remove or add the items from the current graph to make them equal.
 	(false) leave the graph item count alone */
 function change_graph_template($local_graph_id, $graph_template_id, $intrusive) {
@@ -512,9 +510,9 @@ function change_graph_template($local_graph_id, $graph_template_id, $intrusive) 
 	return true;
 }
 
-/* graph_to_graph_template - converts a graph to a graph template
-   @param $local_graph_id - the id of the graph to be converted
-   @param $graph_title - the graph title to use for the new graph template. the variable
+/** graph_to_graph_template - converts a graph to a graph template
+   @param int $local_graph_id - the id of the graph to be converted
+   @param string $graph_title - the graph title to use for the new graph template. the variable
 	<graph_title> will be substituted for the current graph title */
 function graph_to_graph_template($local_graph_id, $graph_title) {
 	/* create a new graph template entry */
@@ -536,9 +534,9 @@ function graph_to_graph_template($local_graph_id, $graph_title) {
 	db_execute("delete from graph_tree_items where local_graph_id=$local_graph_id");
 }
 
-/* data_source_to_data_template - converts a data source to a data template
-   @param $local_data_id - the id of the data source to be converted
-   @param $data_source_title - the data source title to use for the new data template. the variable
+/** data_source_to_data_template - converts a data source to a data template
+   @param int $local_data_id 		- the id of the data source to be converted
+   @param string $data_source_title - the data source title to use for the new data template. the variable
 	<ds_title> will be substituted for the current data source title */
 function data_source_to_data_template($local_data_id, $data_source_title) {
 	/* create a new graph template entry */
@@ -560,18 +558,17 @@ function data_source_to_data_template($local_data_id, $data_source_title) {
 	db_execute("delete from poller_item where local_data_id=$local_data_id");
 }
 
-/* create_complete_graph_from_template - creates a graph and all necessary data sources based on a
+/** create_complete_graph_from_template - creates a graph and all necessary data sources based on a
 	graph template
-   @param $graph_template_id - the id of the graph template that will be used to create the new
-	graph
-   @param $device_id - the id of the device to associate the new graph and data sources with
-   @param $snmp_query_array - if the new data sources are to be based on a data query, specify the
+   @param int $graph_template_id 			- the id of the graph template that will be used to create the new	graph
+   @param int $device_id 					- the id of the device to associate the new graph and data sources with
+   @param array $snmp_query_array 			- if the new data sources are to be based on a data query, specify the
 	necessary data query information here. it must contain the following information:
 	  $snmp_query_array["snmp_query_id"]
 	  $snmp_query_array["snmp_index_on"]
 	  $snmp_query_array["snmp_query_graph_id"]
 	  $snmp_query_array["snmp_index"]
-   @param $suggested_values_array - any additional information to be included in the new graphs or
+   @param array $suggested_values_array 	- any additional information to be included in the new graphs or
 	data sources must be included in the array. data is to be included in the following format:
 	  $values["cg"][graph_template_id]["graph_template"][field_name] = $value  // graph template
 	  $values["cg"][graph_template_id]["graph_template_item"][graph_template_item_id][field_name] = $value  // graph template item
