@@ -158,9 +158,10 @@ function substitute_script_query_path($path) {
    @param string $string 			- the string to make device variable substitutions on
    @param string $l_escape_string 	- the character used to escape each variable on the left side
    @param string $r_escape_string 	- the character used to escape each variable on the right side
-   @param int $device_id 			- (int) the device ID to match
+   @param int $device_id 			- the device ID to match
+   @param bool $quote				- enclose substitutions in quotes
    @return string 					- the original string with all of the variable substitutions made */
-function substitute_device_data($string, $l_escape_string, $r_escape_string, $device_id) {
+function substitute_device_data($string, $l_escape_string, $r_escape_string, $device_id, $quote=true) {
 	if (!isset($_SESSION["sess_device_cache_array"][$device_id])) {
 		$device = db_fetch_row("select * from device where id=$device_id");
 		if ($device["device_template_id"] == 0) {

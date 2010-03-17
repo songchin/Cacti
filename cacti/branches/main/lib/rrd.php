@@ -2283,7 +2283,7 @@ function rrdtool_set_x_grid($xaxis_id, $start, $end) {
  */
 function rrd_substitute_device_query_data($txt_graph_item, $graph, $graph_item) {
 	/* replace device variables in graph elements */
-	$txt_graph_item = substitute_device_data($txt_graph_item, '|','|', $graph["device_id"]);
+	$txt_graph_item = substitute_device_data($txt_graph_item, '|','|', $graph["device_id"], true);
 
 	/* replace query variables in graph elements */
 	if (preg_match("/\|query_[a-zA-Z0-9_]+\|/", $txt_graph_item)) {
