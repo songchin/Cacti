@@ -30,7 +30,7 @@ function import_xml_data(&$xml_data, $import_custom_rra_settings) {
 	$info_array = array();
 
 	$xml_array = xml2array($xml_data);
-cacti_log("xml_array", false, "TEST");
+
 	if (sizeof($xml_array) == 0) {
 		raise_message(7); /* xml parse error */
 		return $info_array;
@@ -39,7 +39,6 @@ cacti_log("xml_array", false, "TEST");
 	while (list($hash, $hash_array) = each($xml_array)) {
 		/* parse information from the hash */
 		$parsed_hash = parse_xml_hash($hash);
-cacti_log("parse_xml_hash", false, "TEST");
 
 		/* invalid/wrong hash */
 		if ($parsed_hash == false) { return $info_array; }
@@ -63,7 +62,6 @@ cacti_log("parse_xml_hash", false, "TEST");
 			/* yes we do. loop through each match for this type */
 			for ($i=0; $i<count($dep_hash_cache[$type]); $i++) {
 				$hash_array = $xml_array{"hash_" . $hash_type_codes{$dep_hash_cache[$type][$i]["type"]} . $hash_version_codes{$dep_hash_cache[$type][$i]["version"]} . $dep_hash_cache[$type][$i]["hash"]};
-cacti_log("parse_xml_hash: " . $type, false, "TEST");
 
 				switch($type) {
 				case 'graph_template':
