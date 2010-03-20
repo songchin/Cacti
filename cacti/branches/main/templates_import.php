@@ -30,6 +30,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch (get_request_var_request("action")) {
 	case 'save':
+	case 'create':
 		form_save();
 
 		break;
@@ -47,6 +48,7 @@ switch (get_request_var_request("action")) {
    -------------------------- */
 
 function form_save() {
+
 	if (isset($_POST["save_component_import"])) {
 		if (trim($_POST["import_text"] != "")) {
 			/* textbox input */

@@ -30,7 +30,7 @@ function import_xml_data(&$xml_data, $import_custom_rra_settings) {
 	$info_array = array();
 
 	$xml_array = xml2array($xml_data);
-
+cacti_log("xml_array", false, "TEST");
 	if (sizeof($xml_array) == 0) {
 		raise_message(7); /* xml parse error */
 		return $info_array;
@@ -39,6 +39,7 @@ function import_xml_data(&$xml_data, $import_custom_rra_settings) {
 	while (list($hash, $hash_array) = each($xml_array)) {
 		/* parse information from the hash */
 		$parsed_hash = parse_xml_hash($hash);
+cacti_log("parse_xml_hash", false, "TEST");
 
 		/* invalid/wrong hash */
 		if ($parsed_hash == false) { return $info_array; }
@@ -62,6 +63,7 @@ function import_xml_data(&$xml_data, $import_custom_rra_settings) {
 			/* yes we do. loop through each match for this type */
 			for ($i=0; $i<count($dep_hash_cache[$type]); $i++) {
 				$hash_array = $xml_array{"hash_" . $hash_type_codes{$dep_hash_cache[$type][$i]["type"]} . $hash_version_codes{$dep_hash_cache[$type][$i]["version"]} . $dep_hash_cache[$type][$i]["hash"]};
+cacti_log("parse_xml_hash: " . $type, false, "TEST");
 
 				switch($type) {
 				case 'graph_template':
@@ -206,7 +208,7 @@ function xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 				}
 			}
 
-			if (!array_key_exists($save, "line_width") && array_key_exists($save, "_line_width")) {
+			if (!array_key_exists("line_width", $save) && array_key_exists("_line_width", $save)) {
 				# no explicit line_width given, but implicit one available
 				$save["line_width"] = $save["_line_width"];
 			}
@@ -217,6 +219,17 @@ function xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 			$hash_cache["graph_template_item"]{$parsed_hash["hash"]} = $graph_template_item_id;
 		}
 	}
+
+
+	if (get_version_index($parsed_hash["version"]) < get_version_index("0.8.8")) {
+		$graph_template_items = db_fetch_assoc("SELECT * " .
+								"FROM graph_templates_item " .
+								"WHERE local_graph_id = 0 " .
+								"AND graph_template_id = " . $graph_template_id .  " " .
+								"ORDER BY graph_template_id ASC, sequence ASC");
+		update_pre_088_graph_items($graph_template_items);
+	}
+
 
 	/* import into: graph_template_input */
 	$fields_graph_template_input_edit = graph_template_input_form_list();
@@ -695,6 +708,7 @@ function xml_to_cdef($hash, &$xml_array, &$hash_cache) {
 	$hash_cache["cdef"][$hash] = $cdef_id;
 
 	/* import into: cdef_items */
+	$fields_cdef_item_edit = preset_cdef_item_form_list();
 	if (is_array($xml_array["items"])) {
 		while (list($item_hash, $item_array) = each($xml_array["items"])) {
 			/* parse information from the hash */
@@ -1072,5 +1086,66 @@ function xml_character_decode($text) {
 		$trans_tbl = get_html_translation_table(HTML_ENTITIES);
 		$trans_tbl = array_flip($trans_tbl);
 		return strtr($text, $trans_tbl);
+	}
+}
+
+function update_pre_088_graph_items($items) {
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/presets/preset_rra_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/template.php");
+
+	if (sizeof($items)) {
+		foreach ($items as $key => $graph_item) {
+			/* mimic the old behavior: LINE[123], AREA and STACK items use the CF specified in the graph item */
+			if (($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1) ||
+				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2) ||
+				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) ||
+				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA)  ||
+				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREASTACK)) {
+				$graph_cf = $graph_item["consolidation_function_id"];
+				/* remember the last CF for this data source for use with GPRINT
+				 * if e.g. an AREA/AVERAGE and a LINE/MAX is used
+				 * we will have AVERAGE first and then MAX, depending on GPRINT sequence */
+				$last_graph_cf{$graph_item["task_item_id"]} = $graph_cf;
+				/* remember this for second foreach loop */
+				$items[$key]["cf_reference"] = $graph_cf;
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) {
+				/* ATTENTION!
+				* the "CF" given on graph_item edit screen for GPRINT is indeed NOT a real "CF",
+				* but an aggregation function
+				* see "man rrdgraph_data" for the correct VDEF based notation
+				* so our task now is to "guess" the very graph_item, this GPRINT is related to
+				* and to use that graph_item's CF */
+				if (isset($last_graph_cf{$graph_item["task_item_id"]})) {
+					$graph_cf = $last_graph_cf{$graph_item["task_item_id"]};
+					/* remember this for second foreach loop */
+					$items[$key]["cf_reference"] = $graph_cf;
+				} else {
+					$graph_cf = generate_graph_best_cf($graph_item["local_data_id"], $graph_item["consolidation_function_id"]);
+					/* remember this for second foreach loop */
+					$items[$key]["cf_reference"] = $graph_cf;
+				}
+
+				switch($graph_item["consolidation_function_id"]) {
+					case RRA_CF_TYPE_AVERAGE:
+						$items[$key]["graph_type_id"] = GRAPH_ITEM_TYPE_GPRINT_AVERAGE;
+						break;
+					case RRA_CF_TYPE_MIN:
+						$items[$key]["graph_type_id"] = GRAPH_ITEM_TYPE_GPRINT_MIN;
+						break;
+					case RRA_CF_TYPE_MAX:
+						$items[$key]["graph_type_id"] = GRAPH_ITEM_TYPE_GPRINT_MAX;
+						break;
+					case RRA_CF_TYPE_LAST:
+						$items[$key]["graph_type_id"] = GRAPH_ITEM_TYPE_GPRINT_LAST;
+						break;
+				}
+
+				db_execute("UPDATE graph_templates_item SET `consolidation_function_id`=".$items[$key]["cf_reference"].", `graph_type_id`=".$items[$key]["graph_type_id"]." WHERE `id`=".$graph_item["id"]);
+				if ($graph_item["graph_template_id"] != 0) {
+					db_execute("UPDATE graph_templates_item SET `consolidation_function_id`=".$items[$key]["cf_reference"].", `graph_type_id`=".$items[$key]["graph_type_id"]." WHERE `local_graph_template_item_id`=".$graph_item["id"]);
+				}
+			}
+		}
 	}
 }
