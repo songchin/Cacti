@@ -485,7 +485,12 @@ function upgrade_to_0_8_8() {
 	/* rename host -> device for tables and columns
 	 * we have some updates to those tables in this file already
 	 * so please take care not to change sequence */
-	db_install_execute("0.8.8", "ALTER TABLE data_local DROP INDEX `host_id`");
+	$_indexes = db_fetch_assoc("SHOW INDEX FROM data_local WHERE `Column_name`='host_id'");
+	if (sizeof($_indexes)) {
+		foreach($_indexes as $_index) {
+			db_install_execute("0.8.8", "ALTER TABLE data_local DROP INDEX " . $_index["Key_name"]);
+		}
+	}
 	db_install_execute("0.8.8", "ALTER TABLE data_local CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
 	db_install_execute("0.8.8", "ALTER TABLE graph_local DROP INDEX `host_id`");
 	db_install_execute("0.8.8", "ALTER TABLE graph_local CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
@@ -717,13 +722,11 @@ function upgrade_to_0_8_8() {
 	$graph_templates = db_fetch_assoc("SELECT id FROM graph_templates ORDER BY id ASC");
 	if (sizeof($graph_templates)) {
 		foreach ($graph_templates as $template) {
-			# doit
 			$graph_template_items = db_fetch_assoc("SELECT * " .
 								"FROM graph_templates_item " .
 								"WHERE local_graph_id = 0 " .
 								"AND graph_template_id = " . $template["id"] .  " " .
 								"ORDER BY graph_template_id ASC, sequence ASC");
-#cacti_log("items: ".serialize($graph_template_items), true, "TEST");
 			update_graph_items($graph_template_items);
 		}
 	}
@@ -731,13 +734,11 @@ function upgrade_to_0_8_8() {
 	$graphs = db_fetch_assoc("SELECT id FROM graph_local WHERE graph_template_id = 0 ORDER BY id ASC");
 	if (sizeof($graphs)) {
 		foreach ($graphs as $graph) {
-			# doit
 			$graph_items = db_fetch_assoc("SELECT * " .
 								"FROM graph_templates_item " .
 								"WHERE local_graph_id = " . $graph["id"] . " " .
 								"AND graph_template_id = 0 " .
 								"ORDER BY local_graph_id ASC, sequence ASC");
-#cacti_log("items: ".serialize($graph_items), true, "TEST");
 			update_graph_items($graph_items);
 		}
 	}
@@ -765,7 +766,7 @@ function update_graph_items($items) {
 				$last_graph_cf{$graph_item["task_item_id"]} = $graph_cf;
 				/* remember this for second foreach loop */
 				$items[$key]["cf_reference"] = $graph_cf;
-			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT_AVERAGE) { # the old GRAPH_ITEM_TYPE_GPRINT!
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) {
 				#cacti_log("GPRINT item id: ".$graph_item["id"]."/type ".$items[$key]["graph_type_id"]."/cf ".$items[$key]["consolidation_function_id"], true, "TEST");
 				/* ATTENTION!
 				* the "CF" given on graph_item edit screen for GPRINT is indeed NOT a real "CF",
@@ -804,8 +805,16 @@ function update_graph_items($items) {
 					db_execute("UPDATE graph_templates_item SET `consolidation_function_id`=".$items[$key]["cf_reference"].", `graph_type_id`=".$items[$key]["graph_type_id"]." WHERE `local_graph_template_item_id`=".$graph_item["id"]);
 					#push_out_graph_item($graph_item["id"]); # this has a lot of overhead
 				}
+			}else{
+				/* all other types are based on the best matching CF */
+				#GRAPH_ITEM_TYPE_COMMENT
+				#GRAPH_ITEM_TYPE_HRULE
+				#GRAPH_ITEM_TYPE_VRULE
+				#GRAPH_ITEM_TYPE_TEXTALIGN
+				$graph_cf = generate_graph_best_cf($graph_item["local_data_id"], $graph_item["consolidation_function_id"]);
+				/* remember this for second foreach loop */
+				$graph_items[$key]["cf_reference"] = $graph_cf;
 			}
 		}
-
 	}
 }
