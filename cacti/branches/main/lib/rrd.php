@@ -288,7 +288,9 @@ function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 		if ( $data_source["data_source_type_id"] == DATA_SOURCE_TYPE_COMPUTE ) {
 			$create_ds .= "DS:$data_source_name:" . $data_source_types{$data_source["data_source_type_id"]} . ":" . (empty($data_source["rrd_compute_rpn"]) ? "U" : $data_source["rrd_compute_rpn"]) . RRD_NL;
 		} else {
-			$create_ds .= "DS:$data_source_name:" . $data_source_types{$data_source["data_source_type_id"]} . ":" . $data_source["rrd_heartbeat"] . ":" . $data_source["rrd_minimum"] . ":" . (empty($data_source["rrd_maximum"]) ? "U" : $data_source["rrd_maximum"]) . RRD_NL;
+			$create_ds .= "DS:$data_source_name:" . $data_source_types{$data_source["data_source_type_id"]} . ":" .
+							$data_source["rrd_heartbeat"] . ":" . $data_source["rrd_minimum"] . ":" .
+							(empty($data_source["rrd_maximum"]) ? "U" : ((int)$data_source["rrd_maximum"]<=(int)$data_source["rrd_minimum"] ? (int)$data_source["rrd_minimum"]+1 : $data_source["rrd_maximum"])) . RRD_NL;
 		}
 	}
 	}
