@@ -987,7 +987,7 @@ function graph_edit() {
 	}
 
 	/* graph item list goes here */
-	if ((!empty($_GET["id"])) && (!array_key_exists($graphs, "graph_template_id"))) {
+	if ((!empty($_GET["id"])) && (!array_key_exists("graph_template_id", $graphs))) {
 		graph_template_item();
 	}
 

@@ -173,12 +173,12 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		<div style='float:right'>
 		<?php	if (read_config_option("auth_method") != 0) {
 					if(read_config_option('i18n_timezone_support') != 0) {
-						?><a href="#" id="menu_timezones" rel="<?php echo CACTI_URL_PATH; ?>"><span id="date_time_format"><strong><?php echo __date("D, " . date_time_format() . " T");?></a></span><?php
+						?><a href="#" id="menu_timezones" rel="<?php echo CACTI_URL_PATH; ?>"><span id="date_time_format"><strong><?php echo __date("D, " . date_time_format() . " T");?></strong></span></a><?php
 					}else {
-						?><span id="date_time_format"><strong><?php echo __date("D, " . date_time_format() . " T");?></span><?php
+						?><span id="date_time_format"><strong><?php echo __date("D, " . date_time_format() . " T");?></strong></span><?php
 					}
 				?>
-					</strong>&nbsp;&nbsp;&nbsp;<?php print __("Logged in as");?> <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo CACTI_URL_PATH; ?>logout.php"><?php print __("Logout");?></a>)
+					&nbsp;&nbsp;&nbsp;<?php print __("Logged in as");?> <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo CACTI_URL_PATH; ?>logout.php"><?php print __("Logout");?></a>)
 		<?php } ?>
 		</div>
 		<?php if(read_config_option('i18n_support') != 0) {?>
