@@ -1893,6 +1893,7 @@ function draw_navigation_text() {
 		"data_sources.php:data_source_edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,data_sources.php:", "url" => "", "level" => "2"),
 		"data_sources.php:ds_edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,data_sources.php:", "url" => "", "level" => "2"),
 		"data_sources.php:ds_toggle_status" => array("title" => "(Disable)", "mapping" => "index.php:,data_sources.php:", "url" => "", "level" => "2"),
+		"data_sources_items.php:item_edit" => array("title" => __("Data Source Items"), "mapping" => "index.php:,data_sources.php:,data_sources.php:data_source_edit", "url" => "", "level" => "3"),
 		"data_templates.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,data_templates.php:", "url" => "", "level" => "2"),
 		"data_templates.php:" => array("title" => __("Data Source Templates"), "mapping" => "index.php:", "url" => "data_templates.php", "level" => "1"),
 		"data_templates.php:template_edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,data_templates.php:", "url" => "", "level" => "2"),

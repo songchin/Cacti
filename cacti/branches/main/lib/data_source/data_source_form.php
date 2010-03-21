@@ -631,8 +631,9 @@ function data_source_edit() {
 	$device_id = 0;
 
 	if (!empty($_GET["id"])) {
-		$data_local = db_fetch_row("select device_id,data_template_id from data_local where id='" . $_GET["id"] . "'");
-		$data       = db_fetch_row("select * from data_template_data where local_data_id='" . $_GET["id"] . "'");
+		$data_local 		= db_fetch_row("select device_id,data_template_id from data_local where id='" . $_GET["id"] . "'");
+		$data       		= db_fetch_row("select * from data_template_data where local_data_id='" . $_GET["id"] . "'");
+		$data_source_items 	= db_fetch_assoc("select * from data_template_rrd where local_data_id=" . $_GET["id"] . " order by data_source_name");
 
 		if (isset($data_local["data_template_id"]) && $data_local["data_template_id"] >= 0) {
 			$data_template      = db_fetch_row("select id,name from data_template where id='" . $data_local["data_template_id"] . "'");
@@ -755,12 +756,11 @@ function data_source_edit() {
 
 	/* only display the "inputs" area if we are using a data template for this data source */
 	if (!empty($data["data_template_id"])) {
-		$template_data_rrds = db_fetch_assoc("select * from data_template_rrd where local_data_id=" . $_GET["id"] . " order by data_source_name");
 
 		html_start_box("<strong>" . __("Supplemental Data Source Template Data") . "</strong>", "100", $colors["header"], 0, "center", "");
 
 		draw_nontemplated_fields_data_source($data["data_template_id"], $data["local_data_id"], $data, "|field|", "<strong>" . __("Data Source Fields") . "</strong>", true, true, 0);
-		draw_nontemplated_fields_data_source_item($data["data_template_id"], $template_data_rrds, "|field|_|id|", "<strong>" . __("Data Source Item Fields") . "</strong>", true, true, true, 0);
+		draw_nontemplated_fields_data_source_item($data["data_template_id"], $data_source_items, "|field|_|id|", "<strong>" . __("Data Source Item Fields") . "</strong>", true, true, true, 0);
 		draw_nontemplated_fields_custom_data($data["id"], "value_|id|", "<strong>" . __("Custom Data") . "</strong>", true, true, 0);
 
 		html_end_box();
@@ -777,10 +777,6 @@ function data_source_edit() {
 		while (list($field_name, $field_array) = each($struct_data_source)) {
 			$form_array += array($field_name => $struct_data_source[$field_name]);
 
-#			if (!(($use_data_template == false) || (!empty($data_template_data{"t_" . $field_name})) || ($field_array["flags"] == "NOTEMPLATE"))) {
-#				$form_array[$field_name]["description"] = "";
-#			}
-
 			$form_array[$field_name]["value"] = (isset($data[$field_name]) ? $data[$field_name] : "");
 			$form_array[$field_name]["form_id"] = (empty($data["id"]) ? "0" : $data["id"]);
 
@@ -791,9 +787,7 @@ function data_source_edit() {
 
 		draw_edit_form(
 			array(
-				"config" => array(
-					"no_form_tag" => true
-					),
+				"config" => array("no_form_tag" => true),
 				"fields" => inject_form_variables($form_array, (isset($data) ? $data : array()))
 				)
 			);
@@ -802,119 +796,14 @@ function data_source_edit() {
 
 
 		if (!empty($_GET["id"])) {
-			$template_item_list = db_fetch_assoc("SELECT * FROM data_template_rrd WHERE data_template_id=" . $_GET["id"] . " AND local_data_id=0 ORDER BY data_source_name");
 
-			html_start_box("<strong>" . __("Data Source Items") . "</strong>", "100", $colors["header"], "0", "center", "data_templates_items.php?action=item_edit&data_template_id=" . $_GET["id"], true);
-			draw_data_template_items_list($template_item_list, "data_sources.php", "local_data_id=" . $_GET["id"], $use_data_template);
+			html_start_box("<strong>" . __("Data Source Items") . "</strong>", "100", $colors["header"], "0", "center", "data_sources_items.php?action=item_edit&local_data_id=" . $_GET["id"], true);
+			draw_data_template_items_list($data_source_items, "data_sources_items.php", "local_data_id=" . $_GET["id"], $use_data_template);
 			html_end_box(false);
 		}
-#		/* fetch ALL rrd's for this data source */
-#		if (!empty($_GET["id"])) {
-#			$template_data_rrds = db_fetch_assoc("select id,data_source_name from data_template_rrd where local_data_id=" . $_GET["id"] . " order by data_source_name");
-#		}
-#
-#		/* select the first "rrd" of this data source by default */
-#		if (empty($_GET["view_rrd"])) {
-#			$_GET["view_rrd"] = (isset($template_data_rrds[0]["id"]) ? $template_data_rrds[0]["id"] : "0");
-#		}
-#
-#		/* get more information about the rrd we chose */
-#		if (!empty($_GET["view_rrd"])) {
-#			$local_data_template_rrd_id = db_fetch_cell("select local_data_template_rrd_id from data_template_rrd where id=" . $_GET["view_rrd"]);
-#
-#			$rrd = db_fetch_row("select * from data_template_rrd where id=" . $_GET["view_rrd"]);
-#			$rrd_template = db_fetch_row("select * from data_template_rrd where id=$local_data_template_rrd_id");
-#
-#			$header_label = __("[edit: ") . $rrd["data_source_name"] . "]";
-#		}else{
-#			$header_label = "[new]";
-#		}
-#
-#		$i = 0;
-#		if (isset($template_data_rrds)) {
-#			if (sizeof($template_data_rrds) > 1) {
-#
-#			/* draw the data source tabs on the top of the page */
-#			print "	<table class='tabs' width='100%' cellspacing='0' cellpadding='3' align='center'>
-#					<tr>\n";
-#
-#					foreach ($template_data_rrds as $template_data_rrd) {
-#						$i++;
-#						print "	<td " . (($template_data_rrd["id"] == get_request_var("view_rrd")) ? "bgcolor='silver'" : "bgcolor='#DFDFDF'") . " nowrap='nowrap' width='" . ((strlen($template_data_rrd["data_source_name"]) * 9) + 50) . "' align='center' class='tab'>
-#								<span class='textHeader'><a href='data_sources.php?action=data_source_edit&id=" . get_request_var("id") . "&view_rrd=" . $template_data_rrd["id"] . "'>$i: " . $template_data_rrd["data_source_name"] . "</a>" . (($use_data_template == false) ? " <a href='data_sources.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&local_data_id=" . get_request_var("id") . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete' align='absmiddle'></a>" : "") . "</span>
-#							</td>\n
-#							<td width='1'></td>\n";
-#					}
-#
-#					print "
-#					<td></td>\n
-#					</tr>
-#				</table>\n";
-#
-#			}elseif (sizeof($template_data_rrds) == 1) {
-#				$_GET["view_rrd"] = $template_data_rrds[0]["id"];
-#			}
-#		}
-#
-#		html_start_box("", "100", $colors["header"], "0", "center", "");
-#
-#		print "	<tr class='rowHeader'>
-#				<td class='textHeaderDark'>
-#					<strong>" . __("Data Source Item") . "</strong> $header_label
-#				</td>
-#				<td class='textHeaderDark' align='right'>
-#					" . ((!empty($_GET["id"]) && (empty($data_template["id"]))) ? "<strong><a class='linkOverDark' href='data_sources.php?action=rrd_add&id=" . $_GET["id"] . "'>" . __("New") . "</a>&nbsp;</strong>" : "") . "
-#				</td>
-#			</tr>\n";
-#
-#		$struct_data_source_item = data_source_item_form_list();
-#		/* data input fields list */
-#		if ((empty($data["data_input_id"])) || (db_fetch_cell("select type_id from data_input where id=" . $data["data_input_id"]) > "1")) {
-#			unset($struct_data_source_item["data_input_field_id"]);
-#		}else{
-#			$struct_data_source_item["data_input_field_id"]["sql"] = "select id,CONCAT(data_name,' - ',name) as name from data_input_fields where data_input_id=" . $data["data_input_id"] . " and input_output='out' and update_rra='on' order by data_name,name";
-#		}
-#
-#		$form_array = array();
-#
-#		while (list($field_name, $field_array) = each($struct_data_source_item)) {
-#			$form_array += array($field_name => $struct_data_source_item[$field_name]);
-#
-##			if (!(($use_data_template == false) || ($rrd_template{"t_" . $field_name} == CHECKED))) {
-##				$form_array[$field_name]["description"] = "";
-##			}
-#
-#			$form_array[$field_name]["value"] = (isset($rrd) ? $rrd[$field_name] : "");
-#
-#			if (!(($use_data_template == false) || ($rrd_template{"t_" . $field_name} == CHECKED))) {
-#				$form_array[$field_name]["method"] = "template_" . $form_array[$field_name]["method"];
-#			}
-#		}
-#
-#		draw_edit_form(
-#			array(
-#				"config" => array(
-#					"no_form_tag" => true
-#					),
-#				"fields" => array(
-#					"data_template_rrd_id" => array(
-#						"method" => "hidden",
-#						"value" => (isset($rrd) ? $rrd["id"] : "0")
-#					),
-#					"local_data_template_rrd_id" => array(
-#						"method" => "hidden",
-#						"value" => (isset($rrd) ? $rrd["local_data_template_rrd_id"] : "0")
-#					)
-#				) + $form_array
-#			)
-#			);
-#
-#		html_end_box();
 
 		/* data source data goes here */
 		data_source_data_edit();
-
-#		form_hidden_box("current_rrd", get_request_var("view_rrd"), "0");
 	}
 
 	/* display the debug mode box if the user wants it */
