@@ -463,9 +463,9 @@ int main(int argc, char *argv[]) {
 
 	/* obtain the list of hosts to poll */
 	if (set.device_threads_exists) {
-		qp += sprintf(qp, "SELECT id, device_threads FROM host");
+		qp += sprintf(qp, "SELECT id, device_threads FROM device");
 	}else{
-		qp += sprintf(qp, "SELECT id, '1' as device_threads FROM host");
+		qp += sprintf(qp, "SELECT id, '1' as device_threads FROM device");
 	}
 	qp += sprintf(qp, " WHERE disabled=''");
 	if (!strlen(set.device_id_list)) {
