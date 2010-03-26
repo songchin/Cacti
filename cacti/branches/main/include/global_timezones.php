@@ -57,7 +57,7 @@ if (isset($_GET['time_zone'])) {
 
 /**
  * init_time_zone() - initialize the custom time zone
- * 
+ *
  * @time_zone - custom time zone that has to be used
  * @return - returns true (successful) or false (failed)
  */
@@ -73,8 +73,8 @@ function init_time_zone($time_zone){
 
 /**
  * set_time_zone() - toogle between system and custom time zone
- * 
- * @time_zone - time zone 
+ *
+ * @time_zone - time zone
  * @return - returns true (successful) or false (failed)
  */
 function set_time_zone($time_zone) {
@@ -87,7 +87,7 @@ function set_time_zone($time_zone) {
 			/* use date functions if possible (PHP>=5.1.0) */
 			if(function_exists('date_default_timezone_set')) {
 				return (@date_default_timezone_set($time_zone)) ? true : false;
-			
+
 			/* try to setup time zone if safe mode is not enabled. */
 			}else {
 				return (@putenv("TZ=" . $time_zone)) ? true : false;
@@ -99,7 +99,7 @@ function set_time_zone($time_zone) {
 
 /**
  * disable_tmz_support() - fall back to system time zone
- * 
+ *
  * @return - returns true (successful) or false (failed)
  */
 function disable_tmz_support() {
@@ -108,7 +108,7 @@ function disable_tmz_support() {
 
 /**
  * enable_tmz_support() - switch to custom time zone
- * 
+ *
  * @return - returns true (successful) or false (failed)
  */
 function enable_tmz_support() {
@@ -121,7 +121,7 @@ function get_list_of_timezones() {
 	$africa = __("Africa") . ": ";
 	$america = __("America") . ": ";
 	$antartica = __("Antarctica") . ": ";
-	$artic = __("Artic") . ": ";
+	$arctic = __("Arctic") . ": ";
 	$asia = __("Asia") . ": ";
 	$atlantic = __("Atlantic") . ": ";
 	$australia = __("Australia") . ": ";
@@ -329,7 +329,7 @@ function get_list_of_timezones() {
 		"Antarctica/South_Pole" => $antartica . __("South Pole"),
 		"Antarctica/Syowa" => $antartica . __("Syowa"),
 		"Antarctica/Vostok" => $antartica . __("Vostok"),
-		"Arctic/Longyearbyen" => $artic . __("Longyearbyen"),
+		"Arctic/Longyearbyen" => $arctic . __("Longyearbyen"),
 		"Asia/Aden" => $asia . __("Aden"),
 		"Asia/Almaty" => $asia . __("Almaty"),
 		"Asia/Amman" => $asia . __("Amman"),
