@@ -48,7 +48,7 @@ require(CACTI_BASE_PATH . "/include/presets/preset_rra_arrays.php");
  *  * */
 $struct_graph_labels = array(
 	"title" => array(
-		"friendly_name" => __("Title (--title &lt;string&gt;)"),
+		"friendly_name" => __("Title") . " (--title &lt;" . __("string") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "255",
 		"size" => "50",
@@ -56,7 +56,7 @@ $struct_graph_labels = array(
 		"description" => __("The name that is printed on the graph."),
 		),
 	"vertical_label" => array(
-		"friendly_name" => __("Vertical Label (--vertical-label &lt;string&gt;)"),
+		"friendly_name" => __("Vertical Label") . " (--vertical-label &lt;" . __("string") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "255",
 		"default" => "",
@@ -64,7 +64,7 @@ $struct_graph_labels = array(
 		"description" => __("The label vertically printed to the left of the graph."),
 		),
 	"image_format_id" => array(
-		"friendly_name" => __("Image Format (--imgformat &lt;format&gt;)"),
+		"friendly_name" => __("Image Format") . " (--imgformat &lt;" . __("format") . "&gt;)",
 		"method" => "drop_array",
 		"array" => $image_types,
 		"default" => IMAGE_TYPE_PNG,
@@ -74,7 +74,7 @@ $struct_graph_labels = array(
 
 $struct_graph_right_axis = array(
 	"right_axis" => array(
-		"friendly_name" => __("Right Axis (--right-axis &lt;scale:shift&gt;)"),
+		"friendly_name" => __("Right Axis") . " (--right-axis &lt;" . __("scale:shift") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "20",
 		"default" => "",
@@ -83,7 +83,7 @@ $struct_graph_right_axis = array(
 		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	"right_axis_label" => array(
-		"friendly_name" => __("Right Axis Label (--right-axis-label &lt;string&gt;)"),
+		"friendly_name" => __("Right Axis Label") . " (--right-axis-label &lt;" . __("string") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "200",
 		"default" => "",
@@ -92,7 +92,7 @@ $struct_graph_right_axis = array(
 		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	"right_axis_format" => array(
-		"friendly_name" => __("Right Axis Format (--right-axis-format &lt;format&gt;)"),
+		"friendly_name" => __("Right Axis Format") . " (--right-axis-format &lt;" . __("format") . "&gt;)",
 		"method" => "drop_sql",
 		"sql" => "select id,name from graph_templates_gprint order by name",
 		"default" => "0",
@@ -104,7 +104,7 @@ $struct_graph_right_axis = array(
 
 $struct_graph_size = array(
 	"height" => array(
-		"friendly_name" => __("Height (--height) &lt;pixels>"),
+		"friendly_name" => __("Height") . " (--height) &lt;" . __("pixels") . "&gt;",
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "120",
@@ -112,7 +112,7 @@ $struct_graph_size = array(
 		"description" => __("The height (in pixels) that the graph is."),
 		),
 	"width" => array(
-		"friendly_name" => __("Width (--width) &lt;pixels>"),
+		"friendly_name" => __("Width") . " (--width) &lt;" . __("pixels") . "&gt;",
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "500",
@@ -120,13 +120,13 @@ $struct_graph_size = array(
 		"description" => __("The width (in pixels) that the graph is."),
 		),
 	"only_graph" => array(
-		"friendly_name" => __("Only Graph (--only-graph)"),
+		"friendly_name" => __("Only Graph") . " (--only-graph)",
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("If you specify the --only-graph option and set the height &lt; 32 pixels you will get a tiny graph image (thumbnail) to use as an icon for use in an overview, for example. All labeling will be stripped off the graph."),
 		),
 	"full_size_mode" => array(
-		"friendly_name" => __("Full Size Mode (--full-size-mode)"),
+		"friendly_name" => __("Full Size Mode") . " (--full-size-mode)",
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("The width and height specify the final dimensions of the output image and the canvas is automatically resized to fit."),
@@ -154,31 +154,31 @@ $struct_graph_limits = array(
 		"items" => array(
 			GRAPH_ALT_AUTOSCALE => array(
 				"radio_value" => GRAPH_ALT_AUTOSCALE,
-				"radio_caption" => __("Use") . " " . __("--alt-autoscale (ignoring given limits)"),
+				"radio_caption" => __("Use") . " --alt-autoscale " . __("(ignoring given limits)"),
 				),
 			GRAPH_ALT_AUTOSCALE_MAX => array(
 				"radio_value" => GRAPH_ALT_AUTOSCALE_MAX,
-				"radio_caption" => __("Use") . " " . __("--alt-autoscale-max (accepting a lower limit)"),
+				"radio_caption" => __("Use") . " --alt-autoscale_max " . __("(accepting a lower limit)"),
 			),
 			GRAPH_ALT_AUTOSCALE_MIN => array(
 				"radio_value" => GRAPH_ALT_AUTOSCALE_MIN,
-				"radio_caption" => __("Use") . " " . __("--alt-autoscale-min (accepting an upper limit, requires rrdtool 1.2.x)"),
+				"radio_caption" => __("Use") . " --alt-autoscale_min " . __("(accepting an upper limit, requires rrdtool 1.2.x)"),
 				"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 			),
 			GRAPH_ALT_AUTOSCALE_LIMITS => array(
 				"radio_value" => GRAPH_ALT_AUTOSCALE_LIMITS,
-				"radio_caption" => __("Use") . " " . __("--alt-autoscale (accepting both limits, rrdtool default)"),
+				"radio_caption" => __("Use") . " --alt-autoscale " . __("(accepting both limits, rrdtool default)"),
 				)
 			)
 		),
 	"auto_scale_rigid" => array(
-		"friendly_name" => __("Rigid Boundaries Mode (--rigid)"),
+		"friendly_name" => __("Rigid Boundaries Mode") . " (--rigid)",
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("Do not expand the lower and upper limit if the graph contains a value outside the valid range."),
 		),
 	"upper_limit" => array(
-		"friendly_name" => __("Upper Limit (--upper-limit &lt;limit&gt;)"),
+		"friendly_name" => __("Upper Limit") . " (--upper-limit &lt;" . __("limit") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "100",
@@ -186,7 +186,7 @@ $struct_graph_limits = array(
 		"description" => __("The maximum vertical value for the rrd graph."),
 		),
 	"lower_limit" => array(
-		"friendly_name" => __("Lower Limit (--lower-limit &lt;limit&gt;)"),
+		"friendly_name" => __("Lower Limit") . " (--lower-limit &lt;" . __("limit") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "255",
 		"default" => "0",
@@ -194,7 +194,7 @@ $struct_graph_limits = array(
 		"description" => __("The minimum vertical value for the rrd graph."),
 		),
 	"no_gridfit" => array(
-		"friendly_name" => __("No Gridfit (--no-gridfit)"),
+		"friendly_name" => __("No Gridfit") . " (--no-gridfit)",
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("In order to avoid anti-aliasing blurring effects rrdtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behaviour off.") . "<br>" .
@@ -205,7 +205,7 @@ $struct_graph_limits = array(
 
 $struct_graph_grid = array(
 	"x_grid" => array(
-		"friendly_name" => __("X Grid (--x-grid &lt;GTM:GST:MTM:MST:LTM:LST:LPR:LFM&gt;)"),
+		"friendly_name" => __("X Grid") . " (--x-grid &lt;GTM:GST:MTM:MST:LTM:LST:LPR:LFM&gt;)",
 		"description" => __("This parameter allows to specify a different grid layout (Global, Major, Label Grid). We refer to the X-Axis Presets here."),
 		"method" => "drop_sql",
 		"sql" => "select id,name from graph_templates_xaxis order by name",
@@ -213,7 +213,7 @@ $struct_graph_grid = array(
 		"none_value" => "None",
 		),
 	"unit_value" => array(		# TODO: shall we rename to y_grid?
-		"friendly_name" => __("Y Grid (--y-grid &lt;grid step:label factor&gt;)"),
+		"friendly_name" => __("Y Grid") . " (--y-grid &lt;" . __("grid step:label factor") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
@@ -221,20 +221,20 @@ $struct_graph_grid = array(
 		"description" => __("Y-axis grid lines appear at each grid step interval. Labels are placed every label factor lines. You can specify 'none' to suppress the grid and labels altogether."),
 		),
 	"alt_y_grid" => array(
-		"friendly_name" => __("Alternative Y Grid (--alt-y-grid)"),
+		"friendly_name" => __("Alternative Y Grid") . " (--alt-y-grid)",
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.") . "<br>" .
 						"<strong>" . __("Note:") . " </strong>" . __("This parameter may interfere with --alt-autoscale options."),
 		),
 	"auto_scale_log" => array(
-		"friendly_name" => __("Logarithmic Scaling (--logarithmic)"),
+		"friendly_name" => __("Logarithmic Scaling") . " (--logarithmic)",
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("Use Logarithmic y-axis scaling"),
 		),
 	"scale_log_units" => array(
-		"friendly_name" => __("SI Units for Logarithmic Scaling (--units=si)"),
+		"friendly_name" => __("SI Units for Logarithmic Scaling") . " (--units=si)",
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("Use SI Units for Logarithmic Scaling instead of using exponential notation (not available for rrdtool-1.0.x).") . "<br>" .
@@ -242,7 +242,7 @@ $struct_graph_grid = array(
 		"class" => "scale_log_units not_RRD_1_0_x",
 		),
 	"unit_exponent_value" => array(
-		"friendly_name" => __("Unit Exponent Value (--units-exponent &lt;exponent&gt;)"),
+		"friendly_name" => __("Unit Exponent Value") . " (--units-exponent &lt;" . __("exponent") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
@@ -250,7 +250,7 @@ $struct_graph_grid = array(
 		"description" => __("What unit cacti should use on the Y-axis. Use 3 to display everything in 'k' or -6 to display everything in 'u' (micro)."),
 		),
 	"unit_length" => array(
-		"friendly_name" => __("Unit Length (--units-length &lt;length&gt;)"),
+		"friendly_name" => __("Unit Length") . " (--units-length &lt;" . __("length") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
@@ -261,7 +261,7 @@ $struct_graph_grid = array(
 
 $struct_graph_color = array(
 	"colortag_back" => array(
-		"friendly_name" => __("Background (--color BACK &lt;rrggbb[aa]&gt;)"),
+		"friendly_name" => __("Background") . " (--color BACK &lt;rrggbb[aa]&gt;)",
 		"method" => "textbox",
 		"max_length" => "6",
 		"default" => "",
@@ -270,7 +270,7 @@ $struct_graph_color = array(
 		"class" => "colortags",
 		),
 	"colortag_canvas" => array(
-		"friendly_name" => __("Canvas (--color CANVAS &lt;rrggbb[aa]&gt;)"),
+		"friendly_name" => __("Canvas") . " (--color CANVAS &lt;rrggbb[aa]&gt;)",
 		"method" => "textbox",
 		"max_length" => "6",
 		"default" => "",
@@ -279,7 +279,7 @@ $struct_graph_color = array(
 		"class" => "colortags",
 		),
 	"colortag_shadea" => array(
-		"friendly_name" => __("ShadeA (--color SHADEA &lt;rrggbb[aa]&gt;)"),
+		"friendly_name" => __("ShadeA") . " (--color SHADEA &lt;rrggbb[aa]&gt;)",
 		"method" => "textbox",
 		"max_length" => "6",
 		"default" => "",
@@ -288,7 +288,7 @@ $struct_graph_color = array(
 		"class" => "colortags",
 		),
 	"colortag_shadeb" => array(
-		"friendly_name" => __("ShadeB (--color SHADEB &lt;rrggbb[aa]&gt;)"),
+		"friendly_name" => __("ShadeB") . " (--color SHADEB &lt;rrggbb[aa]&gt;)",
 		"method" => "textbox",
 		"max_length" => "6",
 		"default" => "",
@@ -297,7 +297,7 @@ $struct_graph_color = array(
 		"class" => "colortags",
 		),
 	"colortag_grid" => array(
-		"friendly_name" => __("Grid (--color GRID &lt;rrggbb[aa]&gt;)"),
+		"friendly_name" => __("Grid") . " (--color GRID &lt;rrggbb[aa]&gt;)",
 		"method" => "textbox",
 		"max_length" => "6",
 		"default" => "",
@@ -306,7 +306,7 @@ $struct_graph_color = array(
 		"class" => "colortags",
 		),
 	"colortag_mgrid" => array(
-		"friendly_name" => __("Major Grid (--color MGRID &lt;rrggbb[aa]&gt;)"),
+		"friendly_name" => __("Major Grid") . " (--color MGRID &lt;rrggbb[aa]&gt;)",
 		"method" => "textbox",
 		"max_length" => "6",
 		"default" => "",
@@ -315,7 +315,7 @@ $struct_graph_color = array(
 		"class" => "colortags",
 		),
 	"colortag_font" => array(
-		"friendly_name" => __("Font (--color FONT &lt;rrggbb[aa]&gt;)"),
+		"friendly_name" => __("Font") . " (--color FONT &lt;rrggbb[aa]&gt;)",
 		"method" => "textbox",
 		"max_length" => "6",
 		"default" => "",
@@ -324,7 +324,7 @@ $struct_graph_color = array(
 		"class" => "colortags",
 		),
 	"colortag_axis" => array(
-		"friendly_name" => __("Axis (--color AXIS &lt;rrggbb[aa]&gt;)"),
+		"friendly_name" => __("Axis") . " (--color AXIS &lt;rrggbb[aa]&gt;)",
 		"method" => "textbox",
 		"max_length" => "6",
 		"default" => "",
@@ -333,7 +333,7 @@ $struct_graph_color = array(
 		"class" => "colortags",
 		),
 	"colortag_frame" => array(
-		"friendly_name" => __("Frame (--color FRAME &lt;rrggbb[aa]&gt;)"),
+		"friendly_name" => __("Frame") . " (--color FRAME &lt;rrggbb[aa]&gt;)",
 		"method" => "textbox",
 		"max_length" => "6",
 		"default" => "",
@@ -342,7 +342,7 @@ $struct_graph_color = array(
 		"class" => "colortags",
 		),
 	"colortag_arrow" => array(
-		"friendly_name" => __("Arrow (--color ARROW &lt;rrggbb[aa]&gt;)"),
+		"friendly_name" => __("Arrow") . " (--color ARROW &lt;rrggbb[aa]&gt;)",
 		"method" => "textbox",
 		"max_length" => "6",
 		"default" => "",
@@ -354,13 +354,13 @@ $struct_graph_color = array(
 
 $struct_graph_legend = array(
 	"force_rules_legend" => array(
-		"friendly_name" => __("Force Rules Legend (--force-rules-legend)"),
+		"friendly_name" => __("Force Rules Legend") . " (--force-rules-legend)",
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("Force the generation of HRULE and VRULE legends."),
 		),
 	"legend_position" => array(
-		"friendly_name" => __("Legend Position (--legend-position=&lt;position&gt;)"),
+		"friendly_name" => __("Legend Position") . " (--legend-position=&lt;" . __("position") . "&gt;)",
 		"method" => "drop_array",
 		"array" => $rrd_legend_position,
 		"none_value" => "None",
@@ -368,7 +368,7 @@ $struct_graph_legend = array(
 		"class" => "not_RRD_1_0_x not_RRD_1_2_x not_RRD_1_3_x",
 		),
 	"legend_direction" => array(
-		"friendly_name" => __("Legend Direction (--legend-direction=&lt;direction&gt;)"),
+		"friendly_name" => __("Legend Direction") . " (--legend-direction=&lt;" . __("direction") . "&gt;)",
 		"method" => "drop_array",
 		"array" => $rrd_legend_direction,
 		"none_value" => "None",
@@ -379,7 +379,7 @@ $struct_graph_legend = array(
 
 $struct_graph_misc = array(
 	"grid_dash" => array(
-		"friendly_name" => __("Grid Dash (--grid-dash &lt;on:off&gt;)"),
+		"friendly_name" => __("Grid Dash") . " (--grid-dash &lt;" . __("on:off") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "10",
 		"default" => "",
@@ -387,7 +387,7 @@ $struct_graph_misc = array(
 		"description" => __("By default the grid is drawn in a 1 on, 1 off pattern."),
 		),
 	"border" => array(
-		"friendly_name" => __("Border (--border &lt;width&gt;)"),
+		"friendly_name" => __("Border") . " (--border &lt;" . __("width") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "10",
 		"default" => "",
@@ -395,7 +395,7 @@ $struct_graph_misc = array(
 		"description" => __("Width in pixels for the 3rd border drawn around the image. 0 disables the border."),
 		),
 	"font_render_mode" => array(
-		"friendly_name" => __("Font Render Mode (--font-render-mode &lt;mode&gt;)"),
+		"friendly_name" => __("Font Render Mode") . " (--font-render-mode &lt;" . __("mode") . "&gt;)",
 		"method" => "drop_array",
 		"array" => $rrd_font_render_modes,
 		"none_value" => "None",
@@ -403,7 +403,7 @@ $struct_graph_misc = array(
 		"class" => "not_RRD_1_0_x",
 		),
 	"font_smoothing_threshold" => array(
-		"friendly_name" => __("Font Smoothing Threshold (--font-smoothing-threshold &lt;threshold&gt;)"),
+		"friendly_name" => __("Font Smoothing Threshold") . " (--font-smoothing-threshold &lt;" . __("threshold") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "8",
 		"default" => "",
@@ -412,7 +412,7 @@ $struct_graph_misc = array(
 		"class" => "not_RRD_1_0_x",
 		),
 	"graph_render_mode" => array(
-		"friendly_name" => __("Graph Render Mode (--graph-render-mode &lt;mode&gt;)"),
+		"friendly_name" => __("Graph Render Mode") . " (--graph-render-mode &lt;" . __("mode") . "&gt;)",
 		"method" => "drop_array",
 		"array" => $rrd_graph_render_modes,
 		"none_value" => "None",
@@ -420,27 +420,27 @@ $struct_graph_misc = array(
 		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	"pango_markup" => array(
-		"friendly_name" => __("Pango Markup (--pango-markup)"),
+		"friendly_name" => __("Pango Markup") . " (--pango-markup)",
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("With this option, all text will be processed by pango markup. This allows to embed some simple html like markup tags."),
 		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	"slope_mode" => array(
-		"friendly_name" => __("Slope Mode (--slope-mode)"),
+		"friendly_name" => __("Slope Mode") . " (--slope-mode)",
 		"method" => "checkbox",
 		"default" => CHECKED,
 		"description" => __("Using Slope Mode, in RRDtool 1.2.x and above, evens out the shape of the graphs at the expense of some on screen resolution."),
 		"class" => "not_RRD_1_0_x",
 		),
 	"interlaced" => array(
-		"friendly_name" => __("Interlaced (--interlaced)"),
+		"friendly_name" => __("Interlaced") . " (--interlaced)",
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("If images are interlaced they become visible on browsers more quickly (this gets ignored in 1.3 for now!)."),
 		),
 	"tab_width" => array(
-		"friendly_name" => __("Tabulator Width (--tabwidth &lt;pixels&gt;)"),
+		"friendly_name" => __("Tabulator Width") . " (--tabwidth &lt;" . __("pixels") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
@@ -449,7 +449,7 @@ $struct_graph_misc = array(
 		"class" => "not_RRD_1_0_x",
 		),
 	"base_value" => array(
-		"friendly_name" => __("Base Value (--base &lt;[1000|1024]&gt;)"),
+		"friendly_name" => __("Base Value") . " (--base &lt;[1000|1024]&gt;)",
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "1000",
@@ -458,7 +458,7 @@ $struct_graph_misc = array(
 		"class" => "not_RRD_1_0_x",
 		),
 	"watermark" => array(
-		"friendly_name" => __("Watermark (--watermark &lt;string&gt;)"),
+		"friendly_name" => __("Watermark") . " (--watermark &lt;" . __("string") . "&gt;)",
 		"method" => "textbox",
 		"max_length" => "255",
 		"default" => "",
@@ -607,7 +607,7 @@ $struct_graph_item = array(
 		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_LINE not_RRD_TYPE_LINESTACK not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_TICK",
 		),
 	"textalign" => array(
-		"friendly_name" => __("Text Alignment (TEXTALIGN)"),
+		"friendly_name" => __("Text Alignment") . " (TEXTALIGN)",
 		"method" => "drop_array",
 		"value" => "|arg1:textalign|",
 		"array" => $rrd_textalign,
