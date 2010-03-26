@@ -132,7 +132,7 @@ if (sizeof($parms)) {
 }
 
 function display_help($me) {
-	echo __("Add Graphs Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
+	echo "Add Graphs Script 1.0" . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to import a Template into Cacti") . "\n\n";
 	echo __("usage: ") . $me . " --filename=[filename] [--with-rras] [-h] [--help] [-v] [--version]\n";
 	echo __("Required:") . "\n";

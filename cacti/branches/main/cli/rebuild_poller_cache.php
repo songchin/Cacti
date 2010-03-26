@@ -115,7 +115,7 @@ ini_set("max_execution_time", $max_execution);
 
 /*	display_help - displays the usage of the function */
 function display_help($me) {
-	echo __("Cacti Rebuild Poller Cache Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
+	echo "Cacti Rebuild Poller Cache Script 1.0" . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("usage: ") . $me . " [--device-id=ID] [-d | --debug] [-h | --help | -v | --version]\n\n";
 	echo "   -d            " . __("Display verbose output during execution") . "\n";
 	echo "   -v --version  " . __("Display this help message") . "\n";

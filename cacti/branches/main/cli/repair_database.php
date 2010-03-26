@@ -84,7 +84,7 @@ if (sizeof($tables)) {
 
 /*	display_help - displays the usage of the function */
 function display_help($me) {
-	echo __("Cacti Database Repair Tool v1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
+	echo "Cacti Database Repair Tool v1.0" . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("usage: ") . $me . " [-d] [-h] [--form] [--help] [-v] [-V] [--version]\n\n";
 	echo "   -form         " . __("Force rebuilding the indexes from the database creation syntax") . "\n";
 	echo "   -d            " . __("Display verbose output during execution") . "\n";

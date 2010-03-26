@@ -158,7 +158,7 @@ if (sizeof($parms) == 0) {
 }
 
 function display_help($me) {
-	echo __("Add Permissions Script 1.1") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
+	echo "Add Permissions Script 1.1" . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to add permissions in Cacti") . "\n\n";
 	echo __("usage: ") . $me . "  [ --user-id=[ID] ]\n";
 	echo "   --item-type=[graph|tree|device|graph_template]\n";

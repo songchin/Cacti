@@ -354,7 +354,7 @@ function createDQGraph($snmp_query_array, $graphTitle, $force) {
 
 
 function display_help($me) {
-	echo __("Add Graphs Script 1.3") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
+	echo "Add Graphs Script 1.3" . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to add graphs in Cacti") . "\n\n";
 	echo __("usage: ") . $me . " --graph-type=[cg|ds] --graph-template-id=[ID]\n";
 	echo "       [--graph-title=title] [graph options] [--force]\n";

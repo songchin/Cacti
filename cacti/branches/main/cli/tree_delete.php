@@ -140,7 +140,7 @@ if (sizeof($parms)) {
 }
 
 function display_help($me) {
-	echo __("Delete Tree Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
+	echo "Delete Tree Script 1.0" . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to delete objects from a tree in Cacti") . "\n\n";
 	echo __("usage: ") . $me . "  --type=[tree|node] --id=[ID]\n\n";
 	echo "   --id=[ID]      " . __("Id of Tree|Node") . "\n";

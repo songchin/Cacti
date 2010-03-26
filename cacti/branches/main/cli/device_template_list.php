@@ -78,7 +78,7 @@ if (sizeof($parms)) {
 }
 
 function display_help($me) {
-	echo __("List Device Template Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
+	echo "List Device Template Script 1.0" . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to list device templates in Cacti") . "\n\n";
 	echo __("usage: ") . $me . " php -q device_template_list.php\n";
 	echo __("Optional:") . "\n";
