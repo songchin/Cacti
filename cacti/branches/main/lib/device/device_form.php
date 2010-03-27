@@ -634,7 +634,7 @@ function device_edit() {
 		$header_label = __("[edit: ") . $device["description"] . "]";
 	}else{
 		$header_label = __("[new]");
-		$device_text    = __("New Host");
+		$device_text    = __("New Device");
 		$device         = "";
 	}
 
@@ -1458,7 +1458,9 @@ function device() {
 	if (isset($_REQUEST["clear_x"])) {
 		kill_session_var("sess_device_current_page");
 		kill_session_var("sess_device_filter");
-		kill_session_var("sess_device_template_id");
+		if (!substr_count($_SERVER["REQUEST_URI"], "/device_templates.php")) {
+			kill_session_var("sess_device_template_id");
+		}
 		kill_session_var("sess_device_status");
 		kill_session_var("sess_device_rows");
 		kill_session_var("sess_device_poller");
@@ -1468,7 +1470,9 @@ function device() {
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["filter"]);
-		unset($_REQUEST["template_id"]);
+		if (!substr_count($_SERVER["REQUEST_URI"], "/device_templates.php")) {
+			unset($_REQUEST["template_id"]);
+		}
 		unset($_REQUEST["status"]);
 		unset($_REQUEST["poller"]);
 		unset($_REQUEST["site"]);
@@ -1485,7 +1489,7 @@ function device() {
 	$changed += check_changed("rows",        "sess_device_rows");
 	$changed += check_changed("poller",      "sess_device_poller");
 	$changed += check_changed("site",        "sess_device_site");
-	$changed += check_changed("device_id",     "sess_ds_device_id");
+	$changed += check_changed("device_id",	 "sess_ds_device_id");
 
 	if ($changed) {
 		$_REQUEST["page"] = "1";
@@ -1506,13 +1510,25 @@ function device() {
 	<script type="text/javascript">
 	<!--
 
-	function applyViewDeviceFilterChange(objForm) {
-		strURL = '?status=' + objForm.status.value;
-		strURL = strURL + '&template_id=' + objForm.template_id.value;
+	function clearDeviceFilterChange(objForm) {
+		<?php print (isset($_REQUEST["tab"]) ? "strURL = '?template_id=" . $_REQUEST["template_id"] . "&id=" . $_REQUEST["template_id"] . "&action=edit&amp;action=edit&tab=" . $_REQUEST["tab"] . "';" : "strURL = '?template_id=-1';");?>
+		strURL = strURL + '&filter=';
+		strURL = strURL + '&rows=-1';
+		document.location = strURL;
+	}
+
+	function applyDeviceFilterChange(objForm) {
+		if (objForm.template_id.value) {
+			strURL = '?template_id=' + objForm.template_id.value;
+			strURL = strURL + '&filter=' + objForm.filter.value;
+		}else{
+			strURL = '?filter=' + objForm.filter.value;
+		}
+		strURL = strURL + '&status=' + objForm.status.value;
 		strURL = strURL + '&rows=' + objForm.rows.value;
 		strURL = strURL + '&poller=' + objForm.poller.value;
 		strURL = strURL + '&site=' + objForm.site.value;
-		strURL = strURL + '&filter=' + objForm.filter.value;
+		<?php print (isset($_REQUEST["tab"]) ? "strURL = strURL + '&id=' + objForm.template_id.value + '&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "");?>
 		document.location = strURL;
 	}
 
@@ -1531,7 +1547,7 @@ function device() {
 						&nbsp;<?php print __("Type:");?>&nbsp;
 					</td>
 					<td class="w1">
-						<select name="template_id" onChange="applyViewDeviceFilterChange(document.form_devices)">
+						<select name="template_id" onChange="applyDeviceFilterChange(document.form_devices)">
 							<option value="-1"<?php if (get_request_var_request("template_id") == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 							<option value="0"<?php if (get_request_var_request("template_id") == "0") {?> selected<?php }?>><?php print __("None");?></option>
 							<?php
@@ -1549,7 +1565,7 @@ function device() {
 						&nbsp;<?php print __("Status:");?>&nbsp;
 					</td>
 					<td class="w1">
-						<select name="status" onChange="applyViewDeviceFilterChange(document.form_devices)">
+						<select name="status" onChange="applyDeviceFilterChange(document.form_devices)">
 							<option value="-1"<?php if (get_request_var_request("status") == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 							<option value="-3"<?php if (get_request_var_request("status") == "-3") {?> selected<?php }?>><?php print __("Enabled");?></option>
 							<option value="-2"<?php if (get_request_var_request("status") == "-2") {?> selected<?php }?>><?php print __("Disabled");?></option>
@@ -1564,7 +1580,7 @@ function device() {
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
 					<td class="w1">
-						<select name="rows" onChange="applyViewDeviceFilterChange(document.form_devices)">
+						<select name="rows" onChange="applyDeviceFilterChange(document.form_devices)">
 							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>><?php print __("Default");?></option>
 							<?php
 							if (sizeof($item_rows) > 0) {
@@ -1583,7 +1599,7 @@ function device() {
 						&nbsp;<?php print __("Site:");?>&nbsp;
 					</td>
 					<td class="w1">
-						<select name="site" onChange="applyViewDeviceFilterChange(document.form_devices)">
+						<select name="site" onChange="applyDeviceFilterChange(document.form_devices)">
 							<option value="-1"<?php if (get_request_var_request("site") == "-1") {?> selected<?php }?>><?php print __("All");?></option>
 							<option value="0"<?php if (get_request_var_request("site") == "0") {?> selected<?php }?>><?php print __("Not Defined");?></option>
 							<?php
@@ -1601,7 +1617,7 @@ function device() {
 						&nbsp;<?php print __("Poller:");?>&nbsp;
 					</td>
 					<td class="w1">
-						<select name="poller" onChange="applyViewDeviceFilterChange(document.form_devices)">
+						<select name="poller" onChange="applyDeviceFilterChange(document.form_devices)">
 							<option value="-1"<?php if (get_request_var_request("poller") == "-1") {?> selected<?php }?>><?php print __("All");?></option>
 							<option value="0"<?php if (get_request_var_request("poller") == "0") {?> selected<?php }?>><?php print __("System Default");?></option>
 							<?php
@@ -1621,9 +1637,9 @@ function device() {
 					<td class="w1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td nowrap>
+					<td class="nw120">
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
-						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
+						<input type="button" Value="<?php print __("Clear");?>" name="clear_x" align="middle" onClick="clearDeviceFilterChange(document.form_devices)">
 					</td>
 				</tr>
 			</table>

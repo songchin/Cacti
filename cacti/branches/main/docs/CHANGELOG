@@ -151,6 +151,7 @@ Cacti CHANGELOG
 -feature: add support for TICK on rrdtool graphs
 -feature: TIME_SHIFT_START and _END as specific data sources for CDEFs (e.g. graph colorization)
 -feature: rrdtool SHIFT support available
+-feature: add shortcuts to template management (device, graph, data source templates)
 
 0.8.7e
 

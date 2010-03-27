@@ -39,34 +39,34 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch (get_request_var_request("action")) {
 	case 'save':
-		form_save();
+		device_template_form_save();
 
 		break;
 	case 'actions':
-		form_actions();
+		device_template_form_actions();
 
 		break;
 	case 'item_remove_gt':
-		template_item_remove_gt();
+		device_template_item_remove_gt();
 
 		header("Location: device_templates.php?action=edit&id=" . $_GET["device_template_id"]);
 		break;
 	case 'item_remove_dq':
-		template_item_remove_dq();
+		device_template_item_remove_dq();
 
 		header("Location: device_templates.php?action=edit&id=" . $_GET["device_template_id"]);
 		break;
 	case 'edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		template_edit();
+		device_template_edit();
 
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		template();
+		device_template();
 
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
@@ -76,7 +76,7 @@ switch (get_request_var_request("action")) {
     The Save Function
    -------------------------- */
 
-function form_save() {
+function device_template_form_save() {
 	/* required for "run_data_query" */
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 
@@ -243,7 +243,7 @@ function form_save() {
     The "actions" function
    ------------------------ */
 
-function form_actions() {
+function device_template_form_actions() {
 	global $colors, $device_actions;
 
 	/* if we are to save this form, instead of display it */
@@ -370,7 +370,7 @@ function form_actions() {
     Template Functions
    --------------------- */
 
-function template_item_remove_gt() {
+function device_template_item_remove_gt() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	input_validate_input_number(get_request_var("device_template_id"));
@@ -379,7 +379,7 @@ function template_item_remove_gt() {
 	db_execute("delete from device_template_graph where graph_template_id=" . $_GET["id"] . " and device_template_id=" . $_GET["device_template_id"]);
 }
 
-function template_item_remove_dq() {
+function device_template_item_remove_dq() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	input_validate_input_number(get_request_var("device_template_id"));
@@ -388,39 +388,105 @@ function template_item_remove_dq() {
 	db_execute("delete from device_template_snmp_query where snmp_query_id=" . $_GET["id"] . " and device_template_id=" . $_GET["device_template_id"]);
 }
 
-function template_edit() {
+function device_template_edit() {
 	global $colors;
-	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
-	require_once(CACTI_BASE_PATH . "/lib/device_template/device_template_info.php");
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
 	/* remember if there's something we want to show to the user */
-	$debug_log = debug_log_return("device_template");
+#	$debug_log = debug_log_return("device_template");
+#
+#	if (!empty($debug_log)) {
+#		debug_log_clear("device_template");
+/*#		?>
+#		<table class='topBoxAlt'>
+#			<tr bgcolor="<?php print $colors["light"];?>">
+#				<td class='mono'>
+#					<?php print $debug_log;?>
+#				</td>
+#			</tr>
+#		</table>
+#		<br>
+#		<?php
+#	}
+*/
+	display_output_messages();
 
-	if (!empty($debug_log)) {
-		debug_log_clear("device_template");
-		?>
-		<table class='topBoxAlt'>
-			<tr bgcolor="<?php print $colors["light"];?>">
-				<td class='mono'>
-					<?php print $debug_log;?>
-				</td>
-			</tr>
-		</table>
-		<br>
-		<?php
-	}
+	$device_template_tabs = array(
+		"general" => __("General"),
+		"devices" => __("Devices"),
+	);
 
-	if (!empty($_GET["id"])) {
-		$device_template = db_fetch_row("select * from device_template where id=" . $_GET["id"]);
+	if (!empty($_REQUEST["id"])) {
+		$device_template = db_fetch_row("select * from device_template where id=" . $_REQUEST["id"]);
 		$header_label = __("[edit: ") . $device_template["name"] . "]";
 	}else{
 		$header_label = __("[new]");
 		$_GET["id"] = 0;
 	}
+
+	/* set the default settings category */
+	if (!isset($_REQUEST["tab"])) {
+		/* there is no selected tab; select the first one */
+		$current_tab = array_keys($device_template_tabs);
+		$current_tab = $current_tab[0];
+	}else{
+		$current_tab = $_REQUEST["tab"];
+	}
+
+	/* draw the categories tabs on the top of the page */
+	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
+	print "<td><div class='tabs'>";
+
+	if (sizeof($device_template_tabs) > 0) {
+		foreach (array_keys($device_template_tabs) as $tab_short_name) {
+			print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("device_templates.php?action=edit" . (isset($_REQUEST['id']) ? "&id=" . $_REQUEST['id'] . "&template_id=" . $_REQUEST['id']: "") . "&tab=$tab_short_name") . "'>$device_template_tabs[$tab_short_name]</a></div>";
+
+			if (!isset($_REQUEST["id"])) break;
+		}
+	}
+	print "</div></td></tr></table>";
+
+	if (!isset($_REQUEST["tab"])) {
+		$_REQUEST["tab"] = "general";
+	}
+
+	switch (get_request_var_request("tab")) {
+		case "devices":
+			include_once(CACTI_BASE_PATH . "/lib/device/device_form.php");
+			include_once(CACTI_BASE_PATH . "/lib/utility.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
+			include_once(CACTI_BASE_PATH . "/lib/device/device_form.php");
+			include_once(CACTI_BASE_PATH . "/lib/graph/graphs_new_form.php");
+			include_once(CACTI_BASE_PATH . "/lib/graph/graphs_form.php");
+			include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_tree.php");
+			include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
+			include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+			include_once(CACTI_BASE_PATH . "/lib/sort.php");
+			include_once(CACTI_BASE_PATH . "/lib/html_form_template.php");
+			include_once(CACTI_BASE_PATH . "/lib/template.php");
+			include_once(CACTI_BASE_PATH . "/lib/snmp.php");
+			include_once(CACTI_BASE_PATH . "/lib/ping.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_device.php");
+
+			device();
+
+			break;
+		default:
+			device_template_display_general($device_template, $header_label);
+
+			break;
+	}
+}
+
+function device_template_display_general($device_template, $header_label) {
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/device_template/device_template_info.php");
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='device_template_edit'>\n";
 	html_start_box("<strong>" . __("Device Templates") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
@@ -941,7 +1007,7 @@ function template_edit() {
 	form_save_button_alt();
 }
 
-function template() {
+function device_template() {
 	global $colors, $device_actions, $item_rows;
 
 	/* ================= input validation ================= */
