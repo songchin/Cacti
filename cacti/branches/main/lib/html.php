@@ -1014,7 +1014,6 @@ function draw_data_template_items_list($item_list, $filename, $url_data, $disabl
 		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='" . (sizeof($header_items)+$last_item_colspan-1) . "'><em>" . __("No Items") . "</em></td></tr>";
 	}
 	print "</table></td></tr>";		/* end of html_header */
-	html_end_box();
 }
 
 

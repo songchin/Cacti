@@ -401,62 +401,99 @@ function template_rrd_add() {
 	exit;
 }
 
-
-/**
- * data_source_template_item	- list all data template items
- */
-function data_source_template_item() {
-	global $colors;
-	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
-
-	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var("id"));
-	/* ==================================================== */
-
-	if (!empty($_GET["id"])) {
-		$template = db_fetch_row("SELECT * FROM data_template WHERE id=" . $_GET["id"]);
-		$template_item_list = db_fetch_assoc("SELECT * FROM data_template_rrd WHERE data_template_id=" . $_GET["id"] . " AND local_data_id=0 ORDER BY data_source_name");
-		$header_label = __("[edit: ") . $template["name"] . "]";
-	}else{
-		$template_item_list = array();
-		$header_label = __("[new]");
-	}
-
-	html_start_box("<strong>" . __("Data Source Items") . "</strong> $header_label", "100", $colors["header"], "0", "center", "data_templates_items.php?action=item_edit&data_template_id=" . $_GET["id"], true);
-	draw_data_template_items_list($template_item_list, "data_templates_items.php", "data_template_id=" . $_GET["id"], false);
-	html_end_box(false);
-
-}
-
-
 /**
  * data_source_template_edit	- edit the data template
  */
 function data_source_template_edit() {
-	global $colors;
-	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
-
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	input_validate_input_number(get_request_var("view_rrd"));
 	/* ==================================================== */
 
-	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_data_source_template_edit'>\n";
+	display_output_messages();
 
-	/* graph item list goes here */
-	if (!empty($_GET["id"])) {
-		data_source_template_item();
-	}
+	$data_template_tabs = array(
+		"general" 		=> __("General"),
+		"items" 		=> __("Items"),
+		"datasources" 	=> __("Data Sources")
+	);
 
 	if (!empty($_GET["id"])) {
-		$template = db_fetch_row("SELECT * FROM data_template WHERE id=" . $_GET["id"]);
-		$template_data = db_fetch_row("SELECT * FROM data_template_data WHERE data_template_id=" . $_GET["id"] . " AND local_data_id=0");
-		$header_label = __("[edit: ") . $template["name"] . "]";
+		$data_template = db_fetch_row("SELECT * FROM data_template WHERE id=" . $_REQUEST["id"]);
+		$header_label = __("[edit: ") . $data_template["name"] . "]";
 	}else{
+		$data_template = array();
 		$header_label = __("[new]");
 	}
 
+	/* set the default settings category */
+	if (!isset($_REQUEST["tab"])) {
+		/* there is no selected tab; select the first one */
+		$current_tab = array_keys($data_template_tabs);
+		$current_tab = $current_tab[0];
+	}else{
+		$current_tab = $_REQUEST["tab"];
+	}
+
+	/* draw the categories tabs on the top of the page */
+	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
+	print "<td><div class='tabs'>";
+
+	if (sizeof($data_template_tabs) > 0) {
+		foreach (array_keys($data_template_tabs) as $tab_short_name) {
+			print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("data_templates.php?action=template_edit" . (isset($_REQUEST['id']) ? "&id=" . $_REQUEST['id'] . "&template_id=" . $_REQUEST['id']: "") . "&filter=&device_id=-1&tab=$tab_short_name") . "'>$data_template_tabs[$tab_short_name]</a></div>";
+
+			if (!isset($_REQUEST["id"])) break;
+		}
+	}
+	print "</div></td></tr></table>";
+
+	if (!isset($_REQUEST["tab"])) {
+		$_REQUEST["tab"] = "general";
+	}
+
+	switch (get_request_var_request("tab")) {
+		case "datasources":
+			include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
+			include_once(CACTI_BASE_PATH . "/lib/utility.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
+			include_once(CACTI_BASE_PATH . "/lib/template.php");
+			include_once(CACTI_BASE_PATH . "/lib/html_form_template.php");
+			include_once(CACTI_BASE_PATH . "/lib/rrd.php");
+			include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+
+			data_source();
+
+			break;
+
+		case "items":
+			/* graph item list goes here */
+			if (!empty($_GET["id"])) {
+				data_template_display_items();
+			}
+
+			break;
+		default:
+			data_source_template_display_general($data_template, $header_label);
+
+			break;
+	}
+}
+
+function data_source_template_display_general($data_template, $header_label) {
+	global $colors;
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
+
+	# fetch all settings for this graph template
+	if (isset($data_template["id"])) {
+		$template_data = db_fetch_row("SELECT * FROM data_template_data WHERE data_template_id=" . $data_template["id"] . " AND local_data_id=0");
+	}else {
+		$template_data = array();
+	}
+
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_data_source_template_edit'>\n";
 
 	# the template header
 	html_start_box("<strong>" . __("Data Source Template") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
@@ -466,7 +503,7 @@ function data_source_template_edit() {
 
 	draw_edit_form(array(
 		"config" => array("no_form_tag" => true),
-		"fields" => inject_form_variables(data_template_form_list(), (isset($template) ? $template : array()), (isset($template_data) ? $template_data : array()))
+		"fields" => inject_form_variables(data_template_form_list(), (isset($data_template) ? $data_template : array()), (isset($template_data) ? $template_data : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */
@@ -523,7 +560,43 @@ function data_source_template_edit() {
 		html_end_box(false);
 	}
 
-	form_save_button_alt("return");
+	form_save_button_alt("url!data_templates.php");
+}
+
+/**
+ * data_source_template_item	- list all data template items
+ */
+function data_template_display_items() {
+	global $colors;
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+
+	/* ================= input validation ================= */
+	input_validate_input_number(get_request_var("id"));
+	/* ==================================================== */
+
+	if (!empty($_GET["id"])) {
+		$template = db_fetch_row("SELECT * FROM data_template WHERE id=" . $_REQUEST["id"]);
+		$template_item_list = db_fetch_assoc("SELECT * FROM data_template_rrd WHERE data_template_id=" . $_REQUEST["id"] . " AND local_data_id=0 ORDER BY data_source_name");
+		$header_label = __("[edit: ") . $template["name"] . "]";
+	}else{
+		$template_item_list = array();
+		$header_label = __("[new]");
+	}
+
+	html_start_box("<strong>" . __("Data Source Items") . "</strong> $header_label", "100", $colors["header"], "0", "center", "data_templates_items.php?action=item_edit&data_template_id=" . $_REQUEST["id"], true);
+	draw_data_template_items_list($template_item_list, "data_templates_items.php", "data_template_id=" . $_REQUEST["id"], false);
+	html_end_box(true);
+
+	?>
+	<table class='saveBox'>
+		<tr>
+			<td>
+				<input id='cancel' type='button' value='Cancel' onClick='window.location.assign("data_templates.php")' name='cancel'>
+			</td>
+		</tr>
+	</table>
+	<?php
+
 }
 
 /**

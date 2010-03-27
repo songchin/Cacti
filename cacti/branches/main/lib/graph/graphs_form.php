@@ -1303,13 +1303,6 @@ function graph() {
 				</tr>
 			</table>
 			<input type='hidden' name='page' value='1'>
-			<?php
-#			if (isset($_REQUEST["tab"])) {
-#				print "<input type='hidden' name='tab' value='" . $_REQUEST["tab"] . "'>\n";
-#				print "<input type='hidden' name='id' value='" . $_REQUEST["id"] . "'>\n";
-#				print "<input type='hidden' name='action' value='edit'>\n";
-#			}
-			?>
 			</form>
 		</td>
 	</tr>

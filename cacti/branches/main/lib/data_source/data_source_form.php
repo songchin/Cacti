@@ -957,26 +957,47 @@ function data_source() {
 	});
 
 	function clearDSFilterChange(objForm) {
-		<?php print (isset($_REQUEST["tab"]) ? "strURL = '?device_id=" . $_REQUEST["device_id"] . "&id=" . $_REQUEST["device_id"] . "&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "strURL = '?device_id=-1';");?>
-		strURL = strURL + '&filter=';
+		strURL = '?filter=';
+		<?php
+		# called from outside
+		if (isset($_REQUEST["tab"])) {
+			# print the tab
+			print "strURL = strURL + &tab=" . $_REQUEST["tab"] . "';";
+			# now look for more parameters
+			if (isset($_REQUEST["device_id"])) {
+				print "strURL = strURL + '&device_id=" . $_REQUEST["device_id"] . "&id=" . $_REQUEST["device_id"] . "';";
+			}
+			if (isset($_REQUEST["template_id"])) {
+				print "strURL = strURL + '&template_id=" . $_REQUEST["template_id"] . "&id=" . $_REQUEST["template_id"] . "';";
+			}
+		}else {
+			# clear all parms
+			print "strURL = strURL + '&device_id=-1';";
+			print "strURL = strURL + '&template_id=-1';";
+		}
+		?>
 		strURL = strURL + '&rows=-1';
-		strURL = strURL + '&template_id=-1';
 		strURL = strURL + '&method_id=-1';
 		document.location = strURL;
 	}
 
 	function applyDSFilterChange(objForm) {
+		strURL = '?filter=' + objForm.filter.value;
+		// take care of parms provided via autocomplete
+		// those are passed as objForm.<parm>.value
+		// instead of $_REQUEST["<parm>"] when called from outside
 		if (objForm.device_id.value) {
 			strURL = '?device_id=' + objForm.device_id.value;
-			strURL = strURL + '&filter=' + objForm.filter.value;
 		}else{
-			strURL = '?filter=' + objForm.filter.value;
+			<?php print (isset($_REQUEST["device_id"]) ? "strURL = strURL + '&device_id=" . $_REQUEST["device_id"] . "&id=" . $_REQUEST["device_id"] . "';" : "strURL = strURL + '&device_id=-1';");?>
 		}
-
+		if (objForm.template_id.value) {
+			strURL = '?template_id=' + objForm.template_id.value;
+		}else{
+			<?php print (isset($_REQUEST["template_id"]) ? "strURL = strURL + '&template_id=" . $_REQUEST["template_id"] . "&id=" . $_REQUEST["template_id"] . "';" : "strURL = strURL + '&template_id=-1';");?>
+		}
 		strURL = strURL + '&rows=' + objForm.rows.value;
-		strURL = strURL + '&template_id=' + objForm.template_id.value;
 		strURL = strURL + '&method_id=' + objForm.method_id.value;
-		<?php print (isset($_REQUEST["tab"]) ? "strURL = strURL + '&id=' + objForm.device_id.value + '&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "");?>
 		document.location = strURL;
 	}
 	-->
@@ -1086,13 +1107,6 @@ function data_source() {
 				</tr>
 			</table>
 			<input type='hidden' name='page' value='1'>
-			<?php
-			if (isset($_REQUEST["tab"])) {
-				print "<input type='hidden' name='tab' value='" . $_REQUEST["tab"] . "'>\n";
-				print "<input type='hidden' name='id' value='" . $_REQUEST["id"] . "'>\n";
-				print "<input type='hidden' name='action' value='edit'>\n";
-			}
-			?>
 			</form>
 		</td>
 	</tr>
