@@ -1025,11 +1025,11 @@ function form_confirm_alt($title_text, $body_text, $cancel_url, $action_url) { ?
 
 /** form_save_button_alt - draws a (save|create) and cancel button at the bottom of
      an html edit form
-   @param string $cancel_action -
-   @param string $action -
-   @param string $force_type - if specified, will force the 'action' button to be either
+   @param string $cancel_action - determines CANCEL action, e.g. URL to go to
+   @param string $action 		- determines SAVE action
+   @param string $force_type 	- if specified, will force the 'action' button to be either
      'save' or 'create'. otherwise this field should be properly auto-detected
-   @param string $key_field  - required to dinstinguish between SAVE and CREATE */
+   @param string $key_field  	- required to dinstinguish between SAVE and CREATE */
 function form_save_button_alt($cancel_action = "", $action = "save", $force_type = "", $key_field = "id") {
 	global $config;
 
@@ -1095,6 +1095,11 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
    has selected "cancel", where to goto.  the default will be to goto the current
    page with no action (aka continue)
   @param string $cancel_action -
+  		'url' 	- defines the URL to go to
+  		'path'	-
+  		'return'-
+  		else	- composes the URL parameters from REQUEST_URI
+  @return string - URL to go to
 */
 function form_cancel_action_compose($cancel_action) {
 	global $url_path;

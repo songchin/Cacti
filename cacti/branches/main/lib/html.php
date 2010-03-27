@@ -900,7 +900,8 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 #			form_alternate_row_color();
 			form_alternate_row_color($item["id"], true);
 		}else{
-			print "<tr id='row_".$item["id"]."' bgcolor='#$custom_row_color'>";
+#			print "<tr id='row_".$item["id"]."' bgcolor='#$custom_row_color'>";
+			form_alternate_row_color($item["id"], true);
 		}
 
 		print "<td>";
@@ -928,7 +929,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 			case GRAPH_ITEM_TYPE_HRULE:
 				$matrix_title = "HRULE: " . $item["value"];
 				break;
-				case GRAPH_ITEM_TYPE_VRULE:
+			case GRAPH_ITEM_TYPE_VRULE:
 				$matrix_title = "VRULE: " . $item["value"];
 				break;
 			case GRAPH_ITEM_TYPE_COMMENT:

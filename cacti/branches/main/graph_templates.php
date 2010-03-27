@@ -20,7 +20,7 @@
  +-------------------------------------------------------------------------+
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
-*/
+ */
 
 include("./include/auth.php");
 include_once(CACTI_BASE_PATH . "/lib/utility.php");
@@ -31,10 +31,10 @@ include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $graph_template_actions = array(
-	ACTION_NONE => __("None"),
+ACTION_NONE => __("None"),
 	"1" => __("Delete"),
 	"2" => __("Duplicate")
-	);
+);
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -82,8 +82,8 @@ switch (get_request_var_request("action")) {
 }
 
 /* --------------------------
-    The Save Function
-   -------------------------- */
+ The Save Function
+ -------------------------- */
 
 function form_save() {
 	if (isset($_POST["save_component_template"])) {
@@ -226,8 +226,8 @@ function form_save() {
 }
 
 /* ------------------------
-    The "actions" function
-   ------------------------ */
+ The "actions" function
+ ------------------------ */
 
 function form_actions() {
 	global $colors, $graph_template_actions;
@@ -239,17 +239,17 @@ function form_actions() {
 		if (get_request_var_post("drp_action") === "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
-			foreach($selected_items as $template_id) {
-				/* ================= input validation ================= */
-				input_validate_input_number($template_id);
-				/* ==================================================== */
+				foreach($selected_items as $template_id) {
+					/* ================= input validation ================= */
+					input_validate_input_number($template_id);
+					/* ==================================================== */
 
-				if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_graph WHERE graph_template_id=$template_id LIMIT 1"))) {
-					$bad_ids[] = $template_id;
-				}else{
-					$template_ids[] = $template_id;
+					if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_graph WHERE graph_template_id=$template_id AND local_graph_id > 0 LIMIT 1"))) {
+						$bad_ids[] = $template_id;
+					}else{
+						$template_ids[] = $template_id;
+					}
 				}
-			}
 			}
 
 			if (isset($bad_ids)) {
@@ -269,9 +269,9 @@ function form_actions() {
 				$graph_template_input = db_fetch_assoc("select id from graph_template_input where " . array_to_sql_or($template_ids, "graph_template_id"));
 
 				if (sizeof($graph_template_input) > 0) {
-				foreach ($graph_template_input as $item) {
-					db_execute("delete from graph_template_input_defs where graph_template_input_id=" . $item["id"]);
-				}
+					foreach ($graph_template_input as $item) {
+						db_execute("delete from graph_template_input_defs where graph_template_input_id=" . $item["id"]);
+					}
 				}
 
 				db_execute("delete from graph_template_input where " . array_to_sql_or($template_ids, "graph_template_id"));
@@ -365,7 +365,170 @@ function form_actions() {
 	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
-function graph_template_item() {
+/* ----------------------------
+ template - Graph Templates
+ ---------------------------- */
+
+function template_edit() {
+
+	/* ================= input validation ================= */
+	input_validate_input_number(get_request_var("id"));
+	/* ==================================================== */
+
+	display_output_messages();
+
+	$graph_template_tabs = array(
+		"general" 	=> __("General"),
+		"items" 	=> __("Items"),
+		"graphs" 	=> __("Graphs"),
+	);
+
+	if (!empty($_REQUEST["id"])) {
+		$graph_template = db_fetch_row("select * from graph_templates where id=" . $_REQUEST["id"]);
+		$header_label = __("[edit: ") . $graph_template["name"] . "]";
+	}else{
+		$graph_template = array();
+		$header_label = __("[new]");
+		#$_REQUEST["id"] = 0;
+	}
+
+	/* set the default settings category */
+	if (!isset($_REQUEST["tab"])) {
+		/* there is no selected tab; select the first one */
+		$current_tab = array_keys($graph_template_tabs);
+		$current_tab = $current_tab[0];
+	}else{
+		$current_tab = $_REQUEST["tab"];
+	}
+
+	/* draw the categories tabs on the top of the page */
+	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
+	print "<td><div class='tabs'>";
+
+	if (sizeof($graph_template_tabs) > 0) {
+		foreach (array_keys($graph_template_tabs) as $tab_short_name) {
+			print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("graph_templates.php?action=template_edit" . (isset($_REQUEST['id']) ? "&id=" . $_REQUEST['id'] . "&template_id=" . $_REQUEST['id']: "") . "&filter=&device_id=-1&tab=$tab_short_name") . "'>$graph_template_tabs[$tab_short_name]</a></div>";
+
+			if (!isset($_REQUEST["id"])) break;
+		}
+	}
+	print "</div></td></tr></table>";
+
+	if (!isset($_REQUEST["tab"])) {
+		$_REQUEST["tab"] = "general";
+	}
+
+	switch (get_request_var_request("tab")) {
+		case "graphs":
+			include_once(CACTI_BASE_PATH . "/lib/graph/graphs_form.php");
+			include_once(CACTI_BASE_PATH . "/lib/utility.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_tree.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
+			include_once(CACTI_BASE_PATH . "/lib/template.php");
+			include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
+			include_once(CACTI_BASE_PATH . "/lib/html_form_template.php");
+			include_once(CACTI_BASE_PATH . "/lib/rrd.php");
+			include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+
+			graph();
+
+			break;
+
+		case "items":
+			/* graph item list goes here */
+			if (!empty($_REQUEST["id"])) {
+				graph_template_display_items();
+			}
+
+			break;
+		default:
+			graph_template_display_general($graph_template, $header_label);
+
+			break;
+	}
+}
+
+function graph_template_display_general($graph_template, $header_label) {
+	global $colors;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
+
+	# fetch all settings for this graph template
+	if (isset($graph_template["id"])) {
+		$template_graph = db_fetch_row("select * from graph_templates_graph where graph_template_id=" . $graph_template["id"] . " and local_graph_id=0");
+	}else {
+		$template_graph = array();
+	}
+
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='graph_template_edit'>\n";
+
+	# the template header
+	html_start_box("<strong>" . __("Graph Template") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
+	$header_items = array(__("Field"), __("Value"));
+	print "<tr><td>";
+	html_header($header_items, 1, true, 'header_template');
+
+	draw_edit_form(array(
+		"config" => array("no_form_tag" => true),
+		"fields" => inject_form_variables(graph_template_form_list(), (isset($graph_template) ? $graph_template : array()), (isset($template_graph) ? $template_graph : array()))
+	));
+
+	print "</table></td></tr>";		/* end of html_header */
+	html_end_box(false);
+	form_hidden_box("graph_template_id", (isset($template_graph["graph_template_id"]) ? $template_graph["graph_template_id"] : "0"), "");
+	form_hidden_box("graph_template_graph_id", (isset($template_graph["id"]) ? $template_graph["id"] : "0"), "");
+	form_hidden_box("save_component_template", 1, "");
+
+
+	# the global graph template fields go here
+	#	html_start_box("<strong>" . __("Graph Template") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template");
+
+	/* id tags of tables (set via html_start_box) required for initial js on load */
+	html_start_box("<strong>" . __("Graph Template Labels") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_labels");
+	draw_template_edit_form('header_graph_labels', graph_labels_form_list(), $template_graph, false);
+	html_end_box(false);
+	/* TODO: we should not use rrd version in the code, when going data-driven */
+	if ( read_config_option("rrdtool_version") != RRD_VERSION_1_0 && read_config_option("rrdtool_version") != RRD_VERSION_1_2) {
+		html_start_box("<strong>" . __("Graph Template Right Axis Settings") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_right_axis");
+		draw_template_edit_form('header_graph_right_axis', graph_right_axis_form_list(), $template_graph, false);
+	}
+	html_end_box(false);
+	html_start_box("<strong>" . __("Graph Template Size") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_size");
+	draw_template_edit_form('header_graph_size', graph_size_form_list(), $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Graph Template Limits") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_limits");
+	draw_template_edit_form('header_graph_limits', graph_limits_form_list(), $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Graph Template Grid") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_grid");
+	draw_template_edit_form('header_graph_grid', graph_grid_form_list(), $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Graph Template Color") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_color");
+	draw_template_edit_form('header_graph_color', graph_color_form_list(), $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Graph Template Legend") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_legend");
+	draw_template_edit_form('header_graph_legend', graph_legend_form_list(), $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Graph Template Misc") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
+	draw_template_edit_form('header_graph_misc', graph_misc_form_list(), $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Graph Template Cacti Specifics") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_cacti");
+	draw_template_edit_form('header_graph_cacti', graph_cacti_form_list(), $template_graph, false);
+	html_end_box(false);
+
+	# the id tag is required for our js code!
+	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
+	#	html_end_box(false);
+
+	form_save_button_alt("url!graph_templates.php");
+
+	include_once(CACTI_BASE_PATH . "/access/js/colorpicker.js");
+	include_once(CACTI_BASE_PATH . "/access/js/graph_template_options.js");
+
+}
+
+
+function graph_template_display_items() {
 	global $colors;
 	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
@@ -373,7 +536,7 @@ function graph_template_item() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	if (empty($_GET["id"])) {
+	if (empty($_REQUEST["id"])) {
 		$template_item_list = array();
 
 		$header_label = __("[new]");
@@ -402,138 +565,58 @@ function graph_template_item() {
 			left join vdef on (vdef_id=vdef.id)
 			left join colors on (color_id=colors.id)
 			left join graph_templates_gprint on (gprint_id=graph_templates_gprint.id)
-			where graph_templates_item.graph_template_id=" . $_GET["id"] . "
+			where graph_templates_item.graph_template_id=" . $_REQUEST["id"] . "
 			and graph_templates_item.local_graph_id=0
 			order by graph_templates_item.sequence");
 
-		$header_label = __("[edit: ") . db_fetch_cell("select name from graph_templates where id=" . $_GET["id"]) . "]";
+		$header_label = __("[edit: ") . db_fetch_cell("select name from graph_templates where id=" . $_REQUEST["id"]) . "]";
 	}
 
-	html_start_box("<strong>" . __("Graph Template Items") . "</strong> $header_label", "100", $colors["header"], "0", "center", "graph_templates_items.php?action=item_edit&graph_template_id=" . $_GET["id"], true);
-	draw_graph_items_list($template_item_list, "graph_templates_items.php", "graph_template_id=" . $_GET["id"], false);
-	html_end_box(false);
+	/* graph template item */
+	html_start_box("<strong>" . __("Graph Template Items") . "</strong> $header_label", "100", $colors["header"], "0", "center", "graph_templates_items.php?action=item_edit&graph_template_id=" . $_REQUEST["id"], true);
+	draw_graph_items_list($template_item_list, "graph_templates_items.php", "graph_template_id=" . $_REQUEST["id"], false);
+	html_end_box(true);
 
-	html_start_box("<strong>" . __("Graph Item Inputs") . "</strong>", "100", $colors["header"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_GET["id"], true);
-
-	print "<tr><td>";
+	/* graph template inputs */
+	html_start_box("<strong>" . __("Graph Item Inputs") . "</strong>", "100", $colors["header"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_REQUEST["id"], true);
+	print "<tr><td>\n";
 	html_header(array(__("Name")), 2,'','','left wp100');
-	print "</td></tr>";
 
-	$template_item_list = db_fetch_assoc("select id,name from graph_template_input where graph_template_id=" . $_GET["id"] . " order by name");
+	$template_item_list = db_fetch_assoc("select id,name from graph_template_input where graph_template_id=" . $_REQUEST["id"] . " order by name");
 
 	if (sizeof($template_item_list) > 0) {
-	foreach ($template_item_list as $item) {
-		form_alternate_row_color("item" . $item["id"]);
-		?>
-			<td>
-				<a class="linkEditMain" href='<?php print htmlspecialchars("graph_templates_inputs.php?action=input_edit&id=" . $item["id"] . "&graph_template_id=" . $_GET["id"]);?>'><?php print $item["name"];?></a>
-			</td>
-			<td align="right">
-				<a href='<?php print htmlspecialchars("graph_templates_inputs.php?action=input_remove&id=" . $item["id"] . "&graph_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='right'></a>
-			</td>
-		<?php
-		form_end_row();
-	}
+		foreach ($template_item_list as $item) {
+			form_alternate_row_color("item" . $item["id"]);
+			?>
+<td><a class="linkEditMain"
+	href='<?php print htmlspecialchars("graph_templates_inputs.php?action=input_edit&id=" . $item["id"] . "&graph_template_id=" . $_REQUEST["id"]);?>'><?php print $item["name"];?></a>
+</td>
+<td align="right"><a
+	href='<?php print htmlspecialchars("graph_templates_inputs.php?action=input_remove&id=" . $item["id"] . "&graph_template_id=" . $_GET["id"]);?>'><img
+	class="buttonSmall" src="images/delete_icon.gif"
+	alt="<?php print __("Delete");?>" align='right'></a></td>
+			<?php
+			form_end_row();
+		}
 	}else{
 		print "<tr class='rowAlternate1'><td colspan='2'><em>" . __("No Inputs") . "</em></td></tr>";
 	}
 
-	html_end_box(false);
-}
+	print "</table></td></tr>";
+	html_end_box(true);
 
-/* ----------------------------
-    template - Graph Templates
-   ---------------------------- */
+	?>
+	<table class='saveBox'>
+		<tr>
+			<td>
+				<input id='cancel' type='button' value='Cancel' onClick='window.location.assign("graph_templates.php")' name='cancel'>
+			</td>
+		</tr>
+	</table>
+	<?php
 
-function template_edit() {
-	global $colors;
-	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
-	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
-
-	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var("id"));
-	/* ==================================================== */
-
-	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='graph_template_edit'>\n";
-
-	/* graph item list goes here */
-	if (!empty($_GET["id"])) {
-		graph_template_item();
-	}
-
-	if (!empty($_GET["id"])) {
-		$template = db_fetch_row("select * from graph_templates where id=" . $_GET["id"]);
-		$template_graph = db_fetch_row("select * from graph_templates_graph where graph_template_id=" . $_GET["id"] . " and local_graph_id=0");
-		$header_label = __("[edit: ") . $template["name"] . "]";
-	}else{
-		$header_label = __("[new]");
-	}
-
-
-	# the template header
-	html_start_box("<strong>" . __("Graph Template") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
-	$header_items = array(__("Field"), __("Value"));
-	print "<tr><td>";
-	html_header($header_items, 1, true, 'header_template');
-
-	draw_edit_form(array(
-		"config" => array("no_form_tag" => true),
-		"fields" => inject_form_variables(graph_template_form_list(), (isset($template) ? $template : array()), (isset($template_graph) ? $template_graph : array()))
-		));
-
-	print "</table></td></tr>";		/* end of html_header */
-	html_end_box(false);
-	form_hidden_box("graph_template_id", $template_graph["graph_template_id"], "0");
-	form_hidden_box("graph_template_graph_id", $template_graph["id"], "0");
-	form_hidden_box("save_component_template", 1, "");
-
-
-	# the global graph template fields go here
-#	html_start_box("<strong>" . __("Graph Template") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template");
-
-	/* id tags of tables (set via html_start_box) required for initial js on load */
-	html_start_box("<strong>" . __("Graph Template Labels") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_labels");
-	draw_template_edit_form('header_graph_labels', graph_labels_form_list(), $template_graph, false);
-	html_end_box(false);
-	/* TODO: we should not use rrd version in the code, when going data-driven */
-	if ( read_config_option("rrdtool_version") != RRD_VERSION_1_0 && read_config_option("rrdtool_version") != RRD_VERSION_1_2) {
-		html_start_box("<strong>" . __("Graph Template Right Axis Settings") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_right_axis");
-		draw_template_edit_form('header_graph_right_axis', graph_right_axis_form_list(), $template_graph, false);
-	}
-	html_end_box(false);
-	html_start_box("<strong>" . __("Graph Template Size") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_size");
-	draw_template_edit_form('header_graph_size', graph_size_form_list(), $template_graph, false);
-	html_end_box(false);
-	html_start_box("<strong>" . __("Graph Template Limits") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_limits");
-	draw_template_edit_form('header_graph_limits', graph_limits_form_list(), $template_graph, false);
-	html_end_box(false);
-	html_start_box("<strong>" . __("Graph Template Grid") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_grid");
-	draw_template_edit_form('header_graph_grid', graph_grid_form_list(), $template_graph, false);
-	html_end_box(false);
-	html_start_box("<strong>" . __("Graph Template Color") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_color");
-	draw_template_edit_form('header_graph_color', graph_color_form_list(), $template_graph, false);
-	html_end_box(false);
-	html_start_box("<strong>" . __("Graph Template Legend") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
-	draw_template_edit_form('header_graph_legend', graph_legend_form_list(), $template_graph, false);
-	html_end_box(false);
-	html_start_box("<strong>" . __("Graph Template Misc") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
-	draw_template_edit_form('header_graph_misc', graph_misc_form_list(), $template_graph, false);
-	html_end_box(false);
-	html_start_box("<strong>" . __("Graph Template Cacti Specifics") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_cacti");
-	draw_template_edit_form('header_graph_cacti', graph_cacti_form_list(), $template_graph, false);
-	html_end_box(false);
-
-	# the id tag is required for our js code!
-	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
-#	html_end_box(false);
-
-	form_save_button_alt("return");
-
-	include_once(CACTI_BASE_PATH . "/access/js/colorpicker.js");
-	include_once(CACTI_BASE_PATH . "/access/js/graph_template_options.js");
-
-?>
-	<script type="text/javascript">
+	?>
+<script type="text/javascript">
 	<!--
 	$(document).ready(function(){
 
@@ -549,9 +632,9 @@ function template_edit() {
 	//-->
 
 </script>
-<?php
-
+	<?php
 }
+
 
 function template() {
 	global $colors, $graph_template_actions, $item_rows;
@@ -593,7 +676,7 @@ function template() {
 	}
 
 	?>
-	<script type="text/javascript">
+<script type="text/javascript">
 	<!--
 	function applyFilterChange(objForm) {
 		strURL = '?rows=' + objForm.rows.value;
@@ -613,106 +696,104 @@ function template() {
 
 	html_start_box("<strong>" . __("Graph Templates") . "</strong>", "100", $colors["header"], "3", "center", "graph_templates.php?action=template_edit", true);
 	?>
-	<tr class='rowAlternate2'>
-		<td>
-			<form name="form_graph_template" action='<?php print basename($_SERVER["PHP_SELF"]);?>'>
-			<table cellpadding="0" cellspacing="3">
-				<tr>
-					<td class="nw50">
-						&nbsp;<?php print __("Search:");?>&nbsp;
-					</td>
-					<td class="w1">
-						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
-					</td>
-					<td class="nw50">
-						&nbsp;<?php print __("Rows:");?>&nbsp;
-					</td>
-					<td class="w1">
-						<select name="rows" onChange="applyFilterChange(document.form_graph_template)">
-							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>>Default</option>
-							<?php
-							if (sizeof($item_rows) > 0) {
-							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if (get_request_var_request("rows") == $key) { print " selected"; } print ">" . $value . "</option>\n";
-							}
-							}
-							?>
-						</select>
-					</td>
-					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
-						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
-						<div><input type='hidden' name='page' value='1'></div>
-					</td>
-				</tr>
-			</table>
-			</form>
-		</td>
-	</tr>
-	<?php
-	html_end_box(false);
+<tr class='rowAlternate2'>
+	<td>
+	<form name="form_graph_template"
+		action='<?php print basename($_SERVER["PHP_SELF"]);?>'>
+	<table cellpadding="0" cellspacing="3">
+		<tr>
+			<td class="nw50">&nbsp;<?php print __("Search:");?>&nbsp;</td>
+			<td class="w1"><input type="text" name="filter" size="40"
+				value="<?php print $_REQUEST["filter"];?>"></td>
+			<td class="nw50">&nbsp;<?php print __("Rows:");?>&nbsp;</td>
+			<td class="w1"><select name="rows"
+				onChange="applyFilterChange(document.form_graph_template)">
+				<option value="-1"
+				<?php if (get_request_var_request("rows") == "-1") {?> selected
+				<?php }?>>Default</option>
+				<?php
+				if (sizeof($item_rows) > 0) {
+					foreach ($item_rows as $key => $value) {
+						print "<option value='" . $key . "'"; if (get_request_var_request("rows") == $key) { print " selected"; } print ">" . $value . "</option>\n";
+					}
+				}
+				?>
+			</select></td>
+			<td style='white-space: nowrap; width: 120px;'>&nbsp;<input
+				type="submit" Value="<?php print __("Go");?>" name="go"
+				align="middle"> <input type="submit"
+				Value="<?php print __("Clear");?>" name="clear_x" align="middle">
+			<div><input type='hidden' name='page' value='1'></div>
+			</td>
+		</tr>
+	</table>
+	</form>
+	</td>
+</tr>
+				<?php
+				html_end_box(false);
 
-	/* form the 'where' clause for our main sql query */
-	if ($_REQUEST["filter"] != "") {
-		$sql_where = "WHERE (graph_templates.name LIKE '%%" . $_REQUEST["filter"] . "%%')
+				/* form the 'where' clause for our main sql query */
+				if ($_REQUEST["filter"] != "") {
+					$sql_where = "WHERE (graph_templates.name LIKE '%%" . $_REQUEST["filter"] . "%%')
 			OR graph_templates.description LIKE '%%" . get_request_var_request("filter") . "%%'";
-	}else{
-		$sql_where = "";
-	}
+				}else{
+					$sql_where = "";
+				}
 
-	html_start_box("", "100", $colors["header"], "0", "center", "");
+				html_start_box("", "100", $colors["header"], "0", "center", "");
 
-	$total_rows = db_fetch_cell("SELECT
+				$total_rows = db_fetch_cell("SELECT
 		COUNT(graph_templates.id)
 		FROM graph_templates
 		$sql_where");
 
-	if (get_request_var_request("rows") == "-1") {
-		$rows = read_config_option("num_rows_device");
-	}else{
-		$rows = get_request_var_request("rows");
-	}
+		if (get_request_var_request("rows") == "-1") {
+			$rows = read_config_option("num_rows_device");
+		}else{
+			$rows = get_request_var_request("rows");
+		}
 
-	$template_list = db_fetch_assoc("SELECT *
+		$template_list = db_fetch_assoc("SELECT *
 		FROM graph_templates
 		$sql_where
 		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
 		" LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
-	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "graph_templates.php");
+		/* generate page list navigation */
+		$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "graph_templates.php");
 
-	print $nav;
-	html_end_box(false);
+		print $nav;
+		html_end_box(false);
 
-	$display_text = array(
+		$display_text = array(
 		"name" => array(__("Template Title"), "ASC"),
 		"description" => array(__("Description"), "ASC"),
 		"nosort" => array(__("Image"), "")
-	);
+		);
 
-	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
+		html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
-	if (sizeof($template_list) > 0) {
-		foreach ($template_list as $template) {
-			form_alternate_row_color('line' . $template["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("graph_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("graph_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
-			form_selectable_cell("<img src='" . $template["image"] . "'>", $template["id"]);
-			form_checkbox_cell($template["name"], $template["id"]);
-			form_end_row();
+		if (sizeof($template_list) > 0) {
+			foreach ($template_list as $template) {
+				form_alternate_row_color('line' . $template["id"], true);
+				form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("graph_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
+				form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("graph_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
+				form_selectable_cell("<img src='" . $template["image"] . "'>", $template["id"]);
+				form_checkbox_cell($template["name"], $template["id"]);
+				form_end_row();
+			}
+
+			form_end_table();
+
+			print $nav;
+		}else{
+			print "<tr><td><em>" . __("No Graph Templates") . "</em></td></tr>\n";
 		}
 
-		form_end_table();
+		print "</table>\n";	# end table of html_header_sort_checkbox
 
-		print $nav;
-	}else{
-		print "<tr><td><em>" . __("No Graph Templates") . "</em></td></tr>\n";
-	}
-
-	print "</table>\n";	# end table of html_header_sort_checkbox
-
-	/* draw the dropdown containing a list of available actions for this form */
-	draw_actions_dropdown($graph_template_actions);
-	print "</form>\n";	# end form of html_header_sort_checkbox
+		/* draw the dropdown containing a list of available actions for this form */
+		draw_actions_dropdown($graph_template_actions);
+		print "</form>\n";	# end form of html_header_sort_checkbox
 }

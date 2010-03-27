@@ -37,7 +37,7 @@ switch (get_request_var_request("action")) {
 	case 'input_remove':
 		input_remove();
 
-		header("Location: graph_templates.php?action=template_edit&id=" . $_GET["graph_template_id"]);
+		header("Location: graph_templates.php?action=template_edit&id=" . get_request_var("graph_template_id") . "&template_id=" . get_request_var("graph_template_id") . "&tab=items");
 		break;
 	case 'input_edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -112,7 +112,7 @@ function form_save() {
 			header("Location: graph_templates_inputs.php?action=input_edit&graph_template_input_id=" . (empty($graph_template_input_id) ? $_POST["graph_template_input_id"] : $graph_template_input_id) . "&graph_template_id=" . $_POST["graph_template_id"]);
 			exit;
 		}else{
-			header("Location: graph_templates.php?action=template_edit&id=" . $_POST["graph_template_id"]);
+			header("Location: graph_templates.php?action=template_edit&id=" . $_POST["graph_template_id"] . "&template_id=" . $_POST["graph_template_id"] . "&tab=items");
 			exit;
 		}
 	}
