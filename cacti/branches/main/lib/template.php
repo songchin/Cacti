@@ -211,23 +211,24 @@ function change_data_template($local_data_id, $data_template_id) {
 		/* this data source already has "child" items */
 	}else{
 		/* this data source does NOT have "child" items; loop through each item in the template
-		and write it exactly to each item */
+		 * and write it exactly to each item */
 		if (sizeof($template_rrds_list) > 0) {
-		foreach ($template_rrds_list as $template_rrd) {
-			unset($save);
-			reset($struct_data_source_item);
+			$struct_data_source_item = data_source_item_form_list();
+			foreach ($template_rrds_list as $template_rrd) {
+				unset($save);
+				reset($struct_data_source_item);
 
-			$save["id"] = 0;
-			$save["local_data_template_rrd_id"] = $template_rrd["id"];
-			$save["local_data_id"] = $local_data_id;
-			$save["data_template_id"] = $template_rrd["data_template_id"];
+				$save["id"] = 0;
+				$save["local_data_template_rrd_id"] = $template_rrd["id"];
+				$save["local_data_id"] = $local_data_id;
+				$save["data_template_id"] = $template_rrd["data_template_id"];
 
-			while (list($field_name, $field_array) = each($struct_data_source_item)) {
-				$save[$field_name] = $template_rrd[$field_name];
+				while (list($field_name, $field_array) = each($struct_data_source_item)) {
+					$save[$field_name] = $template_rrd[$field_name];
+				}
+
+				sql_save($save, "data_template_rrd");
 			}
-
-			sql_save($save, "data_template_rrd");
-		}
 		}
 	}
 
