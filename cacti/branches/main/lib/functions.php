@@ -1936,6 +1936,8 @@ function draw_navigation_text() {
 		"pollers.php:" => array("title" => __("Pollers"), "mapping" => "index.php:", "url" => "pollers.php", "level" => "1"),
 		"pollers.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,pollers.php:", "url" => "", "level" => "2"),
 		"device_templates.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,device_templates.php:", "url" => "", "level" => "2"),
+		"device_templates.php:save_dt" => array("title" => __("Actions"), "mapping" => "index.php:,device_templates.php:", "url" => "", "level" => "2"),
+		"device_templates.php:save_dq" => array("title" => __("Actions"), "mapping" => "index.php:,device_templates.php:", "url" => "", "level" => "2"),
 		"device_templates.php:" => array("title" => __("Device Templates"), "mapping" => "index.php:", "url" => "device_templates.php", "level" => "1"),
 		"device_templates.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,device_templates.php:", "url" => "", "level" => "2"),
 		"index.php:" => array("title" => __("Console"), "mapping" => "", "url" => CACTI_URL_PATH . "index.php", "level" => "0"),

@@ -1155,13 +1155,16 @@ $settings = array(
 			),
 		"auth_method" => array(
 			"friendly_name" => __("Authentication Method"),
-			"description" => __("<blockquote><i>None</i> - No authentication will be used, all users will have full access.<br><br><i>Builtin
-			Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas
-			within Cacti.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created
-			automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP
-			Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the
-			Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP
-			Authentication will not appear as a selectable option.</blockquote>"),
+			"description" => "<blockquote><i>" .
+							__("None") . "</i> - " .
+							__("No authentication will be used, all users will have full access.") . "<br><br><i>" .
+							__("Builtin	Authentication") . "</i> - " .
+							__("Cacti handles user authentication, which allows you to create users and give them rights to different areas	within Cacti.") . "<br><br><i>" .
+							__("Web Basic Authentication") . "</i> - " .
+							__("Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.") . "<br><br><i>" .
+							__("LDAP Authentication") . "</i> - " .
+							__("Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used. If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.") .
+							"</blockquote>"),
 			"method" => "drop_array",
 			"default" => 1,
 			"array" => $auth_methods
@@ -1311,7 +1314,14 @@ $settings = array(
 			),
 		"log_destination" => array(
 			"friendly_name" => __("Log Destination"),
-					"description" => __("<blockquote><i>Cacti System Log</i> - Internal cacti system log utilizing the database.<br><br><i>Localhost System Log</i> - Utilizing PHP syslog to log to the localhosts logs.<br><br><i>Syslog Server</i> - Syslog to local or remote syslog server</blockquote>"),
+					"description" => "<blockquote><i>" .
+							__("Cacti System Log") . "</i> - " .
+							__("Internal cacti system log utilizing the database.") . "<br><br><i>" .
+							__("Localhost System Log") . "</i> - " .
+							__("Utilizing PHP syslog to log to the localhosts logs.") . "<br><br><i>" .
+							__("Syslog Server") . "</i> - " .
+							__("Syslog to local or remote syslog server") .
+							"</blockquote>"),
 			"method" => "checkbox_group",
 			"items" => array(
 				"log_dest_cacti" => array(

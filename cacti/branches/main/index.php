@@ -35,9 +35,9 @@ api_plugin_hook('console_before');
 			started.');?></strong>
 
 			<ul>
-				<li><strong><?php print __('<a href="devices.php">Create devices</a> for network');?></strong></li>
-				<li><strong><?php print __('<a href="graphs_new.php">Create graphs</a> for your new devices');?></strong></li>
-				<li><strong><?php print __('<a href="graph_view.php">View</a> your new graphs');?></strong></li>
+				<li><strong><?php print '<a href="devices.php">' . __('Create devices') . " </a>" . __('for your network');?></strong></li>
+				<li><strong><?php print '<a href="graphs_new.php">' . __('Create graphs') . " </a>" . __('for your new devices');?></strong></li>
+				<li><strong><?php print '<a href="graph_view.php">' . __('View') . " </a>" . __('your new graphs');?></strong></li>
 			</ul>
 			<strong>
 			<?php print __('Find help for each page when clicking the');?>
