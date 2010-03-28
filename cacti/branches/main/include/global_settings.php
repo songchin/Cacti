@@ -1164,7 +1164,7 @@ $settings = array(
 							__("Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.") . "<br><br><i>" .
 							__("LDAP Authentication") . "</i> - " .
 							__("Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used. If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.") .
-							"</blockquote>"),
+							"</blockquote>",
 			"method" => "drop_array",
 			"default" => 1,
 			"array" => $auth_methods
@@ -1314,14 +1314,14 @@ $settings = array(
 			),
 		"log_destination" => array(
 			"friendly_name" => __("Log Destination"),
-					"description" => "<blockquote><i>" .
+			"description" => "<blockquote><i>" .
 							__("Cacti System Log") . "</i> - " .
 							__("Internal cacti system log utilizing the database.") . "<br><br><i>" .
 							__("Localhost System Log") . "</i> - " .
 							__("Utilizing PHP syslog to log to the localhosts logs.") . "<br><br><i>" .
 							__("Syslog Server") . "</i> - " .
 							__("Syslog to local or remote syslog server") .
-							"</blockquote>"),
+							"</blockquote>",
 			"method" => "checkbox_group",
 			"items" => array(
 				"log_dest_cacti" => array(
