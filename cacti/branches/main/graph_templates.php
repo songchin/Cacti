@@ -605,15 +605,7 @@ function graph_template_display_items() {
 	print "</table></td></tr>";
 	html_end_box(true);
 
-	?>
-	<table class='saveBox'>
-		<tr>
-			<td>
-				<input id='cancel' type='button' value='Cancel' onClick='window.location.assign("graph_templates.php")' name='cancel'>
-			</td>
-		</tr>
-	</table>
-	<?php
+	form_save_button_alt("url!graph_templates.php");
 
 	?>
 <script type="text/javascript">

@@ -234,12 +234,4 @@ $fields_device_template_edit = array(
 		"default" => read_config_option("max_get_size"),
 		"size" => "15"
 		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"save_component_template" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
 	);

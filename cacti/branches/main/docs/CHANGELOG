@@ -77,7 +77,7 @@ Cacti CHANGELOG
 -feature#0001009: XML Syntax enhancements (as a dup of 1225 only)
 -feature#0001030: Lower limit and upper limit |query_*| variable support for Graph Templates
 -feature#0001111: add remove-device.php cli script, replace numerical constants for permission handling by PERM_*
--feature#0001122: Propagate Host Template changes to related hosts
+-feature#0001122: Propagate Device Template changes to related hosts, pops up a confirmation form (new templates and changed reindex only, no deletes)
 -feature#0001123: Performance tweak by adding some indices
 -feature#0001124: Devices/Host Templates - remove already associated objects from dropdown selector
 -feature#0001179: Visual Fix for CACTI Graphs View Interface(list,preview)
@@ -151,7 +151,8 @@ Cacti CHANGELOG
 -feature: add support for TICK on rrdtool graphs
 -feature: TIME_SHIFT_START and _END as specific data sources for CDEFs (e.g. graph colorization)
 -feature: rrdtool SHIFT support available
--feature: add shortcuts to template management (device, graph, data source templates)
+-feature: add shortcuts to show matching objects for template management (device, graph, data source templates)
+-feature: tabbed view for templates (device, graph, data source)
 
 0.8.7e
 

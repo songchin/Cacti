@@ -586,17 +586,7 @@ function data_template_display_items() {
 	html_start_box("<strong>" . __("Data Source Items") . "</strong> $header_label", "100", $colors["header"], "0", "center", "data_templates_items.php?action=item_edit&data_template_id=" . $_REQUEST["id"], true);
 	draw_data_template_items_list($template_item_list, "data_templates_items.php", "data_template_id=" . $_REQUEST["id"], false);
 	html_end_box(true);
-
-	?>
-	<table class='saveBox'>
-		<tr>
-			<td>
-				<input id='cancel' type='button' value='Cancel' onClick='window.location.assign("data_templates.php")' name='cancel'>
-			</td>
-		</tr>
-	</table>
-	<?php
-
+	form_save_button_alt("url!data_templates.php");
 }
 
 /**

@@ -1167,6 +1167,26 @@ function form_yesno_button_alt($device_list, $drp_action = "none") {
 	<?php
 }
 
+/** form_yesno_button_alt2 		- draws a yes and no button at the bottom of an html edit form
+   @param string $device_list 	- serialized item array
+   @param string $action 		- specifies the action code, e.g. "save_gt" for the main procedure select directive
+ */
+function form_yesno_button_alt2($item_list, $action = "none") {
+	global $config;
+
+	?>
+	<tr>
+		<td align="right">
+			<div><input type='hidden' name='action' value='<?php print $action;?>'></div>
+			<div><input type='hidden' name='selected_items' value='<?php print $item_list;?>'></div>
+			<input type='button' value='<?php print __("No");?>' onClick='window.location.assign("<?php print htmlspecialchars($_SERVER['HTTP_REFERER']);?>")' name='cancel'>
+			<input type='submit' value='<?php print __("Yes");?>' name='yes'>
+		</td>
+	</tr>
+	</form>
+	<?php
+}
+
 /** form_confirm_buttons_alt - draws a cancel and delete button suitable for display
      on a confirmation form */
 function form_confirm_buttons_alt() {
