@@ -86,8 +86,8 @@
 		menu_html 		= $('#' + options.name + '_html');
 
 		// position menu container
-		menu.css({	'left' 			: initiator_position.left + options.offsetX,	// x-position in relation to the initiator
-					'top' 			: initiator_position.top + options.offsetY		// y-position in relation to the initiator
+		menu.css({	'left' 			: initiator_position.left + options.offsetX + 'px',	// x-position in relation to the initiator
+					'top' 			: initiator_position.top + options.offsetY + 'px'		// y-position in relation to the initiator
 				});
 
 		// "_html" holds the raw data
@@ -136,6 +136,7 @@
 
 		//IE5/6 does not support css option "min-width", so a workaround is required
 		if(menu.width() != options.width) {
+			menu.css({'min-width' : options.width + 'px'});
 			menu.width(options.width);
 		}
 		
