@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cacti\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-26 23:59+0100\n"
+"POT-Creation-Date: 2010-03-28 23:29+0200\n"
 "PO-Revision-Date: 2009-06-09 20:53+0100\n"
 "Last-Translator: Andreas Braun <browniebraun@cacti.cc>\n"
 "Language-Team: es <es@li.org>\n"
@@ -346,16 +346,16 @@ msgstr ""
 #: ../lib/functions.php:1899 ../lib/functions.php:1902
 #: ../lib/functions.php:1915 ../lib/functions.php:1922
 #: ../lib/functions.php:1929 ../lib/functions.php:1933
-#: ../lib/functions.php:1937 ../lib/functions.php:1940
-#: ../lib/functions.php:1944 ../lib/functions.php:1955
-#: ../lib/functions.php:1963 ../lib/functions.php:1976
-#: ../lib/functions.php:1980
+#: ../lib/functions.php:1937 ../lib/functions.php:1942
+#: ../lib/functions.php:1946 ../lib/functions.php:1957
+#: ../lib/functions.php:1965 ../lib/functions.php:1978
+#: ../lib/functions.php:1982
 msgid "(Edit)"
 msgstr "(Editar)"
 
 #: ../lib/functions.php:1876 ../lib/functions.php:1885
-#: ../lib/functions.php:1917 ../lib/functions.php:1958
-#: ../lib/functions.php:1977
+#: ../lib/functions.php:1917 ../lib/functions.php:1960
+#: ../lib/functions.php:1979
 msgid "(Remove)"
 msgstr "(Eliminar)"
 
@@ -383,11 +383,11 @@ msgstr ""
 msgid "*** Forced Password Change ***"
 msgstr "*** Cambio de Contraseña Forzoso ***"
 
-#: ../device_templates.php:1091
+#: ../device_templates.php:1332
 msgid ", Template propagation is forced"
 msgstr ""
 
-#: ../device_templates.php:1091
+#: ../device_templates.php:1332
 msgid ", User can override"
 msgstr ""
 
@@ -487,60 +487,6 @@ msgstr ""
 #: ../include/graph/graph_arrays.php:162
 msgid "30 Min"
 msgstr ""
-
-#: ../index.php:38
-#, fuzzy
-msgid "<a href=\"devices.php\">Create devices</a> for network"
-msgstr "Crear dispositivos</a> para la red"
-
-#: ../index.php:40
-#, fuzzy
-msgid "<a href=\"graph_view.php\">View</a> your new graphs"
-msgstr "Ver</a> las nuevas gráficas"
-
-#: ../index.php:39
-#, fuzzy
-msgid "<a href=\"graphs_new.php\">Create graphs</a> for your new devices"
-msgstr "Crear gráficas</a> para los nuevos dispositivos"
-
-#: ../include/global_settings.php:1314
-msgid ""
-"<blockquote><i>Cacti System Log</i> - Internal cacti system log utilizing "
-"the database.<br><br><i>Localhost System Log</i> - Utilizing PHP syslog to "
-"log to the localhosts logs.<br><br><i>Syslog Server</i> - Syslog to local or "
-"remote syslog server</blockquote>"
-msgstr ""
-
-#: ../include/global_settings.php:1158
-#, fuzzy
-msgid ""
-"<blockquote><i>None</i> - No authentication will be used, all users will "
-"have full access.<br><br><i>Builtin\n"
-"\t\t\tAuthentication</i> - Cacti handles user authentication, which allows "
-"you to create users and give them rights to different areas\n"
-"\t\t\twithin Cacti.<br><br><i>Web Basic Authentication</i> - Authentication "
-"is handled by the web server. Users can be added or created\n"
-"\t\t\tautomatically on first login if the Template User is defined, "
-"otherwise the defined guest permissions will be used.<br><br><i>LDAP\n"
-"\t\t\tAuthentication</i> - Allows for authentication against a LDAP server. "
-"Users will be created automatically on first login if the\n"
-"\t\t\tTemplate User is defined, otherwise the defined guest permissions will "
-"be used.  If PHP's LDAP module is not enabled, LDAP\n"
-"\t\t\tAuthentication will not appear as a selectable option.</blockquote>"
-msgstr ""
-"<ul><li><i>None</i> -No se utilizará autenticación, todos los usuarios \n"
-"tendrán acceso completo.</li><li><i>Autenticación Interna</i> - Cacti \n"
-"realiza la autenticación, lo que permite al administrador crear los "
-"usuarios\n"
-"y otorgarles privilegios a las diferentes areas del sistema.</li><li><i>\n"
-"Autenticación via Web Básica</i> - La autenticación es realizada por el \n"
-"servidor web. Los usuarios pueden ser añadidos o creados automáticamente\n"
-"en su primer ingreso si se define una Plantilla de Usuario, de lo contrario\n"
-"los permisos de invitado por defecto serán utilizados.</li><li><i>\n"
-"Autenticación LDAP</i> - Permite realizar la autenticación en un servidor \n"
-"LDAP. Los usuarios serán creados automáticamente en su primer ingreso si se\n"
-"define una Plantilla de Usuario, de lo contrario los permisos de invitado \n"
-"por defecto serán utilizados.\n"
 
 #: ../lib/utility.php:737
 msgid "<cdef_title>"
@@ -851,12 +797,13 @@ msgstr "Acciones"
 #: ../lib/functions.php:1912 ../lib/functions.php:1919
 #: ../lib/functions.php:1920 ../lib/functions.php:1927
 #: ../lib/functions.php:1930 ../lib/functions.php:1935
-#: ../lib/functions.php:1938 ../lib/functions.php:1945
-#: ../lib/functions.php:1975 ../lib/functions.php:1982
+#: ../lib/functions.php:1938 ../lib/functions.php:1939
+#: ../lib/functions.php:1940 ../lib/functions.php:1947
+#: ../lib/functions.php:1977 ../lib/functions.php:1984
 msgid "Actions"
 msgstr "Acciones"
 
-#: ../data_templates.php:686 ../lib/data_source/data_source_form.php:1204
+#: ../data_templates.php:749 ../lib/data_source/data_source_form.php:1218
 #: ../plugins.php:38
 msgid "Active"
 msgstr "Activo"
@@ -868,16 +815,25 @@ msgstr ""
 #: ../lib/device/device_form.php:1324 ../lib/device/device_form.php:1415
 #: ../user_admin.php:605 ../user_admin.php:661 ../user_admin.php:717
 #: ../user_admin.php:772 ../data_queries.php:530 ../data_queries.php:595
-#: ../device_templates.php:850 ../device_templates.php:930
 msgid "Add"
 msgstr "Agregar"
 
-#: ../lib/device/device_form.php:1408 ../device_templates.php:923
+#: ../device_templates.php:1163
+#, fuzzy
+msgid "Add Data Query"
+msgstr "Añadir consulta de información"
+
+#: ../lib/device/device_form.php:1408
 #, fuzzy
 msgid "Add Data Query:"
 msgstr "Añadir consulta de información"
 
-#: ../lib/device/device_form.php:1320 ../device_templates.php:846
+#: ../device_templates.php:1082
+#, fuzzy
+msgid "Add Graph Template"
+msgstr "Añadir plantilla de gráfica:"
+
+#: ../lib/device/device_form.php:1320
 msgid "Add Graph Template:"
 msgstr "Añadir plantilla de gráfica:"
 
@@ -885,16 +841,6 @@ msgstr "Añadir plantilla de gráfica:"
 #, php-format
 msgid "Added Node (Type: %s) node-id: (%d)"
 msgstr ""
-
-#: ../device_templates.php:211
-#, fuzzy
-msgid "Adding Data Query: "
-msgstr "Añadir consulta de información"
-
-#: ../device_templates.php:170
-#, fuzzy
-msgid "Adding Graph Template: "
-msgstr "Añadir plantilla de gráfica:"
 
 #: ../lib/ajax/get_timezones.php:34 ../include/global_timezones.php:135
 msgid "Addis Ababa"
@@ -959,8 +905,8 @@ msgstr "Despejar"
 msgid "Algiers"
 msgstr "Despejar"
 
-#: ../lib/graph/graphs_new_form.php:446 ../lib/device/device_form.php:1587
-#: ../lib/device/device_form.php:1605 ../utilities.php:758
+#: ../lib/graph/graphs_new_form.php:446 ../lib/device/device_form.php:1603
+#: ../lib/device/device_form.php:1621 ../utilities.php:758
 #: ../utilities.php:1054 ../plugins.php:31
 msgid "All"
 msgstr ""
@@ -1002,7 +948,13 @@ msgstr "Todas las Fuentes de información similares (No incluir duplicadas)"
 msgid "All Types"
 msgstr "Tipo de colector"
 
-#: ../include/global_settings.php:1358
+#: ../device_templates.php:210 ../device_templates.php:355
+msgid ""
+"All devices currently attached to the current Device Template will be "
+"updated."
+msgstr ""
+
+#: ../include/global_settings.php:1368
 #, fuzzy
 msgid ""
 "All events older than the specified number of days will be discarded if the "
@@ -1034,7 +986,7 @@ msgstr "Permitir entradas en blanco"
 msgid "Allow Graph Export"
 msgstr "Permitir exportar gráficas"
 
-#: ../include/global_settings.php:1457
+#: ../include/global_settings.php:1467
 #, fuzzy
 msgid "Allow Graph to extend to Future"
 msgstr "Permitir exportar gráficas"
@@ -1059,6 +1011,14 @@ msgstr ""
 msgid ""
 "Allows Administrators to browse the user log.  Administrators can filter and "
 "export the log as well."
+msgstr ""
+
+#: ../include/global_settings.php:1166
+msgid ""
+"Allows for authentication against a LDAP server. Users will be created "
+"automatically on first login if the Template User is defined, otherwise the "
+"defined guest permissions will be used. If PHP's LDAP module is not enabled, "
+"LDAP Authentication will not appear as a selectable option."
 msgstr ""
 
 #: ../lib/ajax/get_timezones.php:245 ../include/global_timezones.php:334
@@ -1139,11 +1099,11 @@ msgstr ""
 msgid "Antigua"
 msgstr ""
 
-#: ../lib/data_source/data_source_form.php:1012
-#: ../lib/data_source/data_source_form.php:1042
-#: ../lib/graph/graphs_form.php:1225 ../lib/graph/graph_view_form.php:109
-#: ../lib/graph/graph_view_form.php:356 ../lib/device/device_form.php:1535
-#: ../lib/device/device_form.php:1553 ../utilities.php:776
+#: ../lib/data_source/data_source_form.php:1033
+#: ../lib/data_source/data_source_form.php:1063
+#: ../lib/graph/graphs_form.php:1247 ../lib/graph/graph_view_form.php:109
+#: ../lib/graph/graph_view_form.php:356 ../lib/device/device_form.php:1551
+#: ../lib/device/device_form.php:1569 ../utilities.php:776
 #: ../utilities.php:1339 ../utilities.php:1621 ../sites.php:519
 #: ../sites.php:535
 msgid "Any"
@@ -1185,6 +1145,16 @@ msgstr "Activo"
 msgid "Are You Sure?"
 msgstr "¿Esta seguro?"
 
+#: ../device_templates.php:354
+#, fuzzy
+msgid "Are you sure you want to add the following Data Query:"
+msgstr "¿Esta seguro de querer eliminar las siguientes fuentes de información?"
+
+#: ../device_templates.php:209
+#, fuzzy
+msgid "Are you sure you want to add the following Graph Template:"
+msgstr "Esta seguro de querer eliminar las siguientes gráficas?"
+
 #: ../cdef.php:384
 msgid "Are you sure you want to delete the CDEF"
 msgstr "¿Esta seguro de querer borrar el CDEF?"
@@ -1212,7 +1182,7 @@ msgstr "¿Esta seguro de querer eliminar el campo?"
 msgid "Are you sure you want to delete the following CDEFs?"
 msgstr "¿Esta seguro de querer eliminar lo siguientes usuarios?"
 
-#: ../device_templates.php:335
+#: ../device_templates.php:492
 #, fuzzy
 msgid ""
 "Are you sure you want to delete the following Device Templates? All devices "
@@ -1374,7 +1344,7 @@ msgstr ""
 msgid "Arrow"
 msgstr ""
 
-#: ../include/global_settings.php:822 ../include/global_settings.php:1786
+#: ../include/global_settings.php:822 ../include/global_settings.php:1796
 msgid "Arrow (--color ARROW)"
 msgstr ""
 
@@ -1398,7 +1368,8 @@ msgstr ""
 msgid "Asmara"
 msgstr ""
 
-#: ../lib/device/device_form.php:1334 ../device_templates.php:861
+#: ../lib/device/device_form.php:1334 ../device_templates.php:561
+#: ../device_templates.php:1102
 msgid "Associated Data Queries"
 msgstr "Consultas de información asociadas"
 
@@ -1412,7 +1383,8 @@ msgid "Associated Graph Items"
 msgstr "Elementos de gráficas asociados"
 
 #: ../lib/functions.php:1889 ../lib/device/device_form.php:1257
-#: ../data_queries.php:681 ../device_templates.php:788
+#: ../data_queries.php:681 ../device_templates.php:560
+#: ../device_templates.php:1024
 msgid "Associated Graph Templates"
 msgstr "Plantillas de gráfica asociadas"
 
@@ -1486,6 +1458,13 @@ msgstr "Método de autenticación"
 msgid "Authentication Realm"
 msgstr "Autenticación"
 
+#: ../include/global_settings.php:1164
+msgid ""
+"Authentication is handled by the web server. Users can be added or created "
+"automatically on first login if the Template User is defined, otherwise the "
+"defined guest permissions will be used."
+msgstr ""
+
 #: ../plugins.php:240
 msgid "Author:"
 msgstr ""
@@ -1521,7 +1500,7 @@ msgstr ""
 "inferior. Si esto es\n"
 "\t\t\tseleccionado, ambos límites serán ignorados.\n"
 
-#: ../lib/device/device_form.php:1731 ../include/global_settings.php:36
+#: ../lib/device/device_form.php:1747 ../include/global_settings.php:36
 msgid "Availability"
 msgstr "Disponibilidad"
 
@@ -1536,12 +1515,12 @@ msgstr "Cambiar opciones de disponibilidad"
 msgid "Available for RRDTool 1.2.x and above"
 msgstr "Fuentes de gráficas (solo en RRDtool 1.2.x y arriba)"
 
-#: ../device_templates.php:1080
+#: ../device_templates.php:1321
 #, fuzzy
 msgid "Availbility/SNMP Settings"
 msgstr "Configuración de disponibilidad para equipo por colector"
 
-#: ../lib/device/device_form.php:1730
+#: ../lib/device/device_form.php:1746
 msgid "Average (ms)"
 msgstr "Tiempo promedio (ms)"
 
@@ -1568,15 +1547,15 @@ msgstr ""
 msgid "Axis"
 msgstr ""
 
-#: ../include/global_settings.php:806 ../include/global_settings.php:1768
+#: ../include/global_settings.php:806 ../include/global_settings.php:1778
 msgid "Axis (--color AXIS)"
 msgstr ""
 
-#: ../include/global_settings.php:700 ../include/global_settings.php:1655
+#: ../include/global_settings.php:700 ../include/global_settings.php:1665
 msgid "Axis Font File"
 msgstr "Archivo de fuente para los ejes"
 
-#: ../include/global_settings.php:691 ../include/global_settings.php:1645
+#: ../include/global_settings.php:691 ../include/global_settings.php:1655
 msgid "Axis Font Size"
 msgstr "Tamaño de fuente de los ejes"
 
@@ -1589,7 +1568,7 @@ msgstr "Añadir Árbol:"
 msgid "Background"
 msgstr ""
 
-#: ../include/global_settings.php:750 ../include/global_settings.php:1705
+#: ../include/global_settings.php:750 ../include/global_settings.php:1715
 msgid "Background (--color BACK)"
 msgstr ""
 
@@ -1758,6 +1737,11 @@ msgstr ""
 msgid "Buenos Aires"
 msgstr ""
 
+#: ../include/global_settings.php:1161
+#, fuzzy
+msgid "Builtin\tAuthentication"
+msgstr "Autenticación Interna"
+
 #: ../include/auth/auth_arrays.php:77
 msgid "Builtin Authentication"
 msgstr "Autenticación Interna"
@@ -1857,16 +1841,16 @@ msgstr "Sistema Operativo de Cacti:"
 msgid "Cacti RRA '%s' has same cf/steps (%s, %s) as '%s'"
 msgstr ""
 
-#: ../lib/functions.php:1946 ../lib/functions.php:1947 ../settings.php:83
+#: ../lib/functions.php:1948 ../lib/functions.php:1949 ../settings.php:83
 msgid "Cacti Settings"
 msgstr "Opciones de Cacti"
 
-#: ../include/global_settings.php:1318
+#: ../include/global_settings.php:1318 ../include/global_settings.php:1328
 #, fuzzy
 msgid "Cacti System Log"
 msgstr "Utilerías de Sistema"
 
-#: ../include/global_settings.php:1339
+#: ../include/global_settings.php:1349
 #, fuzzy
 msgid "Cacti System Log Size and Control"
 msgstr "Tamaño de bitácora y control"
@@ -1890,6 +1874,12 @@ msgstr "Variables de Cacti"
 #, fuzzy
 msgid "Cacti Version"
 msgstr "Versión"
+
+#: ../include/global_settings.php:1162
+msgid ""
+"Cacti handles user authentication, which allows you to create users and give "
+"them rights to different areas\twithin Cacti."
+msgstr ""
 
 #: ../templates_import.php:96
 msgid "Cacti has imported the following items:"
@@ -1939,7 +1929,7 @@ msgid "Canary"
 msgstr "Comunidad"
 
 #: ../lib/html_form.php:957 ../lib/html_form.php:991 ../lib/html_form.php:1036
-#: ../lib/html_form.php:1051 ../lib/html_form.php:1172
+#: ../lib/html_form.php:1051 ../lib/html_form.php:1197
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -1957,7 +1947,7 @@ msgstr ""
 msgid "Canvas"
 msgstr "Comunidad"
 
-#: ../include/global_settings.php:758 ../include/global_settings.php:1714
+#: ../include/global_settings.php:758 ../include/global_settings.php:1724
 msgid "Canvas (--color CANVAS)"
 msgstr ""
 
@@ -2073,11 +2063,7 @@ msgstr ""
 #: ../include/device_template/device_template_forms.php:78
 msgid ""
 "Check this box to have the allow the user to override the Device Template "
-"Availability and SNMP Settings. If unchecked,\n"
-"\t\tthe user will not be able to change either Availability or SNMP settings "
-"when editing the device.  However, for legacy purposes, this will only\n"
-"\t\tapply to new devices and legacy devices where the user has requested "
-"that template propagation be enabled."
+"Availability and SNMP Settings."
 msgstr ""
 
 #: ../include/device/device_forms.php:102
@@ -2244,34 +2230,34 @@ msgstr ""
 msgid "Choose how items in this tree will be sorted."
 msgstr "Seleccione cuántos elementos de éste árbol serán ordenados."
 
-#: ../include/global_settings.php:1445
+#: ../include/global_settings.php:1455
 #, fuzzy
 msgid "Choose if you want the time span selection box to be displayed."
 msgstr ""
 "Seleccione si desea que el selector de tiempo de vida sea desplegado.\n"
 
 #: ../include/device/device_forms.php:169
-#: ../include/device_template/device_template_forms.php:142
+#: ../include/device_template/device_template_forms.php:143
 #, fuzzy
 msgid "Choose the SNMP version for this device."
 msgstr "Eliga la versión SNMP a utilizar para este equipo."
 
 #: ../include/device/device_forms.php:206
-#: ../include/device_template/device_template_forms.php:179
+#: ../include/device_template/device_template_forms.php:180
 #: ../include/global_settings.php:320
 #, fuzzy
 msgid "Choose the SNMPv3 Authorization Protocol."
 msgstr "Eliga la versión SNMP a utilizar para este equipo."
 
 #: ../include/device/device_forms.php:214
-#: ../include/device_template/device_template_forms.php:187
+#: ../include/device_template/device_template_forms.php:188
 #: ../include/global_settings.php:327
 #, fuzzy
 msgid "Choose the SNMPv3 Privacy Passphrase."
 msgstr "La frase secreta de privacidad para SNMP v3."
 
 #: ../include/device/device_forms.php:223
-#: ../include/device_template/device_template_forms.php:196
+#: ../include/device_template/device_template_forms.php:197
 #: ../include/global_settings.php:334
 #, fuzzy
 msgid "Choose the SNMPv3 Privacy Protocol."
@@ -2362,7 +2348,7 @@ msgid ""
 "templates or whether to use the defaults for this installation."
 msgstr ""
 
-#: ../include/global_settings.php:1571
+#: ../include/global_settings.php:1581
 #, fuzzy
 msgid ""
 "Choose whether to expand the graph templates used for a device on the dual "
@@ -2371,13 +2357,13 @@ msgstr ""
 "Selecciones si se deben expandir las plantillas de gráficas utilzadas paraun "
 "equipo en la vista de árbol con doble recuadro."
 
-#: ../include/global_settings.php:1700
+#: ../include/global_settings.php:1710
 msgid ""
 "Choose whether to use your own custom colortags or utilize the system "
 "defaults."
 msgstr ""
 
-#: ../include/global_settings.php:1603
+#: ../include/global_settings.php:1613
 msgid ""
 "Choose whether to use your own custom fonts and font sizes or utilize the "
 "system defaults."
@@ -2421,26 +2407,26 @@ msgstr "Clásico (a una ruta local)"
 msgid "Classical Presentation"
 msgstr ""
 
-#: ../cdef.php:560 ../data_templates.php:619
-#: ../lib/data_source/data_source_form.php:1033
-#: ../lib/graph/graphs_form.php:1254 ../lib/graph/graphs_new_form.php:484
+#: ../cdef.php:560 ../data_templates.php:682
+#: ../lib/data_source/data_source_form.php:1054
+#: ../lib/graph/graphs_form.php:1276 ../lib/graph/graphs_new_form.php:484
 #: ../lib/graph/graph_view_form.php:147 ../lib/graph/graph_view_form.php:409
 #: ../lib/graph/graph_view_form.php:1155 ../lib/graph/graph_view_form.php:1280
-#: ../lib/device/device_form.php:1626 ../lib/xaxis/xaxis_form.php:454
-#: ../rra.php:338 ../data_input.php:592 ../graph_templates.php:644
+#: ../lib/device/device_form.php:1642 ../lib/xaxis/xaxis_form.php:454
+#: ../rra.php:338 ../data_input.php:592 ../graph_templates.php:717
 #: ../utilities.php:804 ../utilities.php:1064 ../utilities.php:1369
 #: ../utilities.php:1629 ../user_admin.php:1072 ../vdef.php:568
 #: ../gprint_presets.php:320 ../pollers.php:363 ../data_queries.php:812
-#: ../sites.php:506 ../device_templates.php:1033
+#: ../sites.php:506 ../device_templates.php:1274
 msgid "Clear"
 msgstr "Despejar"
 
-#: ../lib/functions.php:1966 ../utilities.php:1221
+#: ../lib/functions.php:1968 ../utilities.php:1221
 #, fuzzy
 msgid "Clear Cacti Log File"
 msgstr "Filtros de bitácora de Cacti"
 
-#: ../lib/functions.php:1967
+#: ../lib/functions.php:1969
 msgid "Clear Poller Cache"
 msgstr "Eliminar el cache del colector"
 
@@ -2448,7 +2434,7 @@ msgstr "Eliminar el cache del colector"
 msgid "Clear Statistics"
 msgstr "Borrar estadísticas"
 
-#: ../lib/functions.php:1968
+#: ../lib/functions.php:1970
 #, fuzzy
 msgid "Clear User Log File"
 msgstr "Filtros de bitácora de Cacti"
@@ -2477,7 +2463,7 @@ msgstr "Color"
 msgid "Color Actions"
 msgstr "Acciones"
 
-#: ../include/global_settings.php:827 ../include/global_settings.php:1791
+#: ../include/global_settings.php:827 ../include/global_settings.php:1801
 msgid "Color tag of the arrow (rrggbb[aa])."
 msgstr ""
 
@@ -2485,7 +2471,7 @@ msgstr ""
 msgid "Color tag of the arrow."
 msgstr ""
 
-#: ../include/global_settings.php:811 ../include/global_settings.php:1773
+#: ../include/global_settings.php:811 ../include/global_settings.php:1783
 msgid "Color tag of the axis (rrggbb[aa])."
 msgstr ""
 
@@ -2493,11 +2479,11 @@ msgstr ""
 msgid "Color tag of the axis."
 msgstr ""
 
-#: ../include/global_settings.php:755 ../include/global_settings.php:1710
+#: ../include/global_settings.php:755 ../include/global_settings.php:1720
 msgid "Color tag of the background (rrggbb[aa])."
 msgstr ""
 
-#: ../include/global_settings.php:763 ../include/global_settings.php:1719
+#: ../include/global_settings.php:763 ../include/global_settings.php:1729
 msgid "Color tag of the background of the actual graph (rrggbb[aa])."
 msgstr ""
 
@@ -2509,7 +2495,7 @@ msgstr ""
 msgid "Color tag of the background."
 msgstr ""
 
-#: ../include/global_settings.php:803 ../include/global_settings.php:1764
+#: ../include/global_settings.php:803 ../include/global_settings.php:1774
 msgid "Color tag of the font (rrggbb[aa])."
 msgstr ""
 
@@ -2517,7 +2503,7 @@ msgstr ""
 msgid "Color tag of the font."
 msgstr ""
 
-#: ../include/global_settings.php:819 ../include/global_settings.php:1782
+#: ../include/global_settings.php:819 ../include/global_settings.php:1792
 msgid "Color tag of the frame (rrggbb[aa])."
 msgstr ""
 
@@ -2525,7 +2511,7 @@ msgstr ""
 msgid "Color tag of the frame."
 msgstr ""
 
-#: ../include/global_settings.php:787 ../include/global_settings.php:1746
+#: ../include/global_settings.php:787 ../include/global_settings.php:1756
 msgid "Color tag of the grid (rrggbb[aa])."
 msgstr ""
 
@@ -2533,7 +2519,7 @@ msgstr ""
 msgid "Color tag of the grid."
 msgstr ""
 
-#: ../include/global_settings.php:771 ../include/global_settings.php:1728
+#: ../include/global_settings.php:771 ../include/global_settings.php:1738
 msgid "Color tag of the left and top border (rrggbb[aa])."
 msgstr ""
 
@@ -2541,7 +2527,7 @@ msgstr ""
 msgid "Color tag of the left and top border."
 msgstr ""
 
-#: ../include/global_settings.php:795 ../include/global_settings.php:1755
+#: ../include/global_settings.php:795 ../include/global_settings.php:1765
 msgid "Color tag of the major grid (rrggbb[aa])."
 msgstr ""
 
@@ -2549,7 +2535,7 @@ msgstr ""
 msgid "Color tag of the major grid."
 msgstr ""
 
-#: ../include/global_settings.php:779 ../include/global_settings.php:1737
+#: ../include/global_settings.php:779 ../include/global_settings.php:1747
 msgid "Color tag of the right and bottom border (rrggbb[aa])."
 msgstr ""
 
@@ -2621,11 +2607,16 @@ msgstr "Configuración"
 msgid "Configuration Settings"
 msgstr "Opciones de Cacti"
 
+#: ../device_templates.php:199 ../device_templates.php:343
+#, fuzzy
+msgid "Confirm"
+msgstr "Confirmación:"
+
 #: ../auth_changepassword.php:121
 msgid "Confirm:"
 msgstr "Confirmación:"
 
-#: ../lib/functions.php:1941 ../lib/functions.php:1942
+#: ../lib/functions.php:1943 ../lib/functions.php:1944
 #: ../include/top_header.php:67 ../include/top_graph_header.php:148
 msgid "Console"
 msgstr "Consola"
@@ -2744,6 +2735,16 @@ msgstr "Crear gráficas desde consulta de información"
 msgid "Create New Graphs"
 msgstr "Crear nuevas gráficas"
 
+#: ../index.php:38
+#, fuzzy
+msgid "Create devices"
+msgstr "Expandir equipos"
+
+#: ../index.php:39
+#, fuzzy
+msgid "Create graphs"
+msgstr "Crear nuevas gráficas"
+
 #: ../lib/graph/graphs_new_form.php:565 ../lib/graph/graphs_new_form.php:583
 msgid "Create:"
 msgstr "Crear: "
@@ -2774,7 +2775,7 @@ msgstr ""
 msgid "Curacao"
 msgstr ""
 
-#: ../lib/device/device_form.php:1729
+#: ../lib/device/device_form.php:1745
 msgid "Current (ms)"
 msgstr "Tiempo actual (ms)"
 
@@ -2813,7 +2814,7 @@ msgstr "Página actual:"
 msgid "Custom"
 msgstr "Personalizado"
 
-#: ../data_templates.php:490 ../lib/data_source/data_source_form.php:542
+#: ../data_templates.php:527 ../lib/data_source/data_source_form.php:542
 #: ../lib/data_source/data_source_form.php:764
 #, fuzzy
 msgid "Custom Data"
@@ -2919,7 +2920,7 @@ msgstr "Ingreso de información"
 msgid "Data Input Fields"
 msgstr "Campos de entrada de información"
 
-#: ../data_templates.php:675 ../lib/data_source/data_source_form.php:1202
+#: ../data_templates.php:738 ../lib/data_source/data_source_form.php:1216
 #: ../data_input.php:638 ../include/data_source/data_source_forms.php:47
 #: ../include/data_query/data_query_forms.php:64 ../data_queries.php:866
 msgid "Data Input Method"
@@ -2975,7 +2976,7 @@ msgstr "Nombre de consulta de información"
 msgid "Data Query Index"
 msgstr "Nombre de consulta de información"
 
-#: ../lib/device/device_form.php:1336 ../device_templates.php:863
+#: ../lib/device/device_form.php:1336 ../device_templates.php:1104
 msgid "Data Query Name"
 msgstr "Nombre de consulta de información"
 
@@ -2983,7 +2984,7 @@ msgstr "Nombre de consulta de información"
 msgid "Data Query:"
 msgstr "Consulta de información:"
 
-#: ../data_templates.php:480 ../lib/html.php:862
+#: ../data_templates.php:517 ../lib/html.php:862
 #: ../lib/data_source/data_source_form.php:772
 #: ../include/global_arrays.php:160 ../include/graph/graph_forms.php:492
 msgid "Data Source"
@@ -3006,18 +3007,18 @@ msgstr "Elemento de fuente de información"
 msgid "Data Source Item Fields"
 msgstr "Campos de elementos de fuente de información"
 
-#: ../lib/html.php:978
+#: ../lib/html.php:979
 #, fuzzy
 msgid "Data Source Item Type"
 msgstr "Elemento de fuente de información"
 
-#: ../data_templates.php:425 ../lib/functions.php:1896
+#: ../data_templates.php:586 ../lib/functions.php:1896
 #: ../lib/data_source/data_source_form.php:800 ../lib/rrd.php:3099
 #, fuzzy
 msgid "Data Source Items"
 msgstr "Elemento de fuente de información"
 
-#: ../lib/html.php:977 ../utilities.php:1732 ../data_queries.php:410
+#: ../lib/html.php:978 ../utilities.php:1732 ../data_queries.php:410
 #, fuzzy
 msgid "Data Source Name"
 msgstr "Fuente de información"
@@ -3026,7 +3027,7 @@ msgstr "Fuente de información"
 msgid "Data Source Path"
 msgstr "Ruta de esta fuente de información."
 
-#: ../data_templates.php:462 ../include/global_form.php:175
+#: ../data_templates.php:499 ../include/global_form.php:175
 #: ../data_queries.php:488
 #, fuzzy
 msgid "Data Source Template"
@@ -3061,8 +3062,9 @@ msgstr "Tipo de fuente de información"
 msgid "Data Source: %d"
 msgstr "Fuente de información:"
 
-#: ../lib/functions.php:1892 ../lib/data_source/data_source_form.php:986
-#: ../lib/device/device_form.php:623 ../lib/device/device_form.php:1726
+#: ../data_templates.php:418 ../lib/functions.php:1892
+#: ../lib/data_source/data_source_form.php:1007
+#: ../lib/device/device_form.php:623 ../lib/device/device_form.php:1742
 #: ../utilities.php:361 ../include/global_arrays.php:150
 #: ../include/global_settings.php:596 ../graphs_items.php:287
 msgid "Data Sources"
@@ -3144,8 +3146,8 @@ msgstr ""
 msgid "Debugging"
 msgstr "Debuggeando"
 
-#: ../lib/data_source/data_source_form.php:1066
-#: ../lib/graph/graphs_form.php:1271 ../lib/device/device_form.php:1568
+#: ../lib/data_source/data_source_form.php:1087
+#: ../lib/graph/graphs_form.php:1293 ../lib/device/device_form.php:1584
 #: ../color.php:609
 msgid "Default"
 msgstr "Por Defecto"
@@ -3163,16 +3165,16 @@ msgstr "Colector por defecto"
 msgid "Default Graph Policy"
 msgstr "Política de gráficas por defecto"
 
-#: ../include/global_settings.php:1549
+#: ../include/global_settings.php:1559
 msgid "Default Graph Tree"
 msgstr "Árbol de gráficas por defecto"
 
-#: ../include/global_settings.php:1450
+#: ../include/global_settings.php:1460
 #, fuzzy
 msgid "Default Graph View Timeshift"
 msgstr "Tiempo de vida por defecto para la vista de gráfica.\n"
 
-#: ../include/global_settings.php:1437
+#: ../include/global_settings.php:1447
 #, fuzzy
 msgid "Default Graph View Timespan"
 msgstr "Tiempo de vida por defecto para la vista de gráfica.\n"
@@ -3191,7 +3193,7 @@ msgstr ""
 msgid "Default Policy"
 msgstr "Política por defecto"
 
-#: ../include/global_settings.php:1423
+#: ../include/global_settings.php:1433
 msgid "Default RRA"
 msgstr "Archivo RRA por defecto"
 
@@ -3229,7 +3231,7 @@ msgid "Default UDP port to be used for SNMP Calls.  Typically 161."
 msgstr ""
 "Puerto UDP por defecto para realizar llamadas SNMP. Típicamente el 161."
 
-#: ../include/global_settings.php:1430
+#: ../include/global_settings.php:1440
 msgid "Default View Mode"
 msgstr "Modo de vista por Defecto"
 
@@ -3251,18 +3253,18 @@ msgstr ""
 msgid "Define Shifting Interval"
 msgstr ""
 
-#: ../include/global_settings.php:1273
+#: ../include/global_settings.php:1276
 msgid ""
 "Defines if users use full Distingished Name or just Username in the defined "
 "Group Member Attribute."
 msgstr ""
 
 #: ../cdef.php:33 ../cdef.php:449 ../data_templates.php:35
-#: ../xaxis_presets.php:34 ../lib/html.php:1007
+#: ../xaxis_presets.php:34 ../lib/html.php:1008
 #: ../lib/device/device_form.php:1306 ../lib/device/device_form.php:1393
 #: ../lib/xaxis/xaxis_form.php:340 ../lib/html_form.php:958
-#: ../lib/html_form.php:1173 ../rra.php:29 ../data_input.php:452
-#: ../data_input.php:488 ../graph_templates.php:35 ../graph_templates.php:432
+#: ../lib/html_form.php:1198 ../rra.php:29 ../data_input.php:452
+#: ../data_input.php:488 ../graph_templates.php:35 ../graph_templates.php:597
 #: ../user_admin.php:30 ../user_admin.php:587 ../user_admin.php:643
 #: ../user_admin.php:699 ../include/data_source/data_source_arrays.php:28
 #: ../include/graph/graph_arrays.php:28 ../include/device/device_arrays.php:28
@@ -3270,7 +3272,7 @@ msgstr ""
 #: ../color.php:686 ../color.php:696 ../color.php:705 ../pollers.php:32
 #: ../data_queries.php:32 ../data_queries.php:513 ../data_queries.php:578
 #: ../data_queries.php:707 ../sites.php:31 ../device_templates.php:32
-#: ../device_templates.php:832
+#: ../device_templates.php:1065
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -3283,7 +3285,7 @@ msgstr "Eliminar asociación de consulta de información"
 msgid "Delete Data Source: %d"
 msgstr "Fuente de información:"
 
-#: ../lib/device/device_form.php:1306 ../device_templates.php:832
+#: ../lib/device/device_form.php:1306 ../device_templates.php:1064
 msgid "Delete Graph Template Association"
 msgstr "Eliminar asociación de plantilla de gráfica"
 
@@ -3322,7 +3324,7 @@ msgstr ""
 "Eliminar todas las <strong>gráficas</strong> y <strong>fuentes de \n"
 "información</strong>\n"
 
-#: ../lib/html.php:1007
+#: ../lib/html.php:1008
 #, fuzzy
 msgid "Delete this Item"
 msgstr "Eliminar elementos"
@@ -3355,8 +3357,8 @@ msgstr ""
 msgid "Descending"
 msgstr "Recuperando"
 
-#: ../data_templates.php:674 ../lib/device/device_form.php:1722
-#: ../graph_templates.php:690
+#: ../data_templates.php:737 ../lib/device/device_form.php:1738
+#: ../graph_templates.php:763
 #: ../include/data_template/data_template_forms.php:36
 #: ../include/device/device_forms.php:35
 #: ../include/device_template/device_template_forms.php:43
@@ -3364,7 +3366,7 @@ msgstr "Recuperando"
 #: ../include/graph_template/graph_template_forms.php:66
 #: ../include/poller/poller_forms.php:35
 #: ../include/data_query/data_query_forms.php:37 ../pollers.php:410
-#: ../data_queries.php:864 ../device_templates.php:1079
+#: ../data_queries.php:864 ../device_templates.php:1320
 msgid "Description"
 msgstr "Descripción"
 
@@ -3419,8 +3421,8 @@ msgstr "Plantillas de equipos"
 msgid "Device Template:"
 msgstr "Plantillas de equipos"
 
-#: ../lib/functions.php:1939 ../device_templates.php:426
-#: ../device_templates.php:1003
+#: ../lib/functions.php:1941 ../device_templates.php:653
+#: ../device_templates.php:1244
 #, fuzzy
 msgid "Device Templates"
 msgstr "Plantillas de equipos"
@@ -3445,9 +3447,9 @@ msgid "Device:"
 msgstr "Equipo:"
 
 #: ../lib/functions.php:1931 ../lib/functions.php:1932
-#: ../lib/functions.php:1934 ../lib/device/device_form.php:1523
+#: ../lib/functions.php:1934 ../lib/device/device_form.php:1539
 #: ../include/global_arrays.php:148 ../include/global_settings.php:615
-#: ../pollers.php:412 ../sites.php:719
+#: ../pollers.php:412 ../sites.php:719 ../device_templates.php:562
 msgid "Devices"
 msgstr "Dispositivos"
 
@@ -3484,11 +3486,11 @@ msgstr "Deshabilitar"
 msgid "Disable Graph Export"
 msgstr "Exportar gráficas"
 
-#: ../data_templates.php:686 ../lib/device/device_form.php:1555
+#: ../data_templates.php:749 ../lib/device/device_form.php:1571
 #: ../lib/html_utility.php:279 ../lib/html_utility.php:303
 #: ../include/global_arrays.php:139 ../include/global_settings.php:267
 #: ../include/global_settings.php:274 ../include/global_settings.php:476
-#: ../include/global_settings.php:1234 ../include/poller/poller_forms.php:56
+#: ../include/global_settings.php:1237 ../include/poller/poller_forms.php:56
 msgid "Disabled"
 msgstr "Deshabilitado"
 
@@ -3496,12 +3498,12 @@ msgstr "Deshabilitado"
 msgid "Disabled (no exporting)"
 msgstr "Deshabilitado (no se permite exportar)"
 
-#: ../device_templates.php:769
+#: ../device_templates.php:998
 #, fuzzy
 msgid "Disabled due to SNMP settings"
 msgstr "Deshabilitado (no se permite exportar)"
 
-#: ../include/global_settings.php:1444
+#: ../include/global_settings.php:1454
 #, fuzzy
 msgid "Display Graph View Timespan Selector"
 msgstr "Selector de tiempo de vida para el despliegue de gráficas.\n"
@@ -3510,7 +3512,7 @@ msgstr "Selector de tiempo de vida para el despliegue de gráficas.\n"
 msgid "Display Order:"
 msgstr ""
 
-#: ../include/global_settings.php:1577
+#: ../include/global_settings.php:1587
 msgid ""
 "Display the graph title on the page so that it may be searched using the "
 "browser."
@@ -3536,26 +3538,26 @@ msgstr ""
 msgid "Display verbose output during execution"
 msgstr ""
 
-#: ../include/global_settings.php:1276
+#: ../include/global_settings.php:1279
 #, fuzzy
 msgid "Distingished Name"
 msgstr "Nombre Distinguible (DN)"
 
-#: ../include/global_settings.php:1261
+#: ../include/global_settings.php:1264
 msgid "Distingished Name of the group that user must have membership."
 msgstr ""
 
-#: ../include/global_settings.php:1244
+#: ../include/global_settings.php:1247
 msgid "Distinguished Name (DN)"
 msgstr "Nombre Distinguible (DN)"
 
-#: ../include/global_settings.php:1296
+#: ../include/global_settings.php:1299
 #, fuzzy
 msgid ""
 "Distinguished Name for Specific Searching binding to the LDAP directory."
 msgstr "Nombre Distinguible (DN) para sesión LDAP por Búsqueda Específica.\n"
 
-#: ../include/global_settings.php:1245
+#: ../include/global_settings.php:1248
 #, fuzzy
 msgid ""
 "Distinguished Name syntax, such as <blockquote>for windows: <br><i>\"&lt;"
@@ -3594,12 +3596,12 @@ msgstr ""
 msgid "Douala"
 msgstr "Recuadro doble"
 
-#: ../lib/device/device_form.php:1558 ../lib/html_utility.php:283
+#: ../lib/device/device_form.php:1574 ../lib/html_utility.php:283
 #: ../lib/html_utility.php:307
 msgid "Down"
 msgstr "Caido"
 
-#: ../lib/device/device_form.php:1741
+#: ../lib/device/device_form.php:1757
 #, php-format
 msgid "Down since %s with error: '%s'"
 msgstr ""
@@ -3610,7 +3612,7 @@ msgstr ""
 msgid "Downed Device Detection"
 msgstr "Detección de equipo caído"
 
-#: ../include/global_settings.php:1563
+#: ../include/global_settings.php:1573
 #, fuzzy
 msgid "Dual Pane Tree Width"
 msgstr "Recuadro doble"
@@ -4424,15 +4426,15 @@ msgstr "El último año"
 msgid "Edit"
 msgstr "Editar"
 
-#: ../lib/functions.php:1961
+#: ../lib/functions.php:1963
 msgid "Edit (Graph Permissions)"
 msgstr "Editar (Permisos de gráficas)"
 
-#: ../lib/functions.php:1962
+#: ../lib/functions.php:1964
 msgid "Edit (Graph Settings)"
 msgstr "Editar (Opciones de gráficas)"
 
-#: ../lib/functions.php:1964
+#: ../lib/functions.php:1966
 msgid "Edit (Realm Permissions)"
 msgstr "Editar (Permisos de acceso)"
 
@@ -4487,7 +4489,7 @@ msgstr ""
 msgid "Else, it will:"
 msgstr ""
 
-#: ../include/global_settings.php:1411
+#: ../include/global_settings.php:1421
 msgid "Email Group"
 msgstr ""
 
@@ -4511,7 +4513,7 @@ msgstr "Exportar gráficas"
 msgid "Enable Template Propagation"
 msgstr "Opciones generales"
 
-#: ../include/global_settings.php:1231
+#: ../include/global_settings.php:1234
 #, fuzzy
 msgid ""
 "Enable or Disable LDAP referrals.  If disabled, it may increase the speed of "
@@ -4520,10 +4522,10 @@ msgstr ""
 "Habilitar o deshabilitar los referentes de LDAP. Al deshabilitar, puede \n"
 "incrementarse la velocidad de las búsquedas.\n"
 
-#: ../lib/device/device_form.php:1554 ../user_admin.php:1122
+#: ../lib/device/device_form.php:1570 ../user_admin.php:1122
 #: ../include/global_arrays.php:140 ../include/global_form.php:60
 #: ../include/global_settings.php:267 ../include/global_settings.php:274
-#: ../include/global_settings.php:1002 ../include/global_settings.php:1234
+#: ../include/global_settings.php:1002 ../include/global_settings.php:1237
 msgid "Enabled"
 msgstr "Habilitado"
 
@@ -4531,11 +4533,11 @@ msgstr "Habilitado"
 msgid "Enabled (strict mode)"
 msgstr ""
 
-#: ../include/global_settings.php:1223
+#: ../include/global_settings.php:1226
 msgid "Encryption"
 msgstr "Encripción"
 
-#: ../include/global_settings.php:1224
+#: ../include/global_settings.php:1227
 #, fuzzy
 msgid ""
 "Encryption that the server supports. TLS is only supported by Protocol "
@@ -4553,11 +4555,11 @@ msgstr "Habilitado"
 msgid "End Date Selector"
 msgstr "Finalizar selector de fecha"
 
-#: ../include/global_settings.php:1478
+#: ../include/global_settings.php:1488
 msgid "End Time of the Daily Shift."
 msgstr ""
 
-#: ../include/global_settings.php:1477
+#: ../include/global_settings.php:1487
 msgid "End of Daily Shift"
 msgstr ""
 
@@ -4626,13 +4628,13 @@ msgid "Enter notes to this device."
 msgstr "Capture la comunidad SNMP para lectura de este equipo."
 
 #: ../include/device/device_forms.php:231
-#: ../include/device_template/device_template_forms.php:204
+#: ../include/device_template/device_template_forms.php:205
 #, fuzzy
 msgid "Enter the SNMP Context to use for this device."
 msgstr "Capture la comunidad SNMP para lectura de este equipo."
 
 #: ../include/device/device_forms.php:240
-#: ../include/device_template/device_template_forms.php:213
+#: ../include/device_template/device_template_forms.php:214
 msgid "Enter the UDP port number to use for SNMP (default is 161)."
 msgstr "Capture el puerto UDP que utilizara con SNMP (por defecto es el 161)"
 
@@ -4686,21 +4688,21 @@ msgstr ""
 msgid "Europe"
 msgstr ""
 
-#: ../lib/device/device_form.php:1728
+#: ../lib/device/device_form.php:1744
 #, fuzzy
 msgid "Event Count"
 msgstr "Hacer bitácora de eventos"
 
-#: ../include/global_settings.php:1400
+#: ../include/global_settings.php:1410
 #, fuzzy
 msgid "Event Log Emailing"
 msgstr "Hacer bitácora de eventos"
 
-#: ../include/global_settings.php:138 ../include/global_settings.php:1309
+#: ../include/global_settings.php:138 ../include/global_settings.php:1312
 msgid "Event Logging"
 msgstr "Hacer bitácora de eventos"
 
-#: ../include/global_settings.php:1412
+#: ../include/global_settings.php:1422
 msgid "Events will be emailed in batches to the assigned user group."
 msgstr ""
 
@@ -4752,7 +4754,7 @@ msgstr "Ejecutando script para extraer lista de índices '%s'"
 msgid "Executing script query"
 msgstr "Ejecutando consulta por script '%s'"
 
-#: ../include/global_settings.php:1570
+#: ../include/global_settings.php:1580
 #, fuzzy
 msgid "Expand Devices"
 msgstr "Dispositivos"
@@ -4784,7 +4786,7 @@ msgstr "Exportar cada x número de ocasiones"
 msgid "Export Method"
 msgstr "Método de exportación"
 
-#: ../lib/functions.php:1950
+#: ../lib/functions.php:1952
 msgid "Export Results"
 msgstr "Exportar Resultados"
 
@@ -4792,7 +4794,7 @@ msgstr "Exportar Resultados"
 msgid "Export Template"
 msgstr "Exportar plantilla"
 
-#: ../lib/functions.php:1948 ../lib/functions.php:1949
+#: ../lib/functions.php:1950 ../lib/functions.php:1951
 #: ../include/global_arrays.php:172
 msgid "Export Templates"
 msgstr "Exportar Plantillas"
@@ -4802,7 +4804,7 @@ msgid "Export timing"
 msgstr "Tiempo de exportación"
 
 #: ../lib/data_source/data_source_form.php:847
-#: ../lib/data_source/data_source_form.php:1213
+#: ../lib/data_source/data_source_form.php:1227
 #, fuzzy
 msgid "External"
 msgstr "Script externo"
@@ -4880,7 +4882,7 @@ msgstr "Puerto de FTP"
 msgid "FTP User"
 msgstr "Usuario de FTP"
 
-#: ../include/global_settings.php:1369 ../include/global_settings.php:1394
+#: ../include/global_settings.php:1379 ../include/global_settings.php:1404
 msgid ""
 "Facility to utilize when using syslog. For Windows enviroments set to USER."
 msgstr ""
@@ -4916,16 +4918,16 @@ msgstr ""
 msgid "Faroe"
 msgstr "Desde"
 
-#: ../data_sources_items.php:156 ../cdef.php:413 ../data_templates.php:463
-#: ../data_templates.php:491 ../lib/data_source/data_source_form.php:731
+#: ../data_sources_items.php:156 ../cdef.php:413 ../data_templates.php:500
+#: ../data_templates.php:528 ../lib/data_source/data_source_form.php:731
 #: ../lib/graph/graphs_form.php:924 ../lib/device/device_form.php:827
 #: ../lib/xaxis/xaxis_form.php:255 ../lib/xaxis/xaxis_form.php:296
-#: ../lib/html_form.php:1200 ../data_input.php:417 ../graph_templates.php:475
+#: ../lib/html_form.php:1225 ../data_input.php:417 ../graph_templates.php:468
 #: ../settings.php:84 ../user_admin.php:978 ../vdef.php:311 ../vdef.php:420
 #: ../tree.php:405 ../graph_templates_items.php:453 ../gprint_presets.php:217
 #: ../color.php:459 ../graph_settings.php:122 ../pollers.php:259
 #: ../data_queries.php:396 ../data_queries.php:653 ../sites.php:431
-#: ../device_templates.php:427 ../data_templates_items.php:158
+#: ../device_templates.php:654 ../data_templates_items.php:158
 #: ../graphs_items.php:413
 #, fuzzy
 msgid "Field"
@@ -4988,7 +4990,7 @@ msgstr ""
 msgid "Finnish"
 msgstr ""
 
-#: ../include/global_settings.php:1463
+#: ../include/global_settings.php:1473
 msgid "First Day of the Week"
 msgstr ""
 
@@ -4997,7 +4999,7 @@ msgstr ""
 msgid "Font"
 msgstr "1 Mes"
 
-#: ../include/global_settings.php:798 ../include/global_settings.php:1759
+#: ../include/global_settings.php:798 ../include/global_settings.php:1769
 msgid "Font (--color FONT)"
 msgstr ""
 
@@ -5096,7 +5098,7 @@ msgstr "Tipo de campo"
 msgid "Frame"
 msgstr "Desde"
 
-#: ../include/global_settings.php:814 ../include/global_settings.php:1777
+#: ../include/global_settings.php:814 ../include/global_settings.php:1787
 msgid "Frame (--color FRAME)"
 msgstr ""
 
@@ -5215,10 +5217,12 @@ msgstr ""
 msgid "Gaza"
 msgstr ""
 
-#: ../lib/device/device_form.php:620 ../utilities.php:210
+#: ../data_templates.php:416 ../lib/device/device_form.php:620
+#: ../graph_templates.php:381 ../utilities.php:210
 #: ../include/global_arrays.php:240 ../include/global_settings.php:34
 #: ../include/global_settings.php:47 ../include/global_settings.php:365
 #: ../include/global_settings.php:998 ../include/global_settings.php:1153
+#: ../device_templates.php:559
 msgid "General"
 msgstr "General"
 
@@ -5310,16 +5314,16 @@ msgstr ""
 msgid "Global Settings"
 msgstr "Configuración Global"
 
-#: ../cdef.php:559 ../data_templates.php:618 ../lib/html.php:1246
-#: ../lib/data_source/data_source_form.php:1032
-#: ../lib/graph/graphs_form.php:1253 ../lib/graph/graphs_new_form.php:483
+#: ../cdef.php:559 ../data_templates.php:681 ../lib/html.php:1246
+#: ../lib/data_source/data_source_form.php:1053
+#: ../lib/graph/graphs_form.php:1275 ../lib/graph/graphs_new_form.php:483
 #: ../lib/graph/graph_view_form.php:146 ../lib/graph/graph_view_form.php:408
-#: ../lib/device/device_form.php:1625 ../lib/xaxis/xaxis_form.php:453
-#: ../rra.php:337 ../data_input.php:591 ../graph_templates.php:643
+#: ../lib/device/device_form.php:1641 ../lib/xaxis/xaxis_form.php:453
+#: ../rra.php:337 ../data_input.php:591 ../graph_templates.php:715
 #: ../utilities.php:803 ../utilities.php:1063 ../utilities.php:1368
 #: ../utilities.php:1628 ../user_admin.php:1071 ../vdef.php:567
 #: ../gprint_presets.php:319 ../color.php:620 ../pollers.php:362
-#: ../data_queries.php:811 ../sites.php:505 ../device_templates.php:1032
+#: ../data_queries.php:811 ../sites.php:505 ../device_templates.php:1273
 msgid "Go"
 msgstr "Ir"
 
@@ -5369,11 +5373,11 @@ msgstr "Configuración"
 msgid "Graph Creation"
 msgstr "Opciones de gráficas"
 
-#: ../include/global_settings.php:1484
+#: ../include/global_settings.php:1494
 msgid "Graph Date Display Format"
 msgstr "Formato de desplegado de fecha en las gráficas"
 
-#: ../include/global_settings.php:1491
+#: ../include/global_settings.php:1501
 msgid "Graph Date Separator"
 msgstr "Separador de fecha en las gráficas"
 
@@ -5422,7 +5426,7 @@ msgstr "Elemento de gráfica"
 msgid "Graph Item Fields"
 msgstr "Campos de elementos de gráfica"
 
-#: ../lib/functions.php:1916 ../graph_templates.php:416
+#: ../lib/functions.php:1916 ../graph_templates.php:581
 #: ../graph_templates_inputs.php:175
 msgid "Graph Item Inputs"
 msgstr "Entradas de elementos de gráficas"
@@ -5456,7 +5460,7 @@ msgstr "Elementos del árbol de gráficas"
 msgid "Graph Legend Item#4"
 msgstr "Elementos del árbol de gráficas"
 
-#: ../lib/functions.php:1913 ../lib/graph/graphs_form.php:1199
+#: ../lib/functions.php:1913 ../lib/graph/graphs_form.php:1221
 #: ../include/global_settings.php:547
 msgid "Graph Management"
 msgstr "Administración de Gráficas"
@@ -5501,7 +5505,7 @@ msgid "Graph Source/Properties"
 msgstr "Propiedades y fuente de gráfica"
 
 #: ../cli/tree_create.php:239 ../cli/tree_update.php:259
-#: ../graph_templates.php:474 ../include/graph_tree/graph_tree_arrays.php:39
+#: ../graph_templates.php:467 ../include/graph_tree/graph_tree_arrays.php:39
 #: ../include/global_form.php:170
 #: ../include/data_query/data_query_forms.php:91 ../data_queries.php:562
 msgid "Graph Template"
@@ -5512,17 +5516,17 @@ msgstr "Plantilla de gráfica"
 msgid "Graph Template Based"
 msgstr "Nombre de plantilla de gráfica"
 
-#: ../lib/graph/graphs_form.php:1055 ../graph_templates.php:522
+#: ../lib/graph/graphs_form.php:1055 ../graph_templates.php:515
 #, fuzzy
 msgid "Graph Template Cacti Specifics"
 msgstr "Elementos de plantillas de gráficas"
 
-#: ../lib/graph/graphs_form.php:1046 ../graph_templates.php:513
+#: ../lib/graph/graphs_form.php:1046 ../graph_templates.php:506
 #, fuzzy
 msgid "Graph Template Color"
 msgstr "Plantilla de gráfica"
 
-#: ../lib/graph/graphs_form.php:1043 ../graph_templates.php:510
+#: ../lib/graph/graphs_form.php:1043 ../graph_templates.php:503
 #, fuzzy
 msgid "Graph Template Grid"
 msgstr "Plantilla de gráfica"
@@ -5532,38 +5536,38 @@ msgstr "Plantilla de gráfica"
 msgid "Graph Template Id"
 msgstr "Plantilla de gráfica"
 
-#: ../lib/functions.php:1918 ../graph_templates.php:412
+#: ../lib/functions.php:1918 ../graph_templates.php:576
 #: ../graph_templates_items.php:452
 msgid "Graph Template Items"
 msgstr "Elementos de plantillas de gráficas"
 
-#: ../graph_templates.php:495
+#: ../graph_templates.php:488
 #, fuzzy
 msgid "Graph Template Labels"
 msgstr "Nombre de plantilla de gráfica"
 
-#: ../lib/graph/graphs_form.php:1049 ../graph_templates.php:516
+#: ../lib/graph/graphs_form.php:1049 ../graph_templates.php:509
 #, fuzzy
 msgid "Graph Template Legend"
 msgstr "Plantilla de gráfica"
 
-#: ../lib/graph/graphs_form.php:1040 ../graph_templates.php:507
+#: ../lib/graph/graphs_form.php:1040 ../graph_templates.php:500
 #, fuzzy
 msgid "Graph Template Limits"
 msgstr "Plantillas de gráficas"
 
-#: ../lib/graph/graphs_form.php:1052 ../graph_templates.php:519
+#: ../lib/graph/graphs_form.php:1052 ../graph_templates.php:512
 #, fuzzy
 msgid "Graph Template Misc"
 msgstr "Plantillas de gráficas"
 
 #: ../lib/api_automation_tools.php:218 ../lib/api_automation_tools.php:260
 #: ../lib/graph/graphs_new_form.php:553 ../lib/device/device_form.php:1259
-#: ../data_queries.php:682 ../device_templates.php:790
+#: ../data_queries.php:682 ../device_templates.php:1026
 msgid "Graph Template Name"
 msgstr "Nombre de plantilla de gráfica"
 
-#: ../graph_templates.php:500
+#: ../graph_templates.php:493
 #, fuzzy
 msgid "Graph Template Right Axis Settings"
 msgstr "Plantilla de gráfica: "
@@ -5573,7 +5577,7 @@ msgstr "Plantilla de gráfica: "
 msgid "Graph Template Selection"
 msgstr "Plantilla de gráfica: "
 
-#: ../lib/graph/graphs_form.php:1037 ../graph_templates.php:504
+#: ../lib/graph/graphs_form.php:1037 ../graph_templates.php:497
 #, fuzzy
 msgid "Graph Template Size"
 msgstr "Plantilla de gráfica"
@@ -5583,7 +5587,7 @@ msgid "Graph Template:"
 msgstr "Plantilla de gráfica:"
 
 #: ../lib/functions.php:1921 ../lib/graph/graphs_new_form.php:551
-#: ../graph_templates.php:614
+#: ../graph_templates.php:689
 msgid "Graph Templates"
 msgstr "Plantillas de gráficas"
 
@@ -5592,15 +5596,15 @@ msgid "Graph Thumbnails"
 msgstr "Vistas pequeñas de gráficas"
 
 #: ../lib/api_automation_tools.php:219 ../lib/api_automation_tools.php:259
-#: ../lib/graph/graphs_form.php:1358
+#: ../lib/graph/graphs_form.php:1373
 msgid "Graph Title"
 msgstr "Título de gráfica"
 
-#: ../lib/functions.php:1956
+#: ../lib/functions.php:1958
 msgid "Graph Tree Items"
 msgstr "Elementos del árbol de gráficas"
 
-#: ../lib/functions.php:1954 ../tree.php:404 ../tree.php:446
+#: ../lib/functions.php:1956 ../tree.php:404 ../tree.php:446
 msgid "Graph Trees"
 msgstr "Árboles de gráficas"
 
@@ -5649,14 +5653,14 @@ msgid "Graph: Upper Limit"
 msgstr "Límite Superior de Gráfica"
 
 #: ../lib/functions.php:1923 ../lib/device/device_form.php:622
-#: ../lib/device/device_form.php:1725 ../utilities.php:357
-#: ../include/top_header.php:68 ../include/global_arrays.php:149
-#: ../include/top_graph_header.php:149
+#: ../lib/device/device_form.php:1741 ../graph_templates.php:383
+#: ../utilities.php:357 ../include/top_header.php:68
+#: ../include/global_arrays.php:149 ../include/top_graph_header.php:149
 msgid "Graphs"
 msgstr "Gráficos"
 
-#: ../include/global_settings.php:1556 ../include/global_settings.php:1584
-#: ../include/global_settings.php:1593
+#: ../include/global_settings.php:1566 ../include/global_settings.php:1594
+#: ../include/global_settings.php:1603
 msgid "Graphs Per-Page"
 msgstr "Gráficas por página"
 
@@ -5684,7 +5688,7 @@ msgstr ""
 msgid "Grid"
 msgstr "Retícula-X"
 
-#: ../include/global_settings.php:782 ../include/global_settings.php:1741
+#: ../include/global_settings.php:782 ../include/global_settings.php:1751
 msgid "Grid (--color GRID)"
 msgstr ""
 
@@ -5697,16 +5701,16 @@ msgstr "2 Días"
 msgid "Gridfitting is turned off for PDF, EPS, SVG output by default."
 msgstr ""
 
-#: ../include/global_settings.php:1260
+#: ../include/global_settings.php:1263
 #, fuzzy
 msgid "Group Distingished Name (DN)"
 msgstr "Nombre Distinguible (DN)"
 
-#: ../include/global_settings.php:1266
+#: ../include/global_settings.php:1269
 msgid "Group Member Attribute"
 msgstr ""
 
-#: ../include/global_settings.php:1272
+#: ../include/global_settings.php:1275
 #, fuzzy
 msgid "Group Member Type"
 msgstr "Tipo de elemento de gráfica"
@@ -5735,7 +5739,7 @@ msgstr ""
 msgid "Guernsey"
 msgstr ""
 
-#: ../include/global_settings.php:1174
+#: ../include/global_settings.php:1177
 msgid "Guest User"
 msgstr "Usuario invitado"
 
@@ -5782,7 +5786,7 @@ msgstr ""
 msgid "Header node options:"
 msgstr "Opciones generales"
 
-#: ../lib/html.php:981 ../include/data_source/data_source_forms.php:129
+#: ../lib/html.php:982 ../include/data_source/data_source_forms.php:129
 msgid "Heartbeat"
 msgstr "Señal de vida"
 
@@ -5858,15 +5862,15 @@ msgstr "Equipo"
 msgid "Host Id"
 msgstr "Equipo"
 
-#: ../lib/data_source/data_source_form.php:994
-#: ../lib/graph/graphs_form.php:1207 ../utilities.php:1321
+#: ../lib/data_source/data_source_form.php:1015
+#: ../lib/graph/graphs_form.php:1229 ../utilities.php:1321
 #: ../utilities.php:1475 ../utilities.php:1603
 #, fuzzy
 msgid "Host:"
 msgstr "Equipos:"
 
 #: ../lib/api_automation_tools.php:216 ../lib/api_automation_tools.php:262
-#: ../lib/api_automation_tools.php:509 ../lib/device/device_form.php:1723
+#: ../lib/api_automation_tools.php:509 ../lib/device/device_form.php:1739
 #: ../include/device/device_forms.php:43 ../include/poller/poller_forms.php:42
 #: ../pollers.php:414
 msgid "Hostname"
@@ -5893,7 +5897,7 @@ msgstr "Cada hora a los minutos especificados"
 msgid "Hovd"
 msgstr ""
 
-#: ../include/global_settings.php:1351
+#: ../include/global_settings.php:1361
 #, fuzzy
 msgid ""
 "How Cacti controls the log size.  The default is to overwrite as needed."
@@ -5964,6 +5968,12 @@ msgstr "Cuántos segundos se deplegarpan en la gráfica para el archivo RRA."
 msgid "How will Cacti handle event logging."
 msgstr "Como manejará Cacti la bitácora de eventos."
 
+#: ../include/device_template/device_template_forms.php:80
+msgid ""
+"However, for legacy purposes, this will only apply to new devices and legacy "
+"devices where the user has requested that template propagation be enabled."
+msgstr ""
+
 #: ../include/global_arrays.php:458
 msgid "Hungarian"
 msgstr ""
@@ -5973,12 +5983,12 @@ msgid "ICMP Ping"
 msgstr "Ping por ICMP"
 
 #: ../include/device/device_forms.php:128
-#: ../include/device_template/device_template_forms.php:101
+#: ../include/device_template/device_template_forms.php:102
 msgid "ICMP on Linux/UNIX requires root privileges."
 msgstr ""
 
-#: ../lib/data_source/data_source_form.php:1201
-#: ../lib/graph/graphs_form.php:1359 ../lib/device/device_form.php:1724
+#: ../lib/data_source/data_source_form.php:1215
+#: ../lib/graph/graphs_form.php:1374 ../lib/device/device_form.php:1740
 #: ../utilities.php:545 ../pollers.php:411
 msgid "ID"
 msgstr ""
@@ -6058,6 +6068,12 @@ msgstr ""
 #: ../tree.php:218
 msgid "If this item is a header, enter a title here."
 msgstr "Si este elemento es un encabezado, capture un nombre aqui."
+
+#: ../include/device_template/device_template_forms.php:79
+msgid ""
+"If unchecked, the user will not be able to change either Availability or "
+"SNMP settings when editing the device."
+msgstr ""
 
 #: ../include/global_settings.php:181
 #, fuzzy
@@ -6158,11 +6174,11 @@ msgid ""
 "here."
 msgstr ""
 
-#: ../graph_templates.php:691
+#: ../graph_templates.php:764
 #: ../include/device_template/device_template_forms.php:61
 #: ../include/graph_template/graph_template_forms.php:47
 #: ../include/data_query/data_query_forms.php:47 ../data_queries.php:865
-#: ../device_templates.php:1081
+#: ../device_templates.php:1322
 msgid "Image"
 msgstr ""
 
@@ -6197,8 +6213,8 @@ msgstr "Importar plantilla de archivo local"
 msgid "Import Template from Text"
 msgstr "Importar plantilla de texto plano"
 
-#: ../lib/functions.php:1951 ../lib/functions.php:1952
-#: ../lib/functions.php:1953 ../include/global_arrays.php:171
+#: ../lib/functions.php:1953 ../lib/functions.php:1954
+#: ../lib/functions.php:1955 ../include/global_arrays.php:171
 #: ../templates_import.php:144
 msgid "Import Templates"
 msgstr "Importar Plantillas"
@@ -6330,6 +6346,10 @@ msgstr "Intervalo"
 msgid "Internal Data Source Name"
 msgstr "Nombre interno para fuente de información"
 
+#: ../include/global_settings.php:1319
+msgid "Internal cacti system log utilizing the database."
+msgstr ""
+
 #: ../utilities.php:384
 msgid "Interval"
 msgstr "Intervalo"
@@ -6404,7 +6424,7 @@ msgstr ""
 msgid "Italian"
 msgstr ""
 
-#: ../cdef.php:431 ../lib/html.php:976 ../lib/graph/graphs_form.php:760
+#: ../cdef.php:431 ../lib/html.php:977 ../lib/graph/graphs_form.php:760
 #: ../lib/device/device_form.php:1389 ../lib/xaxis/xaxis_form.php:313
 #: ../vdef.php:440 ../tree.php:421 ../tree.php:432
 msgid "Item"
@@ -6434,7 +6454,8 @@ msgstr "Valor de elemento de árbol"
 msgid "Item name, just for your convenience."
 msgstr ""
 
-#: ../lib/graph/graph_view_form.php:1205 ../utilities.php:393
+#: ../data_templates.php:417 ../lib/graph/graph_view_form.php:1205
+#: ../graph_templates.php:382 ../utilities.php:393
 #, fuzzy
 msgid "Items"
 msgstr "Elemento"
@@ -6633,7 +6654,7 @@ msgstr ""
 msgid "LDAP"
 msgstr "LDAP"
 
-#: ../include/auth/auth_arrays.php:81
+#: ../include/auth/auth_arrays.php:81 ../include/global_settings.php:1165
 msgid "LDAP Authentication"
 msgstr "Autenticación vía LDAP"
 
@@ -6641,12 +6662,12 @@ msgstr "Autenticación vía LDAP"
 msgid "LDAP Error: "
 msgstr "Error de LDAP: "
 
-#: ../include/global_settings.php:1190
+#: ../include/global_settings.php:1193
 #, fuzzy
 msgid "LDAP General Settings"
 msgstr "Configuración LDAP"
 
-#: ../include/global_settings.php:1256
+#: ../include/global_settings.php:1259
 #, fuzzy
 msgid "LDAP Group Settings"
 msgstr "Configuración LDAP"
@@ -6655,7 +6676,7 @@ msgstr "Configuración LDAP"
 msgid "LDAP Search Error: "
 msgstr "Error de búsqueda LDAP: "
 
-#: ../include/global_settings.php:1279
+#: ../include/global_settings.php:1282
 #, fuzzy
 msgid "LDAP Specific Search Settings"
 msgstr "Búsqueda específica"
@@ -6830,11 +6851,11 @@ msgstr "Valor de leyenda"
 msgid "Legend Direction"
 msgstr ""
 
-#: ../include/global_settings.php:684 ../include/global_settings.php:1637
+#: ../include/global_settings.php:684 ../include/global_settings.php:1647
 msgid "Legend Font File"
 msgstr "Archivo de fuente para leyenda"
 
-#: ../include/global_settings.php:675 ../include/global_settings.php:1627
+#: ../include/global_settings.php:675 ../include/global_settings.php:1637
 msgid "Legend Font Size"
 msgstr "Tamaño de fuente de leyenda"
 
@@ -6843,13 +6864,13 @@ msgstr "Tamaño de fuente de leyenda"
 msgid "Legend Position"
 msgstr "Archivo de fuente para leyenda"
 
-#: ../include/global_settings.php:1405
+#: ../include/global_settings.php:1415
 msgid ""
 "Level of detail to send in email.  When selecting a severity level, every "
 "level above that will be logged as well."
 msgstr ""
 
-#: ../include/global_settings.php:1333
+#: ../include/global_settings.php:1343
 msgid ""
 "Level of detail to send to log.  When selecting a severity level, every "
 "level above that will be logged as well."
@@ -6956,7 +6977,7 @@ msgstr "Gráfica"
 msgid "Local Scratch Directory (ftp only)"
 msgstr ""
 
-#: ../include/global_settings.php:1322
+#: ../include/global_settings.php:1320 ../include/global_settings.php:1332
 msgid "Localhost System Log"
 msgstr ""
 
@@ -6980,17 +7001,17 @@ msgstr "Acciones"
 msgid "Log Administration"
 msgstr "Administración de bitácoras de sistema"
 
-#: ../include/global_settings.php:1350
+#: ../include/global_settings.php:1360
 #, fuzzy
 msgid "Log Control Mechanism"
 msgstr "Mecanismo de control de bitácora"
 
-#: ../include/global_settings.php:1313
+#: ../include/global_settings.php:1316
 #, fuzzy
 msgid "Log Destination"
 msgstr "Destino(s) de la(s) Bitácora(s)"
 
-#: ../include/global_settings.php:1404
+#: ../include/global_settings.php:1414
 #, fuzzy
 msgid "Log Email Level"
 msgstr "Filtros de bitácora de Cacti"
@@ -7149,7 +7170,7 @@ msgstr ""
 msgid "Major Grid"
 msgstr ""
 
-#: ../include/global_settings.php:790 ../include/global_settings.php:1750
+#: ../include/global_settings.php:790 ../include/global_settings.php:1760
 msgid "Major Grid (--color MGRID)"
 msgstr ""
 
@@ -7278,7 +7299,7 @@ msgstr "OID de SNMP"
 msgid "Max Threads"
 msgstr "Threads:"
 
-#: ../lib/html.php:980
+#: ../lib/html.php:981
 #, fuzzy
 msgid "Maximum"
 msgstr "Valor máximo"
@@ -7291,16 +7312,16 @@ msgstr "Número máximo de procesos de colector concurrentes."
 msgid "Maximum Field Length"
 msgstr "Longitud máxima de campo"
 
-#: ../include/global_settings.php:1343
+#: ../include/global_settings.php:1353
 msgid "Maximum Log Size"
 msgstr "Tamaño máximo de bitácora"
 
 #: ../include/device/device_forms.php:257
-#: ../include/device_template/device_template_forms.php:230
+#: ../include/device_template/device_template_forms.php:231
 msgid "Maximum OID's Per Get Request"
 msgstr ""
 
-#: ../include/global_settings.php:1357
+#: ../include/global_settings.php:1367
 msgid "Maximum Retention Period"
 msgstr "Periodo máximo de retención"
 
@@ -7365,7 +7386,7 @@ msgstr "días"
 msgid "Message Type:"
 msgstr ""
 
-#: ../lib/data_source/data_source_form.php:1038
+#: ../lib/data_source/data_source_form.php:1059
 msgid "Method:"
 msgstr "Método:"
 
@@ -7388,7 +7409,7 @@ msgstr "1 Mes"
 msgid "Minimal Heartbeat"
 msgstr "Señal de vida"
 
-#: ../lib/html.php:979
+#: ../lib/html.php:980
 #, fuzzy
 msgid "Minimum"
 msgstr "Valor mínimo"
@@ -7420,7 +7441,7 @@ msgstr ""
 msgid "Miquelon"
 msgstr ""
 
-#: ../include/global_settings.php:1237
+#: ../include/global_settings.php:1240
 msgid "Mode"
 msgstr "Modo"
 
@@ -7432,7 +7453,7 @@ msgstr ""
 msgid "Mode for graph rendering."
 msgstr ""
 
-#: ../include/global_settings.php:1238
+#: ../include/global_settings.php:1241
 #, fuzzy
 msgid ""
 "Mode which cacti will attempt to authenicate against the LDAP server."
@@ -7563,7 +7584,7 @@ msgstr "Ninguna - Únicamente bitácora de sistema"
 
 #: ../include/device/device_forms.php:118
 #: ../include/device/device_forms.php:128
-#: ../include/device_template/device_template_forms.php:101
+#: ../include/device_template/device_template_forms.php:102
 #, fuzzy
 msgid "NOTE:"
 msgstr "AVISO"
@@ -7585,6 +7606,14 @@ msgstr ""
 #: ../include/global_settings.php:1019
 msgid "NOTE: If you change this value, you must re-populate the poller cache."
 msgstr ""
+
+#: ../include/device_template/device_template_forms.php:92
+#, fuzzy
+msgid "NOTE: It is recommended that, at a minimum, SNMP always be selected."
+msgstr ""
+"El método con el cual Cacti determinará si un equipo esta disponible para \n"
+"colectar información. NOTA: Se recomenta que por lo menos SNMP siempre esté\n"
+"habilitado.\n"
 
 #: ../cli/structure_rra_paths.php:107
 #, php-format
@@ -7650,10 +7679,10 @@ msgstr ""
 msgid "Nairobi"
 msgstr ""
 
-#: ../lib/data_source/data_source_form.php:1200
+#: ../lib/data_source/data_source_form.php:1214
 #: ../lib/xaxis/xaxis_form.php:313 ../lib/xaxis/xaxis_form.php:502
 #: ../rra.php:378 ../data_input.php:431 ../data_input.php:465
-#: ../data_input.php:637 ../graph_templates.php:419 ../utilities.php:503
+#: ../data_input.php:637 ../graph_templates.php:583 ../utilities.php:503
 #: ../include/graph_tree/graph_tree_forms.php:32
 #: ../include/data_template/data_template_forms.php:29
 #: ../include/data_source/data_source_forms.php:30
@@ -7673,7 +7702,7 @@ msgstr ""
 msgid "Name"
 msgstr "Nombre"
 
-#: ../include/global_settings.php:1267
+#: ../include/global_settings.php:1270
 msgid "Name of the attribute that contains the usernames of the members."
 msgstr ""
 
@@ -7709,6 +7738,11 @@ msgstr "Nunca"
 msgid "New Data Source Template:"
 msgstr "Nueva plantilla de información:"
 
+#: ../lib/device/device_form.php:637
+#, fuzzy
+msgid "New Device"
+msgstr "Nuevo equipo:"
+
 #: ../user_admin.php:240
 #, fuzzy
 msgid "New Full Name:"
@@ -7721,11 +7755,6 @@ msgstr "Nueva Plantilla de gráfica:"
 #: ../lib/device/device_form.php:621
 msgid "New Graphs"
 msgstr "Nuevas Gráficas"
-
-#: ../lib/device/device_form.php:637
-#, fuzzy
-msgid "New Host"
-msgstr "No hay equipo"
 
 #: ../lib/data_source/data_source_form.php:431
 #: ../lib/graph/graphs_form.php:479
@@ -7785,7 +7814,7 @@ msgstr ""
 msgid "Niue"
 msgstr ""
 
-#: ../lib/html_form.php:1157 ../user_admin.php:1139
+#: ../lib/html_form.php:1162 ../lib/html_form.php:1182 ../user_admin.php:1139
 msgid "No"
 msgstr "No"
 
@@ -7823,16 +7852,16 @@ msgstr "No exiten métodos de salida"
 msgid "No Data Queries"
 msgstr "Consultas de información"
 
-#: ../data_templates.php:696
+#: ../data_templates.php:759
 #, fuzzy
 msgid "No Data Source Templates"
 msgstr "No exiten plantillas de información"
 
-#: ../lib/data_source/data_source_form.php:1232
+#: ../lib/data_source/data_source_form.php:1246
 msgid "No Data Sources"
 msgstr "No hay fuentes de información"
 
-#: ../device_templates.php:1102
+#: ../device_templates.php:1343
 #, fuzzy
 msgid "No Device Templates"
 msgstr "Plantillas de equipos"
@@ -7842,7 +7871,7 @@ msgstr "Plantillas de equipos"
 msgid "No Devices"
 msgstr "Dispositivos"
 
-#: ../graph_templates.php:710 ../user_admin.php:703
+#: ../graph_templates.php:783 ../user_admin.php:703
 msgid "No Graph Templates"
 msgstr "No se encontraron plantillas de gráficas"
 
@@ -7855,7 +7884,7 @@ msgstr "No se encontraron plantillas de gráficas"
 msgid "No Graphs"
 msgstr "No hay gráficas"
 
-#: ../lib/graph/graphs_form.php:1383
+#: ../lib/graph/graphs_form.php:1398
 msgid "No Graphs Found"
 msgstr "No se encontraron gráficas"
 
@@ -7867,11 +7896,11 @@ msgstr "No se encontraron árboles de gráficas."
 msgid "No Gridfit"
 msgstr ""
 
-#: ../lib/data_source/data_source_form.php:986 ../graphs_items.php:287
+#: ../lib/data_source/data_source_form.php:1007 ../graphs_items.php:287
 msgid "No Host"
 msgstr "No hay equipo"
 
-#: ../lib/device/device_form.php:1766
+#: ../lib/device/device_form.php:1782
 msgid "No Hosts"
 msgstr "No hay equipos asociados"
 
@@ -7880,15 +7909,15 @@ msgstr "No hay equipos asociados"
 msgid "No Input Fields"
 msgstr "Campos de entrada"
 
-#: ../data_templates.php:519 ../lib/data_source/data_source_form.php:582
+#: ../data_templates.php:556 ../lib/data_source/data_source_form.php:582
 msgid "No Input Fields for the Selected Data Input Source"
 msgstr ""
 
-#: ../graph_templates.php:438
+#: ../graph_templates.php:602
 msgid "No Inputs"
 msgstr "No se encontraron entradas"
 
-#: ../lib/html.php:963 ../lib/html.php:1013 ../lib/graph/graphs_form.php:808
+#: ../lib/html.php:964 ../lib/html.php:1014 ../lib/graph/graphs_form.php:808
 #: ../gprint_presets.php:377 ../graph_templates_inputs.php:234
 msgid "No Items"
 msgstr "No hay elementos"
@@ -7935,7 +7964,7 @@ msgstr "No buscar"
 msgid "No Sites"
 msgstr "No hay elementos"
 
-#: ../lib/html.php:912
+#: ../lib/html.php:913
 #, fuzzy
 msgid "No Task"
 msgstr "No hay árboles"
@@ -7944,7 +7973,7 @@ msgstr "No hay árboles"
 msgid "No Trees"
 msgstr "No hay árboles"
 
-#: ../include/global_settings.php:1177 ../include/global_settings.php:1185
+#: ../include/global_settings.php:1180 ../include/global_settings.php:1188
 msgid "No User"
 msgstr "No existe usuario"
 
@@ -7971,13 +8000,17 @@ msgstr "No se encontraron elementos de árbol de gráficas."
 msgid "No X-Axis Presets"
 msgstr ""
 
-#: ../lib/device/device_form.php:1399 ../device_templates.php:915
+#: ../lib/device/device_form.php:1399 ../device_templates.php:1152
 msgid "No associated data queries."
 msgstr "No hay consultas de información asociadas."
 
-#: ../device_templates.php:838
+#: ../device_templates.php:1071
 msgid "No associated graph templates."
 msgstr "No se tienen plantillas de gráficas asociadas."
+
+#: ../include/global_settings.php:1160
+msgid "No authentication will be used, all users will have full access."
+msgstr ""
 
 #: ../utilities.php:403
 #, fuzzy
@@ -8007,24 +8040,24 @@ msgstr "Nombre"
 msgid "Non-Matching Items Hidden"
 msgstr ""
 
-#: ../cdef.php:32 ../data_templates.php:34 ../data_templates.php:685
-#: ../lib/api_automation_tools.php:32 ../lib/html.php:948 ../lib/html.php:949
-#: ../lib/html.php:950 ../lib/html.php:1000
+#: ../cdef.php:32 ../data_templates.php:34 ../data_templates.php:748
+#: ../lib/api_automation_tools.php:32 ../lib/html.php:949 ../lib/html.php:950
+#: ../lib/html.php:951 ../lib/html.php:1001
 #: ../lib/data_source/data_source_form.php:361
-#: ../lib/data_source/data_source_form.php:1013
-#: ../lib/data_source/data_source_form.php:1043
-#: ../lib/data_source/data_source_form.php:1212
-#: ../lib/graph/graphs_form.php:386 ../lib/graph/graphs_form.php:1226
-#: ../lib/graph/graphs_form.php:1367 ../lib/device/device_form.php:380
-#: ../lib/device/device_form.php:1536 ../lib/xaxis/xaxis_form.php:173
+#: ../lib/data_source/data_source_form.php:1034
+#: ../lib/data_source/data_source_form.php:1064
+#: ../lib/data_source/data_source_form.php:1226
+#: ../lib/graph/graphs_form.php:386 ../lib/graph/graphs_form.php:1248
+#: ../lib/graph/graphs_form.php:1382 ../lib/device/device_form.php:380
+#: ../lib/device/device_form.php:1552 ../lib/xaxis/xaxis_form.php:173
 #: ../lib/xaxis/xaxis_form.php:328 ../lib/xaxis/xaxis_form.php:330
 #: ../lib/xaxis/xaxis_form.php:332 ../lib/xaxis/xaxis_form.php:335
 #: ../rra.php:28 ../graph_templates.php:34 ../include/global_arrays.php:25
 #: ../include/device/device_arrays.php:103 ../include/auth/auth_arrays.php:76
-#: ../include/auth/auth_arrays.php:98
+#: ../include/auth/auth_arrays.php:98 ../include/global_settings.php:1159
 #: ../include/data_query/data_query_arrays.php:28 ../color.php:579
 #: ../color.php:589 ../color.php:599 ../pollers.php:31 ../data_queries.php:31
-#: ../sites.php:30 ../device_templates.php:31 ../device_templates.php:561
+#: ../sites.php:30 ../device_templates.php:31 ../device_templates.php:790
 msgid "None"
 msgstr "Ninguno"
 
@@ -8064,7 +8097,7 @@ msgstr ""
 msgid "Not Being Graphed"
 msgstr "No está siendo graficado"
 
-#: ../lib/device/device_form.php:1588
+#: ../lib/device/device_form.php:1604
 #, fuzzy
 msgid "Not Defined"
 msgstr "No se definieron campos de entrada"
@@ -8082,7 +8115,7 @@ msgstr ""
 msgid "Not Selected"
 msgstr "No Seleccionado"
 
-#: ../lib/device/device_form.php:1556
+#: ../lib/device/device_form.php:1572
 #, fuzzy
 msgid "Not Up"
 msgstr "Nover hacia arriba"
@@ -8355,7 +8388,7 @@ msgstr ""
 "\t\t\tsea preciso para todos los tipos de gráficas, un etiquetado \n"
 "consistente por lo regular ayuda.\n"
 
-#: ../include/global_settings.php:1498
+#: ../include/global_settings.php:1508
 msgid "Page Refresh"
 msgstr "Recarga de página"
 
@@ -8416,7 +8449,7 @@ msgstr "Anterior"
 msgid "Password"
 msgstr "Contraseña"
 
-#: ../include/global_settings.php:1302
+#: ../include/global_settings.php:1305
 #, fuzzy
 msgid "Password for Specific Searching binding to the LDAP directory."
 msgstr "Contraseña para sesión LDAP por Búsqueda Específica.\n"
@@ -8463,19 +8496,19 @@ msgstr ""
 msgid "Phoenix"
 msgstr ""
 
-#: ../include/device/device_arrays.php:107 ../device_templates.php:573
+#: ../include/device/device_arrays.php:107 ../device_templates.php:802
 #, fuzzy
 msgid "Ping"
 msgstr "Ping por UDP"
 
 #: ../include/device/device_forms.php:126
-#: ../include/device_template/device_template_forms.php:99
+#: ../include/device_template/device_template_forms.php:100
 #, fuzzy
 msgid "Ping Method"
 msgstr "Método:"
 
 #: ../include/device/device_forms.php:137
-#: ../include/device_template/device_template_forms.php:110
+#: ../include/device_template/device_template_forms.php:111
 #: ../include/global_settings.php:1107
 #, fuzzy
 msgid "Ping Port"
@@ -8487,14 +8520,14 @@ msgid "Ping Results"
 msgstr "Cuenta de ping"
 
 #: ../include/device/device_forms.php:154
-#: ../include/device_template/device_template_forms.php:127
+#: ../include/device_template/device_template_forms.php:128
 #: ../include/global_settings.php:1123
 #, fuzzy
 msgid "Ping Retry Count"
 msgstr "Cuenta de ping"
 
 #: ../include/device/device_forms.php:145
-#: ../include/device_template/device_template_forms.php:118
+#: ../include/device_template/device_template_forms.php:119
 #: ../include/global_settings.php:1115
 msgid "Ping Timeout Value"
 msgstr "Valor de tiempo de espera de Ping"
@@ -8503,7 +8536,7 @@ msgstr "Valor de tiempo de espera de Ping"
 msgid "Ping Type"
 msgstr "Tipo de ping"
 
-#: ../include/device/device_arrays.php:104 ../device_templates.php:565
+#: ../include/device/device_arrays.php:104 ../device_templates.php:794
 msgid "Ping and SNMP"
 msgstr ""
 
@@ -8575,7 +8608,7 @@ msgstr ""
 msgid "Polish"
 msgstr "Colectores"
 
-#: ../lib/device/device_form.php:1732
+#: ../lib/device/device_form.php:1748
 #, fuzzy
 msgid "Poll Time"
 msgstr "Tipo de colector"
@@ -8608,7 +8641,7 @@ msgstr "Errores de colector o superiores"
 msgid "Poller Information"
 msgstr "Información PHP"
 
-#: ../lib/data_source/data_source_form.php:1203
+#: ../lib/data_source/data_source_form.php:1217
 #: ../include/global_settings.php:1016
 #, fuzzy
 msgid "Poller Interval"
@@ -8646,7 +8679,7 @@ msgstr "Tipo de colector"
 msgid "Poller Warnings"
 msgstr "Advertencias de colector"
 
-#: ../lib/device/device_form.php:1601
+#: ../lib/device/device_form.php:1617
 msgid "Poller:"
 msgstr "Colector:"
 
@@ -8668,11 +8701,11 @@ msgstr ""
 msgid "Port Moresby"
 msgstr ""
 
-#: ../include/global_settings.php:1208
+#: ../include/global_settings.php:1211
 msgid "Port SSL"
 msgstr "Puerto para SSL"
 
-#: ../include/global_settings.php:1200
+#: ../include/global_settings.php:1203
 msgid "Port Standard"
 msgstr "Puerto estandar"
 
@@ -8733,7 +8766,7 @@ msgid "Preview"
 msgstr "Modo de Vista Previa"
 
 #: ../lib/functions.php:1925 ../include/global_settings.php:50
-#: ../include/global_settings.php:1533
+#: ../include/global_settings.php:1543
 msgid "Preview Mode"
 msgstr "Modo de Vista Previa"
 
@@ -8788,11 +8821,11 @@ msgstr ""
 msgid "Properties"
 msgstr "Propiedades"
 
-#: ../include/global_settings.php:1216
+#: ../include/global_settings.php:1219
 msgid "Protocol Version"
 msgstr "Versión de protocolo"
 
-#: ../include/global_settings.php:1217
+#: ../include/global_settings.php:1220
 msgid "Protocol Version that the server supports."
 msgstr "La versión de protocolo que soporta el servidor."
 
@@ -8908,11 +8941,11 @@ msgstr ""
 msgid "Rarotonga"
 msgstr ""
 
-#: ../lib/device/device_form.php:1336 ../device_templates.php:863
+#: ../lib/device/device_form.php:1336 ../device_templates.php:1104
 msgid "Re-Index Method"
 msgstr "Método de re ordenación"
 
-#: ../lib/device/device_form.php:1411 ../device_templates.php:926
+#: ../lib/device/device_form.php:1411
 #, fuzzy
 msgid "Re-Index Method:"
 msgstr "Método de re ordenación"
@@ -8968,7 +9001,7 @@ msgstr "Ver el cache del colector"
 msgid "Recife"
 msgstr "Recarga de página"
 
-#: ../lib/device/device_form.php:1559 ../lib/html_utility.php:285
+#: ../lib/device/device_form.php:1575 ../lib/html_utility.php:285
 msgid "Recovering"
 msgstr "Recuperando"
 
@@ -8985,7 +9018,7 @@ msgstr "Herramientas requeridas"
 msgid "Redirect all HTTP connections to HTTPS."
 msgstr ""
 
-#: ../include/global_settings.php:1230
+#: ../include/global_settings.php:1233
 msgid "Referrals"
 msgstr "Referentes"
 
@@ -9079,7 +9112,7 @@ msgstr ""
 msgid "Repairing Table -> '%s'"
 msgstr ""
 
-#: ../include/global_settings.php:1250
+#: ../include/global_settings.php:1253
 #, fuzzy
 msgid "Require Group Membership"
 msgstr "Versiones de herramientas requeridas"
@@ -9089,7 +9122,7 @@ msgstr "Versiones de herramientas requeridas"
 msgid "Require SSL Encryption"
 msgstr "Encripción"
 
-#: ../include/global_settings.php:1251
+#: ../include/global_settings.php:1254
 msgid ""
 "Require user to be member of group to authenicate. Group settings must be "
 "set for this to work, enabling without proper group settings will cause "
@@ -9135,7 +9168,7 @@ msgstr "Por Defecto"
 msgid "Result:"
 msgstr ""
 
-#: ../lib/html_form.php:1048 ../lib/html_form.php:1137 ../include/auth.php:92
+#: ../lib/html_form.php:1048 ../lib/html_form.php:1142 ../include/auth.php:92
 #, fuzzy
 msgid "Return"
 msgstr "Reintentos"
@@ -9216,7 +9249,7 @@ msgstr ""
 msgid "Round Robin Archive"
 msgstr "Archivo Round Robin"
 
-#: ../lib/functions.php:1943 ../rra.php:234 ../rra.php:308
+#: ../lib/functions.php:1945 ../rra.php:234 ../rra.php:308
 msgid "Round Robin Archives"
 msgstr "Archivos Round Robin Archive"
 
@@ -9240,14 +9273,14 @@ msgstr "Hileras"
 msgid "Rows Per Page"
 msgstr "Hileras por página"
 
-#: ../cdef.php:544 ../data_templates.php:603
-#: ../lib/data_source/data_source_form.php:1062
-#: ../lib/graph/graphs_form.php:1267 ../lib/device/device_form.php:1564
+#: ../cdef.php:544 ../data_templates.php:666
+#: ../lib/data_source/data_source_form.php:1083
+#: ../lib/graph/graphs_form.php:1289 ../lib/device/device_form.php:1580
 #: ../lib/xaxis/xaxis_form.php:438 ../rra.php:322 ../data_input.php:576
-#: ../graph_templates.php:628 ../utilities.php:782 ../utilities.php:1382
+#: ../graph_templates.php:700 ../utilities.php:782 ../utilities.php:1382
 #: ../utilities.php:1642 ../vdef.php:552 ../gprint_presets.php:304
 #: ../pollers.php:347 ../data_queries.php:796 ../sites.php:484
-#: ../device_templates.php:1017
+#: ../device_templates.php:1258
 #, fuzzy
 msgid "Rows:"
 msgstr "Hileras"
@@ -9276,12 +9309,12 @@ msgid "SI Units for Logarithmic Scaling"
 msgstr "Auto escalamiento logarítmico (--logarithmic)"
 
 #: ../utilities.php:1622 ../include/device/device_arrays.php:106
-#: ../include/global_settings.php:35 ../device_templates.php:569
+#: ../include/global_settings.php:35 ../device_templates.php:798
 msgid "SNMP"
 msgstr "SNMP"
 
 #: ../include/device/device_forms.php:205
-#: ../include/device_template/device_template_forms.php:178
+#: ../include/device_template/device_template_forms.php:179
 #: ../include/global_settings.php:319
 msgid "SNMP Auth Protocol (v3)"
 msgstr ""
@@ -9292,13 +9325,13 @@ msgid "SNMP Cache Items"
 msgstr "Ver el cache de SNMP"
 
 #: ../include/device/device_forms.php:177
-#: ../include/device_template/device_template_forms.php:150
+#: ../include/device_template/device_template_forms.php:151
 #: ../include/global_settings.php:297
 msgid "SNMP Community"
 msgstr "Comunidad SNMP"
 
 #: ../include/device/device_forms.php:230
-#: ../include/device_template/device_template_forms.php:203
+#: ../include/device_template/device_template_forms.php:204
 #, fuzzy
 msgid "SNMP Context"
 msgstr "Comunidad SNMP"
@@ -9321,7 +9354,7 @@ msgid "SNMP Information"
 msgstr "Información SNMP"
 
 #: ../include/device/device_forms.php:164
-#: ../include/device_template/device_template_forms.php:137
+#: ../include/device_template/device_template_forms.php:138
 #, fuzzy
 msgid "SNMP Options"
 msgstr "Opciones v3 de SNMP"
@@ -9331,14 +9364,14 @@ msgid "SNMP Output Type (Dropdown)"
 msgstr "Tipo de salida de SNMO (Menú de caída)"
 
 #: ../include/device/device_forms.php:196
-#: ../include/device_template/device_template_forms.php:169
+#: ../include/device_template/device_template_forms.php:170
 #: ../include/global_settings.php:311
 #, fuzzy
 msgid "SNMP Password (v3)"
 msgstr "Nueva contraseña"
 
 #: ../include/device/device_forms.php:239
-#: ../include/device_template/device_template_forms.php:212
+#: ../include/device_template/device_template_forms.php:213
 msgid "SNMP Port"
 msgstr "Puerto SNMP"
 
@@ -9348,14 +9381,14 @@ msgid "SNMP Port Number"
 msgstr "Número de puerto"
 
 #: ../include/device/device_forms.php:213
-#: ../include/device_template/device_template_forms.php:186
+#: ../include/device_template/device_template_forms.php:187
 #: ../include/global_settings.php:326
 #, fuzzy
 msgid "SNMP Privacy Passphrase (v3)"
 msgstr "Frase secreta de privacidad"
 
 #: ../include/device/device_forms.php:222
-#: ../include/device_template/device_template_forms.php:195
+#: ../include/device_template/device_template_forms.php:196
 #: ../include/global_settings.php:333
 #, fuzzy
 msgid "SNMP Privacy Protocol (v3)"
@@ -9372,13 +9405,13 @@ msgid "SNMP Retries"
 msgstr "Reintentos"
 
 #: ../include/device/device_forms.php:248
-#: ../include/device_template/device_template_forms.php:221
+#: ../include/device_template/device_template_forms.php:222
 #: ../include/global_settings.php:339
 msgid "SNMP Timeout"
 msgstr "Tiempo de espera para SNMP agotado"
 
 #: ../include/device/device_forms.php:187
-#: ../include/device_template/device_template_forms.php:160
+#: ../include/device_template/device_template_forms.php:161
 #: ../include/global_settings.php:304
 #, fuzzy
 msgid "SNMP Username (v3)"
@@ -9389,7 +9422,7 @@ msgid "SNMP Utility Version"
 msgstr "Versión de utilería de SNMP"
 
 #: ../utilities.php:344 ../include/device/device_forms.php:168
-#: ../include/device_template/device_template_forms.php:141
+#: ../include/device_template/device_template_forms.php:142
 #: ../include/global_settings.php:290
 msgid "SNMP Version"
 msgstr "Versión de SNMP"
@@ -9400,18 +9433,18 @@ msgid "SNMP Version:"
 msgstr "Versión de SNMP"
 
 #: ../include/device/device_forms.php:178
-#: ../include/device_template/device_template_forms.php:151
+#: ../include/device_template/device_template_forms.php:152
 #, fuzzy
 msgid "SNMP read community for this device."
 msgstr "Capture la comunidad SNMP para lectura de este equipo."
 
 #: ../include/device/device_forms.php:197
-#: ../include/device_template/device_template_forms.php:170
+#: ../include/device_template/device_template_forms.php:171
 msgid "SNMP v3 password for this device."
 msgstr ""
 
 #: ../include/device/device_forms.php:188
-#: ../include/device_template/device_template_forms.php:161
+#: ../include/device_template/device_template_forms.php:162
 #, fuzzy
 msgid "SNMP v3 username for this device."
 msgstr "Un nombre útil para este árbol de gráficas."
@@ -9560,19 +9593,19 @@ msgstr "Script - en servidor de scripts PHP"
 msgid "Script:"
 msgstr "Script"
 
-#: ../include/global_settings.php:1283
+#: ../include/global_settings.php:1286
 msgid "Search Base"
 msgstr "Base de búsqueda"
 
-#: ../include/global_settings.php:1295
+#: ../include/global_settings.php:1298
 msgid "Search Distingished Name (DN)"
 msgstr "Buscar Nombre Distinguible (DN)"
 
-#: ../include/global_settings.php:1289
+#: ../include/global_settings.php:1292
 msgid "Search Filter"
 msgstr "Filtro de Búsqueda"
 
-#: ../include/global_settings.php:1301
+#: ../include/global_settings.php:1304
 msgid "Search Password"
 msgstr "Buscar Contraseña"
 
@@ -9580,7 +9613,7 @@ msgstr "Buscar Contraseña"
 msgid "Search Returned no Rows."
 msgstr ""
 
-#: ../include/global_settings.php:1284
+#: ../include/global_settings.php:1287
 #, fuzzy
 msgid ""
 "Search base for searching the LDAP directory, such as <br><i>"
@@ -9590,7 +9623,7 @@ msgstr ""
 "Base de búsqueda para buscar en el directorio LDAP, por ejemplo <i>\"dc= \n"
 "win2kdomain,dc=local\"</i> o <i>\"ou=people,dc=domain,dc=local\"</i>.\n"
 
-#: ../include/global_settings.php:1290
+#: ../include/global_settings.php:1293
 #, fuzzy
 msgid ""
 "Search filter to use to locate the user in the LDAP directory, such as "
@@ -9606,16 +9639,16 @@ msgstr ""
 "reemplazado con el nombre de usuario que fue porporcionado al ingreso al \n"
 "sistema.\n"
 
-#: ../cdef.php:538 ../data_templates.php:597
-#: ../lib/data_source/data_source_form.php:1081
-#: ../lib/graph/graphs_form.php:1261 ../lib/graph/graph_view_form.php:140
+#: ../cdef.php:538 ../data_templates.php:660
+#: ../lib/data_source/data_source_form.php:1102
+#: ../lib/graph/graphs_form.php:1283 ../lib/graph/graph_view_form.php:140
 #: ../lib/graph/graph_view_form.php:402 ../lib/graph/graph_view_form.php:1252
-#: ../lib/device/device_form.php:1619 ../lib/xaxis/xaxis_form.php:435
-#: ../rra.php:316 ../data_input.php:570 ../graph_templates.php:622
+#: ../lib/device/device_form.php:1635 ../lib/xaxis/xaxis_form.php:435
+#: ../rra.php:316 ../data_input.php:570 ../graph_templates.php:697
 #: ../utilities.php:797 ../utilities.php:1095 ../utilities.php:1376
 #: ../utilities.php:1636 ../user_admin.php:1065 ../vdef.php:546
 #: ../gprint_presets.php:298 ../color.php:569 ../pollers.php:341
-#: ../data_queries.php:790 ../sites.php:478 ../device_templates.php:1011
+#: ../data_queries.php:790 ../sites.php:478 ../device_templates.php:1252
 msgid "Search:"
 msgstr "Busqueda:"
 
@@ -9692,7 +9725,7 @@ msgstr ""
 msgid "Serbian"
 msgstr ""
 
-#: ../include/global_settings.php:1194
+#: ../include/global_settings.php:1197
 msgid "Server"
 msgstr "Servidor"
 
@@ -9710,7 +9743,7 @@ msgstr ""
 msgid "Settings"
 msgstr "Opciones"
 
-#: ../include/global_settings.php:1332
+#: ../include/global_settings.php:1342
 #, fuzzy
 msgid "Severity Logging Level"
 msgstr "Colector Activo"
@@ -9720,7 +9753,7 @@ msgstr "Colector Activo"
 msgid "ShadeA"
 msgstr "Salvar"
 
-#: ../include/global_settings.php:766 ../include/global_settings.php:1723
+#: ../include/global_settings.php:766 ../include/global_settings.php:1733
 msgid "ShadeA (--color SHADEA)"
 msgstr ""
 
@@ -9729,7 +9762,7 @@ msgstr ""
 msgid "ShadeB"
 msgstr "Salvar"
 
-#: ../include/global_settings.php:774 ../include/global_settings.php:1732
+#: ../include/global_settings.php:774 ../include/global_settings.php:1742
 msgid "ShadeB (--color SHADEB)"
 msgstr ""
 
@@ -9762,7 +9795,7 @@ msgstr ""
 msgid "Show Device Details"
 msgstr "Detección de equipo caído"
 
-#: ../include/global_settings.php:1576
+#: ../include/global_settings.php:1586
 #, fuzzy
 msgid "Show Graph Title"
 msgstr "Título de gráfica"
@@ -9831,7 +9864,7 @@ msgstr "Nombre de campo"
 msgid "Site Notes"
 msgstr ""
 
-#: ../lib/device/device_form.php:1583 ../sites.php:515
+#: ../lib/device/device_form.php:1599 ../sites.php:515
 #, fuzzy
 msgid "Site:"
 msgstr "Paso"
@@ -9842,7 +9875,7 @@ msgstr "Paso"
 msgid "Sites"
 msgstr "Pasos"
 
-#: ../lib/graph/graphs_form.php:1361
+#: ../lib/graph/graphs_form.php:1376
 msgid "Size"
 msgstr "Tamaño"
 
@@ -9926,7 +9959,7 @@ msgstr "Fuente de información especial"
 msgid "Special Type Code"
 msgstr "Fuente de información especial"
 
-#: ../include/global_settings.php:1170
+#: ../include/global_settings.php:1173
 msgid "Special Users"
 msgstr ""
 
@@ -9935,7 +9968,7 @@ msgid "Specific Searching"
 msgstr "Búsqueda específica"
 
 #: ../include/device/device_forms.php:258
-#: ../include/device_template/device_template_forms.php:231
+#: ../include/device_template/device_template_forms.php:232
 msgid ""
 "Specified the number of OID's that can be obtained in a single SNMP Get "
 "request."
@@ -9994,11 +10027,11 @@ msgstr "Iniciado"
 msgid "Start Date Selector"
 msgstr "Iniciar selector de fecha"
 
-#: ../include/global_settings.php:1471
+#: ../include/global_settings.php:1481
 msgid "Start Time of the Daily Shift."
 msgstr ""
 
-#: ../include/global_settings.php:1470
+#: ../include/global_settings.php:1480
 msgid "Start of Daily Shift"
 msgstr ""
 
@@ -10013,13 +10046,13 @@ msgstr "Iniciado"
 msgid "Stats"
 msgstr "Estatus"
 
-#: ../data_templates.php:676 ../lib/device/device_form.php:1259
-#: ../lib/device/device_form.php:1336 ../lib/device/device_form.php:1727
+#: ../data_templates.php:739 ../lib/device/device_form.php:1259
+#: ../lib/device/device_form.php:1336 ../lib/device/device_form.php:1743
 #: ../pollers.php:415
 msgid "Status"
 msgstr "Estatus"
 
-#: ../lib/device/device_form.php:1549 ../plugins.php:244
+#: ../lib/device/device_form.php:1565 ../plugins.php:244
 #, fuzzy
 msgid "Status:"
 msgstr "Estatus"
@@ -10177,30 +10210,31 @@ msgstr ""
 msgid "Syowa"
 msgstr ""
 
-#: ../include/global_settings.php:1393
+#: ../include/global_settings.php:1403
 #, fuzzy
 msgid "Syslog Facility"
 msgstr "Facilidad"
 
-#: ../include/global_settings.php:1326 ../include/global_settings.php:1379
+#: ../include/global_settings.php:1322 ../include/global_settings.php:1336
+#: ../include/global_settings.php:1389
 #, fuzzy
 msgid "Syslog Server"
 msgstr "Servidor"
 
-#: ../include/global_settings.php:1386
+#: ../include/global_settings.php:1396
 msgid "Syslog Server Port"
 msgstr ""
 
-#: ../include/global_settings.php:1375
+#: ../include/global_settings.php:1385
 #, fuzzy
 msgid "Syslog Server Settings"
 msgstr "Opciones de Sistema"
 
-#: ../include/global_settings.php:1387
+#: ../include/global_settings.php:1397
 msgid "Syslog Server port to send syslog message to."
 msgstr ""
 
-#: ../include/global_settings.php:1380
+#: ../include/global_settings.php:1390
 msgid ""
 "Syslog Server to send syslog message to. To use TCP port, proceed server "
 "with \"tcp://\"."
@@ -10208,6 +10242,10 @@ msgstr ""
 
 #: ../include/global_arrays.php:492
 msgid "Syslog Style (h e H:M:S)"
+msgstr ""
+
+#: ../include/global_settings.php:1323
+msgid "Syslog to local or remote syslog server"
 msgstr ""
 
 #: ../include/global_arrays.php:92
@@ -10220,17 +10258,17 @@ msgstr "Bitácoras de eventos y de sistema del servidor"
 msgid "System"
 msgstr "Sistema:"
 
-#: ../lib/device/device_form.php:1606 ../include/device/device_forms.php:54
+#: ../lib/device/device_form.php:1622 ../include/device/device_forms.php:54
 #, fuzzy
 msgid "System Default"
 msgstr "Por Defecto"
 
-#: ../include/global_settings.php:1364
+#: ../include/global_settings.php:1374
 #, fuzzy
 msgid "System Log Settings"
 msgstr "Opciones de Sistema"
 
-#: ../include/global_settings.php:1368
+#: ../include/global_settings.php:1378
 msgid "System Syslog Facility"
 msgstr ""
 
@@ -10244,17 +10282,17 @@ msgid "TCP Ping"
 msgstr "Ping por ICMP"
 
 #: ../include/device/device_forms.php:139
-#: ../include/device_template/device_template_forms.php:112
+#: ../include/device_template/device_template_forms.php:113
 #, fuzzy
 msgid "TCP or UDP port to attempt connection."
 msgstr "Puerto TCP/UDP para comnunicaciones encriptadas con SSL"
 
-#: ../include/global_settings.php:1201
+#: ../include/global_settings.php:1204
 #, fuzzy
 msgid "TCP/UDP port for Non SSL communications."
 msgstr "Puerto TCP/UDP para comnunicaciones no encriptadas con SSL"
 
-#: ../include/global_settings.php:1209
+#: ../include/global_settings.php:1212
 #, fuzzy
 msgid "TCP/UDP port for SSL communications."
 msgstr "Puerto TCP/UDP para comnunicaciones encriptadas con SSL"
@@ -10298,7 +10336,7 @@ msgstr ""
 msgid "Tbilisi"
 msgstr ""
 
-#: ../lib/functions.php:1972 ../utilities.php:1798 ../utilities.php:1802
+#: ../lib/functions.php:1974 ../utilities.php:1798 ../utilities.php:1802
 msgid "Technical Support"
 msgstr ""
 
@@ -10326,12 +10364,12 @@ msgstr "Comunidad"
 msgid "Template Based Availability and SNMP"
 msgstr "Método de disponibilidad"
 
-#: ../data_templates.php:673 ../lib/data_source/data_source_form.php:1205
-#: ../lib/graph/graphs_form.php:1360
+#: ../data_templates.php:736 ../lib/data_source/data_source_form.php:1219
+#: ../lib/graph/graphs_form.php:1375
 msgid "Template Name"
 msgstr "Nombre de plantilla"
 
-#: ../graph_templates.php:689 ../device_templates.php:1078
+#: ../graph_templates.php:762 ../device_templates.php:1319
 msgid "Template Title"
 msgstr "Título de la plantilla"
 
@@ -10351,7 +10389,7 @@ msgstr "Plantillas"
 msgid "Template Username:"
 msgstr "Nombre de plantilla"
 
-#: ../device_templates.php:1091
+#: ../device_templates.php:1332
 #, fuzzy
 msgid "Template controls Availability and SNMP"
 msgstr "Método de disponibilidad"
@@ -10361,8 +10399,8 @@ msgstr "Método de disponibilidad"
 msgid "Template user '"
 msgstr "Plantillas"
 
-#: ../lib/data_source/data_source_form.php:1008
-#: ../lib/graph/graphs_form.php:1221 ../lib/graph/graph_view_form.php:105
+#: ../lib/data_source/data_source_form.php:1029
+#: ../lib/graph/graphs_form.php:1243 ../lib/graph/graph_view_form.php:105
 #: ../lib/graph/graph_view_form.php:352
 #, fuzzy
 msgid "Template:"
@@ -10511,11 +10549,11 @@ msgstr ""
 "La información que es enviada al script. se incluye la ruta completa al "
 "scripty los campos de entrada en &lt;&gt; corchetes."
 
-#: ../include/global_settings.php:1485
+#: ../include/global_settings.php:1495
 msgid "The date format to use for graphs"
 msgstr "El formato de fecha a utilizar en las gráficas"
 
-#: ../include/global_settings.php:1492
+#: ../include/global_settings.php:1502
 msgid "The date separator to be used for graphs"
 msgstr "El separador para las fechas que será utilizado en las gráficas"
 
@@ -10524,7 +10562,7 @@ msgstr "El separador para las fechas que será utilizado en las gráficas"
 msgid "The date/time setting for logs"
 msgstr "El formato de fecha a utilizar en las gráficas"
 
-#: ../include/global_settings.php:1424
+#: ../include/global_settings.php:1434
 #, fuzzy
 msgid ""
 "The default RRA to use when thumbnail graphs are not being displayed or when "
@@ -10539,7 +10577,7 @@ msgid "The default allow/deny graph policy for this user"
 msgstr ""
 "La política de permitir/denegar de gráficas por defecto para este usuario."
 
-#: ../include/global_settings.php:1550
+#: ../include/global_settings.php:1560
 msgid "The default graph tree to use when displaying graphs in tree mode."
 msgstr ""
 "El árbol de gráficas por defecto a utilizar cuando se utilize el modode "
@@ -10552,14 +10590,14 @@ msgstr ""
 "El elemento de fuente de información a utilizar para este elemento de "
 "gráfica."
 
-#: ../include/global_settings.php:1451
+#: ../include/global_settings.php:1461
 #, fuzzy
 msgid "The default timeshift you wish to be displayed when you display graphs"
 msgstr ""
 "El tiempo de vida por defecto que desea aplique para el desplegado de \n"
 "gráficas.\n"
 
-#: ../include/global_settings.php:1438
+#: ../include/global_settings.php:1448
 #, fuzzy
 msgid "The default timespan you wish to be displayed when you display graphs"
 msgstr ""
@@ -10583,11 +10621,11 @@ msgstr ""
 msgid "The device_id or 'All' or a pipe delimited list of device_id's"
 msgstr ""
 
-#: ../include/global_settings.php:1195
+#: ../include/global_settings.php:1198
 msgid "The dns hostname or ip address of the server."
 msgstr "El nombre por DNS o la dirección IP del servidor."
 
-#: ../include/global_settings.php:1464
+#: ../include/global_settings.php:1474
 #, fuzzy
 msgid "The first Day of the Week for weekly Graph Displays"
 msgstr "El tamaño de la fuente utilizada pata los títulos de gráficas"
@@ -10605,25 +10643,25 @@ msgstr ""
 "Las siguientes fuentes de información están siendo utilizadas para estas "
 "gráficas:"
 
-#: ../include/global_settings.php:701 ../include/global_settings.php:1656
+#: ../include/global_settings.php:701 ../include/global_settings.php:1666
 msgid "The font file to be used for Graph Axis items"
 msgstr "El archivo de fuente a utilizar para los ejes de las gráficas"
 
-#: ../include/global_settings.php:685 ../include/global_settings.php:1638
+#: ../include/global_settings.php:685 ../include/global_settings.php:1648
 msgid "The font file to be used for Graph Legend items"
 msgstr "El archivo de fuente a utilizar para los elementos de leyendas"
 
-#: ../include/global_settings.php:717 ../include/global_settings.php:1674
+#: ../include/global_settings.php:717 ../include/global_settings.php:1684
 #, fuzzy
 msgid "The font file to be used for Graph Unit items"
 msgstr "El archivo de fuente a utilizar para los ejes de las gráficas"
 
-#: ../include/global_settings.php:733 ../include/global_settings.php:1691
+#: ../include/global_settings.php:733 ../include/global_settings.php:1701
 #, fuzzy
 msgid "The font file to be used for Graph Watermarks"
 msgstr "El archivo de fuente a utilizar para los ejes de las gráficas"
 
-#: ../include/global_settings.php:669 ../include/global_settings.php:1620
+#: ../include/global_settings.php:669 ../include/global_settings.php:1630
 msgid "The font file to use for Graph Titles"
 msgstr "El archivo de fuente a utilizar para los títulos de las gráficas"
 
@@ -10643,7 +10681,7 @@ msgstr ""
 msgid "The height (in pixels) that the graph is."
 msgstr "La altura (en pixeles) del área de la gráfica."
 
-#: ../include/global_settings.php:428 ../include/global_settings.php:1508
+#: ../include/global_settings.php:428 ../include/global_settings.php:1518
 msgid "The height of thumbnail graphs in pixels."
 msgstr "La altura de modo previo de gráficas en pixeles."
 
@@ -10701,7 +10739,7 @@ msgstr ""
 "El número máximo de caracteres a desplegar para el título de una gráfica."
 
 #: ../include/device/device_forms.php:249
-#: ../include/device_template/device_template_forms.php:222
+#: ../include/device_template/device_template_forms.php:223
 msgid ""
 "The maximum number of milliseconds Cacti will wait for an SNMP response "
 "(does not work with php-snmp support)."
@@ -10709,7 +10747,7 @@ msgstr ""
 "El número máximo de milisegundos que Cacti esperará por una repuesta SNMP(no "
 "aplica para php-snmp)."
 
-#: ../include/global_settings.php:1344
+#: ../include/global_settings.php:1354
 #, fuzzy
 msgid ""
 "The maximum number of records to store in the Cacti log.  The log will be "
@@ -10755,6 +10793,7 @@ msgid "The maximum vertical value for the rrd graph."
 msgstr "El valor máximo del eje vertical para la gráfica."
 
 #: ../include/device/device_forms.php:117
+#: ../include/device_template/device_template_forms.php:91
 #, fuzzy
 msgid ""
 "The method Cacti will use to determine if a device is available for polling."
@@ -10763,7 +10802,6 @@ msgstr ""
 "colectar información. NOTA: Se recomenta que por lo menos SNMP siempre esté\n"
 "habilitado.\n"
 
-#: ../include/device_template/device_template_forms.php:91
 #: ../include/global_settings.php:1094
 #, fuzzy
 msgid ""
@@ -10793,14 +10831,14 @@ msgstr "El nombre asignado a esta plantilla de información."
 msgid "The name given to this graph template."
 msgstr "El nombre asignado a esta plantilla de gráfica."
 
-#: ../include/global_settings.php:1175
+#: ../include/global_settings.php:1178
 #, fuzzy
 msgid ""
 "The name of the guest user for viewing graphs; is \"No User\" by default."
 msgstr ""
 "El nombre del usuario invitado por defecto para ver gráficas; es \"guest\"."
 
-#: ../include/global_settings.php:1183
+#: ../include/global_settings.php:1186
 #, fuzzy
 msgid ""
 "The name of the user that cacti will use as a template for new Web Basic and "
@@ -10813,7 +10851,7 @@ msgstr ""
 msgid "The name that is printed on the graph."
 msgstr "El nombre que es impreso en la gráfica."
 
-#: ../include/global_settings.php:444 ../include/global_settings.php:1522
+#: ../include/global_settings.php:444 ../include/global_settings.php:1532
 msgid "The number of columns to use when displaying thumbnail graphs."
 msgstr "El número de columnas a utilizar al desplegar modo previo de gráficas"
 
@@ -10847,11 +10885,11 @@ msgid ""
 "applies to the Spine poller only."
 msgstr ""
 
-#: ../include/global_settings.php:1594
+#: ../include/global_settings.php:1604
 msgid "The number of graphs to display on one page in list view mode."
 msgstr "El número de gráficas a desplegar en una pantalla en modo de lista."
 
-#: ../include/global_settings.php:1557 ../include/global_settings.php:1585
+#: ../include/global_settings.php:1567 ../include/global_settings.php:1595
 msgid "The number of graphs to display on one page in preview mode."
 msgstr "El número de gráficas a desplegar en una pantalla en modo previo."
 
@@ -10898,11 +10936,11 @@ msgstr ""
 msgid "The number of rows to display on a single page for sites."
 msgstr "El número de hileras a desplegar en una sola página para equipos."
 
-#: ../include/global_settings.php:1499
+#: ../include/global_settings.php:1509
 msgid "The number of seconds between automatic page refreshes."
 msgstr "El número de segundos entre cada recarga automática de página."
 
-#: ../include/device_template/device_template_forms.php:128
+#: ../include/device_template/device_template_forms.php:129
 #: ../include/global_settings.php:1124
 #, fuzzy
 msgid "The number of times Cacti will attempt to ping a device before failing."
@@ -11006,23 +11044,23 @@ msgid "The script/source used to gather data for this data source."
 msgstr ""
 "El origen o script utilizado para reunir informacion en esta fuente de datos."
 
-#: ../include/global_settings.php:692 ../include/global_settings.php:1646
+#: ../include/global_settings.php:692 ../include/global_settings.php:1656
 msgid "The size of the font used for Graph Axis"
 msgstr "El tamaño de la fuente utilizada pata los ejes de las gráficas"
 
-#: ../include/global_settings.php:676 ../include/global_settings.php:1628
+#: ../include/global_settings.php:676 ../include/global_settings.php:1638
 msgid "The size of the font used for Graph Legend items"
 msgstr "El tamaño de la fuente utilizada pata los elementos de leyendas"
 
-#: ../include/global_settings.php:660 ../include/global_settings.php:1610
+#: ../include/global_settings.php:660 ../include/global_settings.php:1620
 msgid "The size of the font used for Graph Titles"
 msgstr "El tamaño de la fuente utilizada pata los títulos de gráficas"
 
-#: ../include/global_settings.php:708 ../include/global_settings.php:1664
+#: ../include/global_settings.php:708 ../include/global_settings.php:1674
 msgid "The size of the font used for Graph Units"
 msgstr "El tamaño de la fuente utilizada pata las unidades de gráficas"
 
-#: ../include/global_settings.php:724 ../include/global_settings.php:1682
+#: ../include/global_settings.php:724 ../include/global_settings.php:1692
 #, fuzzy
 msgid "The size of the font used for Graph Watermarks"
 msgstr "El tamaño de la fuente utilizada pata los títulos de gráficas"
@@ -11044,7 +11082,7 @@ msgstr ""
 "tiempo de espera de SNMP solo aplica para pings por ese protocolo.\n"
 
 #: ../include/device/device_forms.php:146
-#: ../include/device_template/device_template_forms.php:119
+#: ../include/device_template/device_template_forms.php:120
 #, fuzzy
 msgid ""
 "The timeout value to use for device ICMP and UDP pinging. This device SNMP "
@@ -11069,7 +11107,7 @@ msgid ""
 msgstr ""
 
 #: ../include/device/device_forms.php:127
-#: ../include/device_template/device_template_forms.php:100
+#: ../include/device_template/device_template_forms.php:101
 msgid "The type of ping packet to sent."
 msgstr ""
 
@@ -11110,7 +11148,7 @@ msgid ""
 "the canvas is automatically resized to fit."
 msgstr ""
 
-#: ../include/global_settings.php:436 ../include/global_settings.php:1515
+#: ../include/global_settings.php:436 ../include/global_settings.php:1525
 msgid "The width of thumbnail graphs in pixels."
 msgstr "El ancho de modo previo de gráficas en pixeles."
 
@@ -11281,15 +11319,15 @@ msgstr ""
 msgid "Thule"
 msgstr "Título"
 
-#: ../include/global_settings.php:443 ../include/global_settings.php:1521
+#: ../include/global_settings.php:443 ../include/global_settings.php:1531
 msgid "Thumbnail Columns"
 msgstr "Columnas de modo previo"
 
-#: ../include/global_settings.php:427 ../include/global_settings.php:1507
+#: ../include/global_settings.php:427 ../include/global_settings.php:1517
 msgid "Thumbnail Height"
 msgstr "Altura de modo previo"
 
-#: ../include/global_settings.php:1528
+#: ../include/global_settings.php:1538
 msgid "Thumbnail Sections"
 msgstr "Secciones de modo previo"
 
@@ -11298,7 +11336,7 @@ msgstr "Secciones de modo previo"
 msgid "Thumbnail Settings"
 msgstr "Secciones de modo previo"
 
-#: ../include/global_settings.php:435 ../include/global_settings.php:1514
+#: ../include/global_settings.php:435 ../include/global_settings.php:1524
 msgid "Thumbnail Width"
 msgstr "Ancho de modo previo"
 
@@ -11347,11 +11385,11 @@ msgstr "Tiempo de espera agotado"
 msgid "Title"
 msgstr "Título"
 
-#: ../include/global_settings.php:668 ../include/global_settings.php:1619
+#: ../include/global_settings.php:668 ../include/global_settings.php:1629
 msgid "Title Font File"
 msgstr "Archivo de fuente para Título"
 
-#: ../include/global_settings.php:659 ../include/global_settings.php:1609
+#: ../include/global_settings.php:659 ../include/global_settings.php:1619
 msgid "Title Font Size"
 msgstr "Tamaño de fuente de título"
 
@@ -11365,7 +11403,7 @@ msgstr "Formato de título:"
 #: ../lib/data_source/data_source_form.php:449
 #: ../lib/graph/graphs_form.php:451 ../lib/graph/graphs_form.php:460
 #: ../lib/xaxis/xaxis_form.php:201 ../graph_templates.php:344 ../vdef.php:247
-#: ../device_templates.php:345
+#: ../device_templates.php:502
 msgid "Title Format:"
 msgstr "Formato de título:"
 
@@ -11506,11 +11544,11 @@ msgstr "Opciones de usuario"
 msgid "Tree View"
 msgstr "Vista de Árbol"
 
-#: ../include/global_settings.php:1541
+#: ../include/global_settings.php:1551
 msgid "Tree View (Dual Pane)"
 msgstr "Vista de Árbol (Recuadro doble)"
 
-#: ../include/global_settings.php:1537
+#: ../include/global_settings.php:1547
 msgid "Tree View (Single Pane)"
 msgstr "Vista de Árbol (Recuadro sencillo)"
 
@@ -11649,7 +11687,7 @@ msgstr ""
 msgid "Type of value you want to see in the legend."
 msgstr "¿Esta seguro de querer eliminar el campo?"
 
-#: ../lib/graph/graphs_new_form.php:442 ../lib/device/device_form.php:1531
+#: ../lib/graph/graphs_new_form.php:442 ../lib/device/device_form.php:1547
 #, fuzzy
 msgid "Type:"
 msgstr "Árbol:"
@@ -11691,11 +11729,11 @@ msgstr "Valor de unidades"
 msgid "Unit Exponent Value"
 msgstr "Archivo de fuente para unidades"
 
-#: ../include/global_settings.php:716 ../include/global_settings.php:1673
+#: ../include/global_settings.php:716 ../include/global_settings.php:1683
 msgid "Unit Font File"
 msgstr "Archivo de fuente para unidades"
 
-#: ../include/global_settings.php:707 ../include/global_settings.php:1663
+#: ../include/global_settings.php:707 ../include/global_settings.php:1673
 msgid "Unit Font Size"
 msgstr "Tamaño de fuente de las unidades"
 
@@ -11704,7 +11742,7 @@ msgstr "Tamaño de fuente de las unidades"
 msgid "Unit Length"
 msgstr "Longitud de unidades"
 
-#: ../lib/device/device_form.php:1560 ../lib/html_utility.php:291
+#: ../lib/device/device_form.php:1576 ../lib/html_utility.php:291
 #: ../lib/html_utility.php:305 ../utilities.php:292 ../utilities.php:515
 #: ../utilities.php:527 ../plugins.php:172 ../plugins.php:173
 #: ../plugins.php:174
@@ -11734,7 +11772,7 @@ msgstr "Dependencia no cumplida:"
 msgid "Unmet Dependency: "
 msgstr "Dependencia no cumplida:"
 
-#: ../lib/device/device_form.php:1557 ../lib/html_utility.php:287
+#: ../lib/device/device_form.php:1573 ../lib/html_utility.php:287
 #: ../lib/html_utility.php:309
 msgid "Up"
 msgstr "Arriba"
@@ -11774,6 +11812,11 @@ msgstr "Actualizar RRD"
 #: ../include/data_input/data_input_forms.php:96
 msgid "Update RRD File"
 msgstr "Actualizar este archivo RRD"
+
+#: ../device_templates.php:1172
+#, fuzzy
+msgid "Update Re-Index Method"
+msgstr "Método de re ordenación"
 
 #: ../include/global_arrays.php:262
 msgid "Update Round Robin Archives"
@@ -11832,12 +11875,12 @@ msgstr ""
 msgid "Use"
 msgstr "No existe usuario"
 
-#: ../include/global_settings.php:1699
+#: ../include/global_settings.php:1709
 #, fuzzy
 msgid "Use Custom Colortags"
 msgstr "Scripts Customizados"
 
-#: ../include/global_settings.php:1602
+#: ../include/global_settings.php:1612
 #, fuzzy
 msgid "Use Custom Fonts"
 msgstr "Scripts Customizados"
@@ -11846,7 +11889,7 @@ msgstr "Scripts Customizados"
 msgid "Use Logarithmic y-axis scaling"
 msgstr "Utilizar escalamiento logarítmico en el eje Y"
 
-#: ../lib/html_form.php:1222
+#: ../lib/html_form.php:1247
 msgid "Use Per-Graph Value (Ignore this Value)"
 msgstr ""
 
@@ -11906,7 +11949,7 @@ msgstr "El usuario tiene privilegios para la vista de árbol"
 msgid "User Login History"
 msgstr ""
 
-#: ../lib/functions.php:1960 ../user_admin.php:1057
+#: ../lib/functions.php:1962 ../user_admin.php:1057
 #: ../include/global_arrays.php:179
 msgid "User Management"
 msgstr "Administración de Usuarios"
@@ -11928,7 +11971,7 @@ msgstr "Nombre de usuario:"
 msgid "User Removed"
 msgstr "Nombre de Usuario"
 
-#: ../include/global_settings.php:1182
+#: ../include/global_settings.php:1185
 msgid "User Template"
 msgstr "Plantilla de usuario"
 
@@ -11988,14 +12031,18 @@ msgid ""
 "graphs at the expense of some on screen resolution."
 msgstr ""
 
-#: ../device_templates.php:1091
+#: ../device_templates.php:1332
 #, fuzzy
 msgid "Using System Defaults"
 msgstr "Por Defecto"
 
-#: ../lib/functions.php:1965 ../include/global_arrays.php:177
+#: ../lib/functions.php:1967 ../include/global_arrays.php:177
 msgid "Utilities"
 msgstr "Utilerias"
+
+#: ../include/global_settings.php:1321
+msgid "Utilizing PHP syslog to log to the localhosts logs."
+msgstr ""
 
 #: ../lib/ajax/get_timezones.php:392 ../include/global_timezones.php:475
 msgid "Uzhgorod"
@@ -12021,7 +12068,7 @@ msgstr "Elemento de CDEF"
 msgid "VDEF Item Value"
 msgstr "Elemento de CDEF"
 
-#: ../lib/functions.php:1978 ../vdef.php:310 ../vdef.php:439
+#: ../lib/functions.php:1980 ../vdef.php:310 ../vdef.php:439
 #, fuzzy
 msgid "VDEF Items"
 msgstr "Elementos CDEF"
@@ -12031,7 +12078,7 @@ msgstr "Elementos CDEF"
 msgid "VDEF Title"
 msgstr "Elemento de CDEF"
 
-#: ../lib/functions.php:1974 ../vdef.php:419 ../vdef.php:538
+#: ../lib/functions.php:1976 ../vdef.php:419 ../vdef.php:538
 #, fuzzy
 msgid "VDEF's"
 msgstr "Los CDEF"
@@ -12055,17 +12102,17 @@ msgstr "Nombre de plantilla de gráfica"
 msgid "Validation error."
 msgstr ""
 
-#: ../data_sources_items.php:156 ../cdef.php:413 ../data_templates.php:463
-#: ../data_templates.php:491 ../lib/data_source/data_source_form.php:731
+#: ../data_sources_items.php:156 ../cdef.php:413 ../data_templates.php:500
+#: ../data_templates.php:528 ../lib/data_source/data_source_form.php:731
 #: ../lib/graph/graphs_form.php:924 ../lib/device/device_form.php:827
 #: ../lib/xaxis/xaxis_form.php:255 ../lib/xaxis/xaxis_form.php:296
-#: ../lib/html_form.php:1200 ../lib/rrd.php:3099 ../data_input.php:417
-#: ../graph_templates.php:475 ../settings.php:84 ../user_admin.php:978
+#: ../lib/html_form.php:1225 ../lib/rrd.php:3099 ../data_input.php:417
+#: ../graph_templates.php:468 ../settings.php:84 ../user_admin.php:978
 #: ../include/graph/graph_forms.php:591 ../vdef.php:311 ../vdef.php:420
 #: ../tree.php:405 ../tree.php:421 ../tree.php:432
 #: ../graph_templates_items.php:453 ../gprint_presets.php:217 ../color.php:459
 #: ../graph_settings.php:122 ../pollers.php:259 ../data_queries.php:396
-#: ../data_queries.php:653 ../sites.php:431 ../device_templates.php:427
+#: ../data_queries.php:653 ../sites.php:431 ../device_templates.php:654
 #: ../data_templates_items.php:158 ../graphs_items.php:413
 msgid "Value"
 msgstr "Valor"
@@ -12139,12 +12186,12 @@ msgstr ""
 msgid "Vietnamese"
 msgstr ""
 
-#: ../lib/graph/graph_view_form.php:544
+#: ../lib/graph/graph_view_form.php:544 ../index.php:40
 #, fuzzy
 msgid "View"
 msgstr "Vista de Árbol"
 
-#: ../lib/functions.php:1969 ../utilities.php:1816
+#: ../lib/functions.php:1971 ../utilities.php:1816
 #, fuzzy
 msgid "View Cacti Log File"
 msgstr "Filtros de bitácora de Cacti"
@@ -12153,11 +12200,11 @@ msgstr "Filtros de bitácora de Cacti"
 msgid "View Graphs"
 msgstr "Ver gráficas"
 
-#: ../lib/functions.php:1970 ../utilities.php:1838
+#: ../lib/functions.php:1972 ../utilities.php:1838
 msgid "View Poller Cache"
 msgstr "Ver el cache del colector"
 
-#: ../lib/functions.php:1971 ../utilities.php:1846
+#: ../lib/functions.php:1973 ../utilities.php:1846
 msgid "View SNMP Cache"
 msgstr "Ver el cache de SNMP"
 
@@ -12166,7 +12213,7 @@ msgstr "Ver el cache de SNMP"
 msgid "View User Log"
 msgstr "Nuevo nombre de usuario"
 
-#: ../lib/functions.php:1973
+#: ../lib/functions.php:1975
 msgid "View User Log File"
 msgstr ""
 
@@ -12260,12 +12307,12 @@ msgstr ""
 msgid "Watermark"
 msgstr "Archivo de fuente para Título"
 
-#: ../include/global_settings.php:732 ../include/global_settings.php:1690
+#: ../include/global_settings.php:732 ../include/global_settings.php:1700
 #, fuzzy
 msgid "Watermark Font File"
 msgstr "Archivo de fuente para Título"
 
-#: ../include/global_settings.php:723 ../include/global_settings.php:1681
+#: ../include/global_settings.php:723 ../include/global_settings.php:1691
 #, fuzzy
 msgid "Watermark Font Size"
 msgstr "Tamaño de fuente de título"
@@ -12274,7 +12321,7 @@ msgstr "Tamaño de fuente de título"
 msgid "Web Basic"
 msgstr ""
 
-#: ../include/auth/auth_arrays.php:78
+#: ../include/auth/auth_arrays.php:78 ../include/global_settings.php:1163
 msgid "Web Basic Authentication"
 msgstr "Autenticación básica via servidor web"
 
@@ -12343,7 +12390,7 @@ msgstr ""
 msgid "What would you like to export?"
 msgstr "Que desea exportar_"
 
-#: ../include/global_settings.php:1564
+#: ../include/global_settings.php:1574
 msgid ""
 "When choosing dual pane Tree View, what width should the tree occupy in "
 "pixels."
@@ -12365,7 +12412,7 @@ msgid ""
 "source."
 msgstr ""
 
-#: ../include/global_settings.php:1458
+#: ../include/global_settings.php:1468
 msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr ""
 
@@ -12389,7 +12436,7 @@ msgstr ""
 "\t\t\t\t\topcionalmente cambiar el formato de título para las gráficas "
 "nuevas."
 
-#: ../device_templates.php:343
+#: ../device_templates.php:500
 #, fuzzy
 msgid ""
 "When you click save, the following Device Templates will be duplicated. You "
@@ -12622,14 +12669,14 @@ msgstr ""
 "Cuales RRAs se utilizarán para ingresar información. (Se recomienta que se \n"
 "seleccionen todos estos valores).\n"
 
-#: ../include/global_settings.php:1431
+#: ../include/global_settings.php:1441
 #, fuzzy
 msgid "Which mode you want displayed when you visit 'graph_view.php'"
 msgstr ""
 "Que modo desea que se despliegue al visitar la página de presentación\n"
 "de gráficas.\n"
 
-#: ../include/global_settings.php:1529
+#: ../include/global_settings.php:1539
 msgid "Which sections of Cacti thumbnail graphs should be used for."
 msgstr "En que secciones de Cacti se debe utilizar el modo previo de gráficas."
 
@@ -12691,13 +12738,13 @@ msgstr "Retícula-X"
 msgid "X-Axis"
 msgstr ""
 
-#: ../lib/functions.php:1981 ../lib/xaxis/xaxis_form.php:254
+#: ../lib/functions.php:1983 ../lib/xaxis/xaxis_form.php:254
 #: ../lib/xaxis/xaxis_form.php:312
 #, fuzzy
 msgid "X-Axis Items"
 msgstr "No hay elementos"
 
-#: ../lib/functions.php:1979 ../lib/xaxis/xaxis_form.php:295
+#: ../lib/functions.php:1981 ../lib/xaxis/xaxis_form.php:295
 #: ../lib/xaxis/xaxis_form.php:428
 #, fuzzy
 msgid "X-Axis Presets"
@@ -12790,7 +12837,7 @@ msgstr ""
 msgid "Yerevan"
 msgstr "General"
 
-#: ../lib/html_form.php:1158 ../user_admin.php:1137
+#: ../lib/html_form.php:1163 ../lib/html_form.php:1183 ../user_admin.php:1137
 msgid "Yes"
 msgstr "Si"
 
@@ -12828,7 +12875,7 @@ msgstr ""
 #: ../lib/xaxis/xaxis_form.php:185 ../rra.php:137 ../data_input.php:231
 #: ../graph_templates.php:328 ../user_admin.php:205 ../vdef.php:231
 #: ../gprint_presets.php:135 ../pollers.php:181 ../data_queries.php:292
-#: ../sites.php:162 ../device_templates.php:329
+#: ../sites.php:162 ../device_templates.php:486
 msgid ""
 "You did not select a valid action. Please select 'Return' to return to the "
 "previous menu."
@@ -12872,7 +12919,7 @@ msgid ""
 "the previous menu."
 msgstr ""
 
-#: ../device_templates.php:353
+#: ../device_templates.php:510
 msgid ""
 "You must first select a Device Template.  Please select 'Return' to return "
 "to the previous menu."
@@ -12996,7 +13043,7 @@ msgstr ""
 msgid "[data input:"
 msgstr "Ingreso de información"
 
-#: ../lib/data_source/data_source_form.php:986
+#: ../lib/data_source/data_source_form.php:1007
 #, fuzzy
 msgid "[device:"
 msgstr "Equipo:"
@@ -13012,16 +13059,16 @@ msgstr "Equipo:"
 msgid "[edit graph: "
 msgstr "Gráfica creada: "
 
-#: ../data_sources_items.php:146 ../cdef.php:406 ../data_templates.php:419
-#: ../data_templates.php:455 ../lib/data_source/data_source_form.php:530
+#: ../data_sources_items.php:146 ../cdef.php:406 ../data_templates.php:423
+#: ../data_templates.php:580 ../lib/data_source/data_source_form.php:530
 #: ../lib/data_source/data_source_form.php:647
 #: ../lib/graph/graphs_form.php:854 ../lib/device/device_form.php:629
 #: ../lib/device/device_form.php:634 ../lib/xaxis/xaxis_form.php:248
 #: ../lib/xaxis/xaxis_form.php:289 ../data_input.php:346
-#: ../graph_templates.php:409 ../graph_templates.php:467 ../user_admin.php:526
+#: ../graph_templates.php:388 ../graph_templates.php:572 ../user_admin.php:526
 #: ../user_admin.php:939 ../vdef.php:413 ../tree.php:398
 #: ../gprint_presets.php:210 ../color.php:452 ../pollers.php:251
-#: ../data_queries.php:389 ../device_templates.php:419
+#: ../data_queries.php:389 ../device_templates.php:567
 #: ../data_templates_items.php:148 ../graphs_items.php:406
 msgid "[edit: "
 msgstr "[editar: "
@@ -13035,16 +13082,16 @@ msgstr "[editar: "
 msgid "[fail]"
 msgstr "[fallo]"
 
-#: ../data_sources_items.php:150 ../cdef.php:408 ../data_templates.php:422
-#: ../data_templates.php:457 ../lib/data_source/data_source_form.php:532
+#: ../data_sources_items.php:150 ../cdef.php:408 ../data_templates.php:426
+#: ../data_templates.php:583 ../lib/data_source/data_source_form.php:532
 #: ../lib/data_source/data_source_form.php:653
 #: ../lib/graph/graphs_form.php:556 ../lib/graph/graphs_form.php:862
 #: ../lib/device/device_form.php:636 ../lib/xaxis/xaxis_form.php:250
-#: ../lib/xaxis/xaxis_form.php:291 ../graph_templates.php:379
-#: ../graph_templates.php:469 ../user_admin.php:528 ../user_admin.php:941
+#: ../lib/xaxis/xaxis_form.php:291 ../graph_templates.php:391
+#: ../graph_templates.php:542 ../user_admin.php:528 ../user_admin.php:941
 #: ../vdef.php:415 ../tree.php:400 ../graph_templates_items.php:448
 #: ../templates_import.php:111 ../gprint_presets.php:212 ../color.php:454
-#: ../pollers.php:253 ../data_queries.php:391 ../device_templates.php:421
+#: ../pollers.php:253 ../data_queries.php:391 ../device_templates.php:570
 #: ../graph_templates_inputs.php:160 ../data_templates_items.php:152
 #: ../graphs_items.php:408
 msgid "[new]"
@@ -13254,6 +13301,14 @@ msgstr "La función no existe"
 
 #: ../about.php:42
 msgid "for information, support, and updates."
+msgstr ""
+
+#: ../index.php:38
+msgid "for your network"
+msgstr ""
+
+#: ../index.php:39
+msgid "for your new devices"
 msgstr ""
 
 #: ../include/graph/graph_forms.php:67 ../include/graph/graph_forms.php:95
@@ -13794,6 +13849,11 @@ msgstr ""
 msgid "xff for cacti rra id '%s' should be '%s'"
 msgstr ""
 
+#: ../index.php:40
+#, fuzzy
+msgid "your new graphs"
+msgstr "Gráficas exportadas"
+
 #, fuzzy
 #~ msgid "     1 = Graph Template,\n"
 #~ msgstr "Plantilla de gráfica"
@@ -14036,6 +14096,53 @@ msgstr ""
 #~ msgid "90 Days"
 #~ msgstr "90 Días"
 
+#, fuzzy
+#~ msgid "<a href=\"devices.php\">Create devices</a> for network"
+#~ msgstr "Crear dispositivos</a> para la red"
+
+#, fuzzy
+#~ msgid "<a href=\"graph_view.php\">View</a> your new graphs"
+#~ msgstr "Ver</a> las nuevas gráficas"
+
+#, fuzzy
+#~ msgid "<a href=\"graphs_new.php\">Create graphs</a> for your new devices"
+#~ msgstr "Crear gráficas</a> para los nuevos dispositivos"
+
+#, fuzzy
+#~ msgid ""
+#~ "<blockquote><i>None</i> - No authentication will be used, all users will "
+#~ "have full access.<br><br><i>Builtin\n"
+#~ "\t\t\tAuthentication</i> - Cacti handles user authentication, which "
+#~ "allows you to create users and give them rights to different areas\n"
+#~ "\t\t\twithin Cacti.<br><br><i>Web Basic Authentication</i> - "
+#~ "Authentication is handled by the web server. Users can be added or "
+#~ "created\n"
+#~ "\t\t\tautomatically on first login if the Template User is defined, "
+#~ "otherwise the defined guest permissions will be used.<br><br><i>LDAP\n"
+#~ "\t\t\tAuthentication</i> - Allows for authentication against a LDAP "
+#~ "server. Users will be created automatically on first login if the\n"
+#~ "\t\t\tTemplate User is defined, otherwise the defined guest permissions "
+#~ "will be used.  If PHP's LDAP module is not enabled, LDAP\n"
+#~ "\t\t\tAuthentication will not appear as a selectable option.</blockquote>"
+#~ msgstr ""
+#~ "<ul><li><i>None</i> -No se utilizará autenticación, todos los usuarios \n"
+#~ "tendrán acceso completo.</li><li><i>Autenticación Interna</i> - Cacti \n"
+#~ "realiza la autenticación, lo que permite al administrador crear los "
+#~ "usuarios\n"
+#~ "y otorgarles privilegios a las diferentes areas del sistema.</li><li><i>\n"
+#~ "Autenticación via Web Básica</i> - La autenticación es realizada por el \n"
+#~ "servidor web. Los usuarios pueden ser añadidos o creados automáticamente\n"
+#~ "en su primer ingreso si se define una Plantilla de Usuario, de lo "
+#~ "contrario\n"
+#~ "los permisos de invitado por defecto serán utilizados.</li><li><i>\n"
+#~ "Autenticación LDAP</i> - Permite realizar la autenticación en un "
+#~ "servidor \n"
+#~ "LDAP. Los usuarios serán creados automáticamente en su primer ingreso si "
+#~ "se\n"
+#~ "define una Plantilla de Usuario, de lo contrario los permisos de "
+#~ "invitado \n"
+#~ "por defecto serán utilizados.\n"
+
 #~ msgid "A description for this data query."
 #~ msgstr "Una descripción para esta consulta de información."
 
@@ -14123,6 +14230,14 @@ msgstr ""
 #, fuzzy
 #~ msgid "Add Permissions Script 1.1"
 #~ msgstr "Añadir consulta de información"
+
+#, fuzzy
+#~ msgid "Adding Data Query: "
+#~ msgstr "Añadir consulta de información"
+
+#, fuzzy
+#~ msgid "Adding Graph Template: "
+#~ msgstr "Añadir plantilla de gráfica:"
 
 #~ msgid ""
 #~ "Allows the dynamic placement of the y-grid based upon min and max "
@@ -15302,8 +15417,9 @@ msgstr ""
 #~ msgid "New Data Template Item"
 #~ msgstr "Nuevo elemento de plantilla de información"
 
-#~ msgid "New Device:"
-#~ msgstr "Nuevo equipo:"
+#, fuzzy
+#~ msgid "New Host"
+#~ msgstr "No hay equipo"
 
 #~ msgid "No Data Pollers"
 #~ msgstr "Colectores de información no encontrados"

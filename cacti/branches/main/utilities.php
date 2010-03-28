@@ -279,6 +279,7 @@ function display_php() {
 function display_general() {
 	global $colors, $config, $rrdtool_versions;
 	require(CACTI_BASE_PATH . "/include/poller/poller_arrays.php");
+	require(CACTI_BASE_PATH . "/include/data_input/data_input_arrays.php");
 
 	/* Get poller stats */
 	$poller_item = db_fetch_assoc("SELECT action, count(action) as total FROM poller_item GROUP BY action");

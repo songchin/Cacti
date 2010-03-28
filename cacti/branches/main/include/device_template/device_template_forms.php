@@ -75,9 +75,9 @@ $fields_device_template_edit = array(
 	"override_permitted" => array(
 		"method" => "checkbox",
 		"friendly_name" => __("Allow Override"),
-		"description" => __("Check this box to have the allow the user to override the Device Template Availability and SNMP Settings. If unchecked,
-		the user will not be able to change either Availability or SNMP settings when editing the device.  However, for legacy purposes, this will only
-		apply to new devices and legacy devices where the user has requested that template propagation be enabled."),
+		"description" => __("Check this box to have the allow the user to override the Device Template Availability and SNMP Settings.") .
+						__("If unchecked, the user will not be able to change either Availability or SNMP settings when editing the device.") .
+						__("However, for legacy purposes, this will only apply to new devices and legacy devices where the user has requested that template propagation be enabled."),
 		"value" => "|arg1:override_permitted|",
 		"default" => "on",
 		"form_id" => "|arg1:id|"
@@ -88,7 +88,8 @@ $fields_device_template_edit = array(
 		),
 	"availability_method" => array(
 		"friendly_name" => __("Downed Device Detection"),
-		"description" => __("The method Cacti will use to determine if a device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"),
+		"description" => __("The method Cacti will use to determine if a device is available for polling.") . "<br><i>" .
+						__("NOTE: It is recommended that, at a minimum, SNMP always be selected.") . "</i>",
 		"on_change" => "changeHostForm()",
 		"value" => "|arg1:availability_method|",
 		"method" => "drop_array",
