@@ -59,7 +59,8 @@ if (isset($_GET['mode']) && in_array($_GET['mode'], $modes)  && isset($_GET['id'
 			if (!in_array($id, $plugins))
 				break;
 			api_plugin_uninstall($id);
-			$plugins = plugins_retrieve_list();
+			Header("Location: plugins.php\n\n");
+			exit;
 			break;
 		case 'disable':
 			if (!in_array($id, $plugins))
