@@ -98,6 +98,7 @@ function api_rrd_datasource_add($file_array, $ds_array, $debug) {
 /**
  * appends a <DS> subtree to an RRD XML structure
  * @param object $dom	- the DOM object, where the RRD XML is stored
+ * @param string $version- rrd file version
  * @param string $name	- name of the new ds
  * @param string $type	- type of the new ds
  * @param int $min_hb	- heartbeat of the new ds
@@ -148,6 +149,15 @@ function append_DS($dom, $version, $name, $type, $min_hb, $min, $max) {
 	$insert->parentNode->insertBefore($new_node, $insert);
 }
 
+/**
+ * COMPUTE DS: appends a <DS> subtree to an RRD XML structure
+ * @param object $dom	- the DOM object, where the RRD XML is stored
+ * @param string $version- rrd file version
+ * @param string $name	- name of the new ds
+ * @param string $type	- type of the new ds
+ * @param int $cdef		- the cdef rpn used for COMPUTE
+ * return object		- modified DOM
+ */
 function append_COMPUTE_DS($dom, $version, $name, $type, $cdef) {
 
 	/* rrdtool version dependencies */
@@ -192,8 +202,9 @@ function append_COMPUTE_DS($dom, $version, $name, $type, $cdef) {
 
 /**
  * append a <DS> subtree to the <CDP_PREP> subtrees of a RRD XML structure
- * @param $dom		- the DOM object, where the RRD XML is stored
- * return object	- the modified DOM object
+ * @param object $dom		- the DOM object, where the RRD XML is stored
+ * @param string $version	- rrd file version
+ * return object			- the modified DOM object
  */
 function append_CDP_Prep_DS($dom, $version) {
 
@@ -232,8 +243,8 @@ function append_CDP_Prep_DS($dom, $version) {
 
 /**
  * append a <V>alue element to the <DATABASE> subtrees of a RRD XML structure
- * @param $dom		- the DOM object, where the RRD XML is stored
- * return object	- the modified DOM object
+ * @param object $dom	- the DOM object, where the RRD XML is stored
+ * return object		- the modified DOM object
  */
 function append_Value($dom) {
 
