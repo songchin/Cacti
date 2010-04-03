@@ -232,6 +232,7 @@ $struct_graph_grid = array(
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("Use Logarithmic y-axis scaling"),
+		"class" => "auto_scale_log",
 		),
 	"scale_log_units" => array(
 		"friendly_name" => __("SI Units for Logarithmic Scaling") . " (--units=si)",

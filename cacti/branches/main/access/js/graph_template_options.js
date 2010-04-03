@@ -1,12 +1,16 @@
 <script type="text/javascript">
 <!--
 $(document).ready(function(){
-	//inter-dependencies
+	// inter-dependencies
 	rrdtool_graph_dependencies();
-	Enable_if_Checked('#auto_scale_log', ".scale_log_units");
+	// search for both the field itself and the templating checkbox (Use per Graph Value),
+	// so use the class for searching and NOT the label!
+	Enable_if_Checked('.auto_scale_log', ".scale_log_units");
 
-	$('#auto_scale_log').click( function() {
-		Enable_if_Checked('#auto_scale_log', ".scale_log_units");
+	// toggle not only if the field itself is (un)checked,
+	// do the same for the templating checkbox
+	$('.auto_scale_log').click( function() {
+		Enable_if_Checked('.auto_scale_log', ".scale_log_units");
 	});
 });
 
