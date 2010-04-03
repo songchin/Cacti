@@ -745,4 +745,9 @@ function upgrade_to_0_8_8() {
 		}
 	}
 
+	/* change the name and description for data input method "Unix - Get Load Average" from 10min to 15min */
+	$dim_id = db_fetch_cell("SELECT id FROM `data_input` WHERE input_string LIKE '%%scripts/loadavg_multi.pl%%' LIMIT 0,1");
+	$field_id = db_fetch_cell("SELECT id FROM `data_input_fields` WHERE data_name LIKE '%%10min%%' AND data_input_id =" . $dim_id . " LIMIT 0,1");
+	db_install_execute("0.8.8", "UPDATE data_input_fields SET `name`='15 Minute Average', `data_name`='15min' WHERE `id`=" . $field_id);
+
 }

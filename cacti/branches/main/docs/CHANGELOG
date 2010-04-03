@@ -1,4 +1,5 @@
 Cacti CHANGELOG
+-bug#0000671: script loadavg_multi.pl: uptime output is for 1, 5 and 15 minutes and NOT 1, 5 and 10 
 -bug#0000933: Change output to 24 hr
 -bug#0001024: Can't create two devices via CLI with the same IP-Address
 -bug#0001085: LDAP enabled status not maintained on upgrade from 0.8.6j to 0.8.7

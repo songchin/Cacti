@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-#get load avg for 1;5;10 min
+#get load avg for 1;5;15 min
 open(PROCESS, "uptime |");
 $avg = <PROCESS>;
 close(PROCESS);
@@ -9,4 +9,4 @@ close(PROCESS);
 
 $avg =~ s/^.*:\s(\d+\.\d{2}),?\s(\d+\.\d{2}),?\s(\d+\.\d{2})$//;
 
-print "1min:$1 5min:$2 10min:$3";
+print "1min:$1 5min:$2 15min:$3";
