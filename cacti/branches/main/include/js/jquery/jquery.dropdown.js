@@ -21,7 +21,7 @@
  +-------------------------------------------------------------------------+
 */
 
-(function($){  
+(function($){
  $.fn.DropDownMenu = function(options) {
 
 	var defaults = {
@@ -31,19 +31,20 @@
 		maxHeight: 300,
 		width: 150,
 		timeout: 500,
+		auto_close: 10000,
 		html: '<h6>empty</h6>',
 		offsetX: 0,
 		offsetY: 15,
 		simultaneous: false,
 		rel: ''
 	};
-	
+
 	var timerref 		= null;
 	var menu 			= null;
 	var menuHeight 		= 0;
 	var options 		= $.extend(defaults, options);
 	var contentHeight	= 0;
-	
+
 	// do nothing if requested menu is still loaded
 	if($('#' + options.name).is(":visible")) {
 		return;
@@ -59,13 +60,13 @@
 		});
 	}
 
-	return this.each(function() {  
+	return this.each(function() {
 		obj = $(this);
 		newMenu = _init_menu(obj.offset());
 		_open_menu(newMenu);
 	});
-	
-	
+
+
 	function _init_menu(initiator_position){
 
 		// integrate a base frame
@@ -97,7 +98,7 @@
 			var subMenu = $(this);
 			var subMenuID = options.name + '_' + i;
 			var subMenuTitle = subMenu.find('a:first').html();
-			subMenu.attr('id', subMenuID);	
+			subMenu.attr('id', subMenuID);
 			subMenu.click( function() {
 				 _toggle_subMenu( subMenuID);
 			} );
@@ -108,14 +109,14 @@
 
 		// "_content" holds the visible menu data
 		menu_content.append(options.html);
-		
+
 		// hide every submenu and its items
 		i=1;
 		menu_content.find("h6:has(div)").each(function() {
 			var subMenu = $(this);
 			var subMenuID = options.name + '_' + i;
-			var subMenuTitle = subMenu.find('a:first').html();		
-			subMenu.attr('id', subMenuID);	
+			var subMenuTitle = subMenu.find('a:first').html();
+			subMenu.attr('id', subMenuID);
 			subMenu.click( function() {
 				 _toggle_subMenu( subMenuID);
 			} );
@@ -123,14 +124,14 @@
 			subMenu.find('a:first').html(subMenuTitle + '&nbsp;<img src="' + options.rel + '/images/tw_close.gif" class="icon">');
 			i++;
 		});
-		
+
 		// if necessary show the title, subtitle ...
 		if(options.title != '') { menu_head.show(); }
 		if(options.subtitle != '') { menu_subhead.show(); }
-		
+
 		// make content visible
 		menu_content.show();
-		
+
 		//reduce height to a minimum for best fit
 		menuHeight = (menu.height() > options.maxHeight) ? options.maxHeight : menu.height();
 
@@ -139,15 +140,15 @@
 			menu.css({'min-width' : options.width + 'px'});
 			menu.width(options.width);
 		}
-		
-		
+
+
 		menu.css({'height':0});
 		menu.bind('mouseover', _cancel_timer);
 		menu.bind('mouseout', _set_timer);
-		return menu;		
+		return menu;
 	}
-	
-	
+
+
 	function _toggle_subMenu(subMenuID){
 
 		if(subMenuID == null) {
@@ -173,11 +174,11 @@
 			var subMenu = $(this)
 			var subsubMenuID = subMenu.attr('id');
 			subMenu.click( function() {
-				_toggle_subMenu( subsubMenuID); 
+				_toggle_subMenu( subsubMenuID);
 			} );
 			subMenu.children("div").hide();
 		});
-		
+
 		//re-calculate content height if back-button is hidden
 		if(subMenuID != null) {
 		    menu_content.height(menu.height() - menu_head.height() - menu_back.height() - menu_subhead.height() - 16);
@@ -186,19 +187,20 @@
 		//return false to suppress unwanted click events
 		return false;
 	}
-	
-	
-	function _set_timer(){
-		timerref = window.setTimeout( _close_menu, options.timeout);
+
+
+	function _set_timer(timer){
+			timer = ( typeof(timer) != 'number' ) ? options.timeout : timer;
+			timerref = window.setTimeout( _close_menu, timer);
 	}
-	
-	function _cancel_timer() {  
-		if(timerref) {  
+
+	function _cancel_timer() {
+		if(timerref) {
 			window.clearTimeout(timerref);
 			timerref = null;
 		}
 	}
-	
+
 	function _close_menu(){
 		menu = $('#' + options.name);
 		menu.slideUp();
@@ -207,68 +209,25 @@
 			    menu.dequeue();
 			});
 	}
-	
+
 	function _open_menu(obj){
 		//wait until oldMenu is completey closed before opening a new one
 		var wait = setInterval(function() {
 		    if( !oldMenus.is(":animated") ) {
 				clearInterval(wait);
 				obj.animate({height: menuHeight}, 600);
-		
+
 				//setup contentHeight;
 				contentHeight = $('#' + options.name + '_content').height();
 				$('#' + options.name + '_content').css({'overflow-y':'auto'});
 
 				obj.find('h6').eq(0).focus();
-				_cancel_timer();
+				if(options.auto_close !== false) {
+					_set_timer(options.auto_close);
+				}
 		    }
 		}, 200);
-
 	}
 
- };  
-})(jQuery); 
-
-
-
-
-$(document).ready(function(){
-
-	// Ajax request for language menu
-	$('#menu_languages').click(
-		function () {
-			var url_path = this.rel;
-			$.ajax({
-					method: "get",url: url_path + "lib/ajax/get_languages.php",
-					beforeSend: function(){$("#loading").fadeIn(0);},
-					complete: function(){$("#loading").fadeOut(1000); },
-					success: function(html){$('#menu_languages').DropDownMenu({timeout: 500, 
-												    name: 'dd_languages', 
-												    html: html, 
-												    title: 'Languages',
-												    rel: url_path
-												    });}
-				 });
-		}
-	);
-	
-	// Ajax request for timezone menu
-	$('#menu_timezones').click( 
-		function () {
-			var url_path = this.rel;
-			$.ajax({
-					method: "get",url: url_path + "lib/ajax/get_timezones.php",
-					beforeSend: function(){$("#loading").fadeIn(0);},
-					complete: function(){$("#loading").fadeOut(1000);},
-					success: function(html){$('#menu_timezones').DropDownMenu({timeout: 500, 
-												    name: 'dd_timezones',
-													html: html,
-													title: 'Time zones',
-													rel: url_path
-													});}
-			 });
-		}
-	);
-
-
-});
+ };
+})(jQuery);

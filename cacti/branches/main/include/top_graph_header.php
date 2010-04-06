@@ -124,6 +124,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<link href="<?php echo CACTI_URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.js"></script>
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/layout.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/layout.php"></script>
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jstree/jquery.tree.js"></script>
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.cookie.js"></script>
 	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.autocomplete.js"></script>
@@ -183,7 +184,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		</div>
 		<?php if(read_config_option('i18n_support') != 0) {?>
 		<div style='float:right;'>
-			<a href="#" id="menu_languages" rel="<?php echo CACTI_URL_PATH; ?>"><img src="<?php echo CACTI_URL_PATH; ?>images/flag_icons/<?php print CACTI_COUNTRY;?>.gif" align="top">&nbsp;<?php print CACTI_LANGUAGE;?></a>
+			<a href="#" id="menu_languages" rel="<?php echo CACTI_URL_PATH; ?>"><img src="<?php echo CACTI_URL_PATH; ?>images/flag_icons/<?php print CACTI_COUNTRY;?>.gif" align="top">&nbsp;<?php print $lang2locale[CACTI_LOCALE]["language"];?></a>
 		</div>
 		<div id="loading" style="display:none; float:right"><img src="<?php echo CACTI_URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>">LOADING</div>
 		<?php }?>

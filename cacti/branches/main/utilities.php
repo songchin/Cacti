@@ -583,7 +583,7 @@ function display_languages() {
 
 	/* create a list of all languages this Cacti system supports ... */
 	$dhandle = opendir(CACTI_BASE_PATH . "/locales/LC_MESSAGES");
-	$supported_languages["cacti"] = "English, ";
+	$supported_languages["cacti"] = __("English") . ", ";
 	while (false !== ($filename = readdir($dhandle))) {
 		if(isset($locations[$filename])) {
 			$supported_languages["cacti"] .= $locations[$filename] . ", ";
@@ -599,7 +599,7 @@ function display_languages() {
 
 			$plugin = $plugin["directory"];
 			$dhandle = @opendir(CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales/LC_MESSAGES");
-			$supported_languages[$plugin] = "English, ";
+			$supported_languages[$plugin] = __("English") . ", ";
 			if($dhandle) {
 				while (false !== ($filename = readdir($dhandle))) {
 					if(isset($locations[$filename])) {
@@ -889,6 +889,7 @@ function utilities_view_user_log() {
 	print $nav;
 	html_end_box(false);
 
+
 	$display_text = array(
 		"username" => array(__("Username"), "ASC"),
 		"full_name" => array(__("Full Name"), "ASC"),
@@ -1080,6 +1081,7 @@ function utilities_view_logfile() {
 						</select>
 					</td>
 					<td class="nw100">
+
 						&nbsp;<?php print __("Display Order:");?>&nbsp;
 					</td>
 					<td class="w1">
