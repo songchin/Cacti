@@ -1,9 +1,10 @@
 ﻿The Cacti Group | spine
 
 SVN
--bug:0001653: Transient ICMP Socket create failures causing spine to die
--feature:0001550: Record the polling time for each host to optimize polling times
--feature:0001629: Implement the snmp clientaddr option to bind spine to a specific local ip address 
+-bug#0001653: Transient ICMP Socket create failures causing spine to die
+-bug#0001657: Spine output shows drop of latest bit from hex value 
+-feature#0001550: Record the polling time for each host to optimize polling times
+-feature#0001629: Implement the snmp clientaddr option to bind spine to a specific local ip address 
 -feature: Implement new file based datetime format in the spine log function
 
 0.8.7f
