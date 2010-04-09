@@ -23,7 +23,7 @@
 */
 
 $no_http_headers = true;
-require(dirname(__FILE__) . "./global.php");
+require(dirname(__FILE__) . "/global.php");
 ?>
 $(document).ready(function(){
 
