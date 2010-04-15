@@ -89,7 +89,7 @@ foreach($tables AS $table) {
 /*	display_help - displays the usage of the function */
 function display_help () {
 	print "Cacti Database Conversion Tool v1.0, Copyright 2010 - The Cacti Group\n\n";
-	print "usage: repair_database.php [-d] [-h] [--form] [--help] [-v] [-V] [--version]\n\n";
+	print "usage: convert_innodb.php [-d] [-h] [--form] [--help] [-v] [-V] [--version]\n\n";
 	print "-d | --debug     - Display verbose output during execution\n";
 	print "-s | --size=N    - The largest table size in records to convert\n";
 	print "-v -V --version  - Display this help message\n";
